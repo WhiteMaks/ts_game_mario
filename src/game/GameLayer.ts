@@ -1,7 +1,5 @@
 import characterSpriteSheetSrc from "../resources/character_spritesheet.png";
 import {GameEngine} from "#game_engine/src/namespace/game_engine";
-import {Sprite2D} from "../libs/game_engine/src/libs/graphics_engine/src";
-import {Sprite2DRendererComponent} from "../libs/game_engine/src";
 
 class GameLayer extends GameEngine.BaseLayer {
 	private readonly graphicsElement: GameEngine.GraphicsEngine.GraphicsElement;
@@ -12,8 +10,8 @@ class GameLayer extends GameEngine.BaseLayer {
 	private marioEntity!: GameEngine.ECS.Entity;
 	private enemyEntity!: GameEngine.ECS.Entity;
 
-	private marioSprites!: Sprite2D[];
-	private enemySprites!: Sprite2D[];
+	private marioSprites!: GameEngine.GraphicsEngine.Sprite2D[];
+	private enemySprites!: GameEngine.GraphicsEngine.Sprite2D[];
 
 	private marioSpriteIndex!: number;
 	private marioSpriteFlipTime!: number;
@@ -143,7 +141,7 @@ class GameLayer extends GameEngine.BaseLayer {
 				this.marioSpriteIndex = 0;
 			}
 
-			this.marioEntity.getComponent(Sprite2DRendererComponent).sprite = this.marioSprites[this.marioSpriteIndex];
+			this.marioEntity.getComponent(GameEngine.Sprite2DRendererComponent).sprite = this.marioSprites[this.marioSpriteIndex];
 		}
 
 		if (this.enemySpriteFlipTimeLeft < 0) {
@@ -153,7 +151,7 @@ class GameLayer extends GameEngine.BaseLayer {
 				this.enemySpriteIndex = 0;
 			}
 
-			this.enemyEntity.getComponent(Sprite2DRendererComponent).sprite = this.enemySprites[this.enemySpriteIndex];
+			this.enemyEntity.getComponent(GameEngine.Sprite2DRendererComponent).sprite = this.enemySprites[this.enemySpriteIndex];
 		}
 
 		this.scene.update(time);

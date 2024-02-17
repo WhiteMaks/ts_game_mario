@@ -1,4 +1,5 @@
 import characterSpriteSheetSrc from "../resources/character_spritesheet.png";
+import decorationAndBlockSpriteSheetSrc from "../resources/decoration_and_block_spritesheet.png";
 import {GameEngine} from "#game_engine/src/namespace/game_engine";
 
 class GameLayer extends GameEngine.Layer.BaseLayer {
@@ -33,6 +34,99 @@ class GameLayer extends GameEngine.Layer.BaseLayer {
 
 		const context = this.graphicsElement.getGraphicsContext();
 
+		this.initCharacters(context);
+		this.initDecorationsAndBlocks(context);
+	}
+
+	public detach(): void {
+	}
+
+	public elementInput(event: GameEngine.EventSystem.ElementEvent): void {
+		if (event.getType() === GameEngine.EventSystem.ElementEventType.RESIZE) {
+			this.scene.resize(event.getWidth(), event.getHeight());
+		}
+	}
+
+	public keyboardInput(event: GameEngine.EventSystem.KeyboardEvent): void {
+	}
+
+	public mouseInput(event: GameEngine.EventSystem.MouseEvent): void {
+	}
+
+	public update(time: GameEngine.Time): void {
+		this.updateCharacters(time);
+
+		this.scene.update(time);
+	}
+
+	public render(): void {
+		GameEngine.Engine.renderer2D.resetStatistics();
+
+		GameEngine.Engine.renderer2D.setClearColor(this.color);
+		GameEngine.Engine.renderer2D.clear();
+
+		this.scene.render();
+	}
+
+	public clean(): void {
+		this.scene.clean();
+		this.marioEntity.clean();
+	}
+
+	//todo перенести в скрипт после реализации системы анимаций
+	private updateCharacters(time: GameEngine.Time): void {
+		const deltaTime = time.getDeltaTimeSec();
+		this.marioSpriteFlipTimeLeft -= deltaTime;
+		this.enemySpriteFlipTimeLeft -= deltaTime;
+
+		if (this.marioSpriteFlipTimeLeft < 0) {
+			this.marioSpriteFlipTimeLeft = this.marioSpriteFlipTime;
+			this.marioSpriteIndex++;
+			if (this.marioSpriteIndex >= this.marioSprites.length) {
+				this.marioSpriteIndex = 1;
+			}
+
+			this.marioEntity.getComponent(GameEngine.ECS.Sprite2DRendererComponent).sprite = this.marioSprites[this.marioSpriteIndex];
+		}
+
+		if (this.enemySpriteFlipTimeLeft < 0) {
+			this.enemySpriteFlipTimeLeft = this.enemySpriteFlipTime;
+			this.enemySpriteIndex++;
+			if (this.enemySpriteIndex >= this.enemySprites.length) {
+				this.enemySpriteIndex = 0;
+			}
+
+			this.enemyEntity.getComponent(GameEngine.ECS.Sprite2DRendererComponent).sprite = this.enemySprites[this.enemySpriteIndex];
+		}
+	}
+
+	private initDecorationsAndBlocks(context: GameEngine.GraphicsEngine.IGraphicsContext): void {
+		const decorationAndBlockSpriteSheetImage = new Image();
+		decorationAndBlockSpriteSheetImage.src = decorationAndBlockSpriteSheetSrc;
+		const decorationAndBlockSpriteSheetTexture = GameEngine.GraphicsEngine.ResourceFactory.create2DTexture(
+			context,
+			decorationAndBlockSpriteSheetImage,
+			4
+		);
+		const decorationAndBlockSpriteSize = new GameEngine.GraphicsEngine.Vector2(16, 16);
+
+		const blockSprite = GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(
+			decorationAndBlockSpriteSheetTexture,
+			new GameEngine.GraphicsEngine.Vector2(1, 11),
+			decorationAndBlockSpriteSize
+		)
+
+		for (let i = -9; i < 10; i++) {
+			const blockEntity = this.scene.createEntity("Block[" + i + "] entity");
+			const blockTransformComponent = blockEntity.getComponent(GameEngine.ECS.TransformComponent);
+			blockTransformComponent.position.setY(-1);
+			blockTransformComponent.position.setX(i);
+			const blockSpriteComponent = blockEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
+			blockSpriteComponent.sprite = blockSprite;
+		}
+	}
+
+	private initCharacters(context: GameEngine.GraphicsEngine.IGraphicsContext): void {
 		const characterSpriteSheetImage = new Image();
 		characterSpriteSheetImage.src = characterSpriteSheetSrc;
 		const characterSpriteSheetTexture = GameEngine.GraphicsEngine.ResourceFactory.create2DTexture(
@@ -95,80 +189,21 @@ class GameLayer extends GameEngine.Layer.BaseLayer {
 		);
 
 		this.enemyEntity = this.scene.createEntity("Enemy entity");
-		const enemyTransformComponent = this.enemyEntity.getComponent(GameEngine.ECS.TransformComponent);
-		enemyTransformComponent.position.setX(0.5);
 		const enemySpriteComponent = this.enemyEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
 		enemySpriteComponent.sprite = this.enemySprites[this.enemySpriteIndex];
 
 		this.marioEntity = this.scene.createEntity("Mario entity");
 		const marioTransformComponent = this.marioEntity.getComponent(GameEngine.ECS.TransformComponent);
-		marioTransformComponent.position.setX(-0.5);
-		marioTransformComponent.position.setZ(0.5);
+		marioTransformComponent.position.setX(-9);
 		const marioSpriteComponent = this.marioEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
 		marioSpriteComponent.sprite = this.marioSprites[this.marioSpriteIndex];
 		const cameraComponent = this.marioEntity.addComponent(GameEngine.ECS.CameraComponent);
 		cameraComponent.camera = new GameEngine.GraphicsEngine.OrthographicCamera(
 			this.graphicsElement.getWidth(),
-			this.graphicsElement.getHeight()
+			this.graphicsElement.getHeight(),
+			5
 		);
 		cameraComponent.primary = true;
-	}
-
-	public detach(): void {
-	}
-
-	public elementInput(event: GameEngine.EventSystem.ElementEvent): void {
-		if (event.getType() === GameEngine.EventSystem.ElementEventType.RESIZE) {
-			this.scene.resize(event.getWidth(), event.getHeight());
-		}
-	}
-
-	public keyboardInput(event: GameEngine.EventSystem.KeyboardEvent): void {
-	}
-
-	public mouseInput(event: GameEngine.EventSystem.MouseEvent): void {
-	}
-
-	public update(time: GameEngine.Time): void {
-		const deltaTime = time.getDeltaTimeSec();
-		this.marioSpriteFlipTimeLeft -= deltaTime;
-		this.enemySpriteFlipTimeLeft -= deltaTime;
-
-		if (this.marioSpriteFlipTimeLeft < 0) {
-			this.marioSpriteFlipTimeLeft = this.marioSpriteFlipTime;
-			this.marioSpriteIndex++;
-			if (this.marioSpriteIndex >= this.marioSprites.length) {
-				this.marioSpriteIndex = 1;
-			}
-
-			this.marioEntity.getComponent(GameEngine.ECS.Sprite2DRendererComponent).sprite = this.marioSprites[this.marioSpriteIndex];
-		}
-
-		if (this.enemySpriteFlipTimeLeft < 0) {
-			this.enemySpriteFlipTimeLeft = this.enemySpriteFlipTime;
-			this.enemySpriteIndex++;
-			if (this.enemySpriteIndex >= this.enemySprites.length) {
-				this.enemySpriteIndex = 0;
-			}
-
-			this.enemyEntity.getComponent(GameEngine.ECS.Sprite2DRendererComponent).sprite = this.enemySprites[this.enemySpriteIndex];
-		}
-
-		this.scene.update(time);
-	}
-
-	public render(): void {
-		GameEngine.Engine.renderer2D.resetStatistics();
-
-		GameEngine.Engine.renderer2D.setClearColor(this.color);
-		GameEngine.Engine.renderer2D.clear();
-
-		this.scene.render();
-	}
-
-	public clean(): void {
-		this.scene.clean();
-		this.marioEntity.clean();
 	}
 
 }

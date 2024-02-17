@@ -33,6 +33,7 @@ class GameLayer extends GameEngine.Layer.BaseLayer {
 		this.scene = new GameEngine.Scene(this.graphicsElement.getWidth(), this.graphicsElement.getHeight());
 
 		const context = this.graphicsElement.getGraphicsContext();
+		context.printDebugInfo();
 
 		this.initCharacters(context);
 		this.initDecorationsAndBlocks(context);

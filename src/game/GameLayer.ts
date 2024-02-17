@@ -1,7 +1,7 @@
 import characterSpriteSheetSrc from "../resources/character_spritesheet.png";
 import {GameEngine} from "#game_engine/src/namespace/game_engine";
 
-class GameLayer extends GameEngine.BaseLayer {
+class GameLayer extends GameEngine.Layer.BaseLayer {
 	private readonly graphicsElement: GameEngine.GraphicsEngine.GraphicsElement;
 	private readonly color: GameEngine.GraphicsEngine.Vector4;
 
@@ -95,18 +95,18 @@ class GameLayer extends GameEngine.BaseLayer {
 		);
 
 		this.enemyEntity = this.scene.createEntity("Enemy entity");
-		const enemyTransformComponent = this.enemyEntity.getComponent(GameEngine.TransformComponent);
+		const enemyTransformComponent = this.enemyEntity.getComponent(GameEngine.ECS.TransformComponent);
 		enemyTransformComponent.position.setX(0.5);
-		const enemySpriteComponent = this.enemyEntity.addComponent(GameEngine.Sprite2DRendererComponent);
+		const enemySpriteComponent = this.enemyEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
 		enemySpriteComponent.sprite = this.enemySprites[this.enemySpriteIndex];
 
 		this.marioEntity = this.scene.createEntity("Mario entity");
-		const marioTransformComponent = this.marioEntity.getComponent(GameEngine.TransformComponent);
+		const marioTransformComponent = this.marioEntity.getComponent(GameEngine.ECS.TransformComponent);
 		marioTransformComponent.position.setX(-0.5);
 		marioTransformComponent.position.setZ(0.5);
-		const marioSpriteComponent = this.marioEntity.addComponent(GameEngine.Sprite2DRendererComponent);
+		const marioSpriteComponent = this.marioEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
 		marioSpriteComponent.sprite = this.marioSprites[this.marioSpriteIndex];
-		const cameraComponent = this.marioEntity.addComponent(GameEngine.CameraComponent);
+		const cameraComponent = this.marioEntity.addComponent(GameEngine.ECS.CameraComponent);
 		cameraComponent.camera = new GameEngine.GraphicsEngine.OrthographicCamera(
 			this.graphicsElement.getWidth(),
 			this.graphicsElement.getHeight()
@@ -129,8 +129,8 @@ class GameLayer extends GameEngine.BaseLayer {
 	public mouseInput(event: GameEngine.EventSystem.MouseEvent): void {
 	}
 
-	public update(time: GameEngine.GraphicsEngine.Time): void {
-		const deltaTime = time.getDeltaTime() / 1000;
+	public update(time: GameEngine.Time): void {
+		const deltaTime = time.getDeltaTimeSec();
 		this.marioSpriteFlipTimeLeft -= deltaTime;
 		this.enemySpriteFlipTimeLeft -= deltaTime;
 
@@ -138,10 +138,10 @@ class GameLayer extends GameEngine.BaseLayer {
 			this.marioSpriteFlipTimeLeft = this.marioSpriteFlipTime;
 			this.marioSpriteIndex++;
 			if (this.marioSpriteIndex >= this.marioSprites.length) {
-				this.marioSpriteIndex = 0;
+				this.marioSpriteIndex = 1;
 			}
 
-			this.marioEntity.getComponent(GameEngine.Sprite2DRendererComponent).sprite = this.marioSprites[this.marioSpriteIndex];
+			this.marioEntity.getComponent(GameEngine.ECS.Sprite2DRendererComponent).sprite = this.marioSprites[this.marioSpriteIndex];
 		}
 
 		if (this.enemySpriteFlipTimeLeft < 0) {
@@ -151,17 +151,17 @@ class GameLayer extends GameEngine.BaseLayer {
 				this.enemySpriteIndex = 0;
 			}
 
-			this.enemyEntity.getComponent(GameEngine.Sprite2DRendererComponent).sprite = this.enemySprites[this.enemySpriteIndex];
+			this.enemyEntity.getComponent(GameEngine.ECS.Sprite2DRendererComponent).sprite = this.enemySprites[this.enemySpriteIndex];
 		}
 
 		this.scene.update(time);
 	}
 
 	public render(): void {
-		GameEngine.GameEngine.renderer2D.resetStatistics();
+		GameEngine.Engine.renderer2D.resetStatistics();
 
-		GameEngine.GameEngine.renderer2D.setClearColor(this.color);
-		GameEngine.GameEngine.renderer2D.clear();
+		GameEngine.Engine.renderer2D.setClearColor(this.color);
+		GameEngine.Engine.renderer2D.clear();
 
 		this.scene.render();
 	}

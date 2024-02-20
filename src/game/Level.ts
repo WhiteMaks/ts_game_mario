@@ -55,6 +55,7 @@ export class Level {
 		const enemyEntity = this.scene.createEntity("Enemy");
 		const enemyTransformComponent = enemyEntity.getComponent(GameEngine.ECS.TransformComponent);
 		enemyTransformComponent.position.setX(9);
+		enemyTransformComponent.position.setZ(0.5);
 		const enemyCharactersTextureComponent = enemyEntity.addComponent(GameEngine.ECS.Texture2DRendererComponent);
 		enemyCharactersTextureComponent.texture = characterSpriteSheetTexture;
 		enemyEntity.addComponent(GameEngine.ECS.TypeScriptComponent).bind(EnemyCreatorScript);

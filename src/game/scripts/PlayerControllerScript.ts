@@ -2,6 +2,9 @@ import {GameEngine} from "../../libs/game_engine/src/namespace/game_engine";
 
 export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 	private marioSpriteComponent!: GameEngine.ECS.Sprite2DRendererComponent;
+	private marioTransformComponent!: GameEngine.ECS.TransformComponent;
+
+	private cameraComponent!: GameEngine.ECS.CameraComponent;
 
 	private marioIdleSprites!: GameEngine.GraphicsEngine.Sprite2D[];
 	private marioIdleSpriteIndex!: number;
@@ -12,6 +15,8 @@ export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 	private marioRunSpriteIndex!: number;
 	private marioRunSpriteFlipTime!: number;
 	private marioRunSpriteFlipTimeLeft!: number;
+
+	private marioRunSpeed!: number;
 	
 	public init() {
 		const spriteSheetComponent = this.getComponent(GameEngine.ECS.Texture2DRendererComponent);
@@ -60,20 +65,36 @@ export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 		this.marioSpriteComponent = this.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
 		this.marioSpriteComponent.sprite = this.marioIdleSprites[this.marioIdleSpriteIndex];
 
+		this.marioTransformComponent = this.getComponent(GameEngine.ECS.TransformComponent);
+
+		this.cameraComponent = this.getComponent(GameEngine.ECS.CameraComponent);
+
 		spriteSheetComponent.remove();
+
+		this.marioRunSpeed = 5;
 	}
 
 	public update(time: GameEngine.Time): void {
 		const deltaTime = time.getDeltaTimeSec();
 
-		// if (
-		// 	GameEngine.EventSystem.Input.isKeyboardKeyPressed(GameEngine.EventSystem.Key.D) ||
-		// 	GameEngine.EventSystem.Input.isKeyboardKeyPressed(GameEngine.EventSystem.Key.A)
-		// ) {
+		const marioPosition = this.marioTransformComponent.position;
+		const marioRotation = this.marioTransformComponent.rotation;
+
+		if (GameEngine.EventSystem.Input.isKeyboardKeyPressed(GameEngine.EventSystem.Key.D)) {
+			marioRotation.setY(0);
+			marioPosition.setX(marioPosition.getX() + this.marioRunSpeed * deltaTime);
+
 			this.updateRunFrame(deltaTime);
-		// } else {
-		// 	this.updateIdleFrame(deltaTime);
-		// }
+		} else if (GameEngine.EventSystem.Input.isKeyboardKeyPressed(GameEngine.EventSystem.Key.A)) {
+			marioRotation.setY(180);
+			marioPosition.setX(marioPosition.getX() - this.marioRunSpeed * deltaTime);
+
+			this.updateRunFrame(deltaTime);
+		} else {
+			this.updateIdleFrame(deltaTime);
+		}
+
+		this.cameraComponent.camera.setPosition(new GameEngine.GraphicsEngine.Vector3(marioPosition.getX(), 6, 0));
 	}
 
 	private updateIdleFrame(deltaTime: number): void {

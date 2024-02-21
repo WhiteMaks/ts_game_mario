@@ -24,6 +24,7 @@ export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 		const spriteSheetTexture = spriteSheetComponent.texture;
 		const spriteSize = new GameEngine.GraphicsEngine.Vector2(16, 16);
 
+		//todo убрать после реализации системы анимации
 		this.marioIdleSpriteIndex = 0;
 		this.marioIdleSpriteFlipTime = 0.2;
 		this.marioIdleSpriteFlipTimeLeft = 0;
@@ -68,6 +69,7 @@ export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 		this.marioTransformComponent = this.getComponent(GameEngine.ECS.TransformComponent);
 
 		this.cameraComponent = this.getComponent(GameEngine.ECS.CameraComponent);
+		this.cameraComponent.camera.getPosition().setY(7);
 
 		spriteSheetComponent.remove();
 
@@ -94,7 +96,7 @@ export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 			this.updateIdleFrame(deltaTime);
 		}
 
-		this.cameraComponent.camera.setPosition(new GameEngine.GraphicsEngine.Vector3(marioPosition.getX(), 6, 0));
+		this.cameraComponent.camera.getPosition().setX(marioPosition.getX());
 	}
 
 	private updateIdleFrame(deltaTime: number): void {

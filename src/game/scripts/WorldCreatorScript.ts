@@ -72,6 +72,24 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 			bottomRightPipeSprite,
 			30, 0, 0
 		);
+
+		this.createBigPipe(
+			scene,
+			topLeftPipeSprite,
+			topRightPipeSprite,
+			bottomLeftPipeSprite,
+			bottomRightPipeSprite,
+			38, 0, 0
+		);
+
+		this.createBigPipe(
+			scene,
+			topLeftPipeSprite,
+			topRightPipeSprite,
+			bottomLeftPipeSprite,
+			bottomRightPipeSprite,
+			49, 0, 0
+		);
 	}
 
 	private createDecorations(
@@ -155,7 +173,7 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 		this.createSmallHill(
 			scene,
 			leftBigHillSprite,
-			centreBigHillSprite,
+			centreLeftBigHillSprite,
 			rightBigHillSprite,
 			topBigHillSprite,
 			8, 0, -0.5
@@ -175,6 +193,34 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 			centerBushSprite,
 			rightBushSprite,
 			33, 0, -0.5
+		);
+
+		this.createBigHill(
+			scene,
+			leftBigHillSprite,
+			centreLeftBigHillSprite,
+			centreBigHillSprite,
+			centreRightBigHillSprite,
+			rightBigHillSprite,
+			topBigHillSprite,
+			40, 0, -0.5
+		);
+
+		this.createBigBush(
+			scene,
+			leftBushSprite,
+			centerBushSprite,
+			rightBushSprite,
+			51, 0, -0.5
+		);
+
+		this.createSmallHill(
+			scene,
+			leftBigHillSprite,
+			centreLeftBigHillSprite,
+			rightBigHillSprite,
+			topBigHillSprite,
+			56, 0, -0.5
 		);
 	}
 
@@ -435,6 +481,33 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 		}
 	}
 
+	private createBigPipe(
+		scene: GameEngine.Scene,
+		topLeft: GameEngine.GraphicsEngine.Sprite2D,
+		topRight: GameEngine.GraphicsEngine.Sprite2D,
+		bottomLeft: GameEngine.GraphicsEngine.Sprite2D,
+		bottomRight: GameEngine.GraphicsEngine.Sprite2D,
+		x: number, y: number, z: number
+	): void {
+		this.createMediumPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y + 1, z);
+
+		const bottomLeftEntity = scene.createEntity("Big Pipe [bottom left] entity");
+		const bottomLeftTransformComponent = bottomLeftEntity.getComponent(GameEngine.ECS.TransformComponent);
+		bottomLeftTransformComponent.position.setX(x);
+		bottomLeftTransformComponent.position.setY(y);
+		bottomLeftTransformComponent.position.setZ(z);
+		const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
+		bottomLeftSpriteComponent.sprite = bottomLeft;
+
+		const bottomRightEntity = scene.createEntity("Big Pipe [bottom right] entity");
+		const bottomRightTransformComponent = bottomRightEntity.getComponent(GameEngine.ECS.TransformComponent);
+		bottomRightTransformComponent.position.setX(x + 1);
+		bottomRightTransformComponent.position.setY(y);
+		bottomRightTransformComponent.position.setZ(z);
+		const bottomRightSpriteComponent = bottomRightEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
+		bottomRightSpriteComponent.sprite = bottomRight;
+	}
+
 	private createMediumPipe(
 		scene: GameEngine.Scene,
 		topLeft: GameEngine.GraphicsEngine.Sprite2D,
@@ -443,6 +516,8 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 		bottomRight: GameEngine.GraphicsEngine.Sprite2D,
 		x: number, y: number, z: number
 	): void {
+		this.createSmallPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y + 1, z);
+
 		const bottomLeftEntity = scene.createEntity("Medium Pipe [bottom left] entity");
 		const bottomLeftTransformComponent = bottomLeftEntity.getComponent(GameEngine.ECS.TransformComponent);
 		bottomLeftTransformComponent.position.setX(x);
@@ -458,38 +533,6 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 		bottomRightTransformComponent.position.setZ(z);
 		const bottomRightSpriteComponent = bottomRightEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
 		bottomRightSpriteComponent.sprite = bottomRight;
-
-		const centerLeftEntity = scene.createEntity("Medium Pipe [center left] entity");
-		const centerLeftTransformComponent = centerLeftEntity.getComponent(GameEngine.ECS.TransformComponent);
-		centerLeftTransformComponent.position.setX(x);
-		centerLeftTransformComponent.position.setY(y + 1);
-		centerLeftTransformComponent.position.setZ(z);
-		const centerLeftSpriteComponent = centerLeftEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
-		centerLeftSpriteComponent.sprite = bottomLeft;
-
-		const centerRightEntity = scene.createEntity("Medium Pipe [center right] entity");
-		const centerRightTransformComponent = centerRightEntity.getComponent(GameEngine.ECS.TransformComponent);
-		centerRightTransformComponent.position.setX(x + 1);
-		centerRightTransformComponent.position.setY(y + 1);
-		centerRightTransformComponent.position.setZ(z);
-		const centerRightSpriteComponent = centerRightEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
-		centerRightSpriteComponent.sprite = bottomRight;
-
-		const topLeftEntity = scene.createEntity("Medium Pipe [top left] entity");
-		const topLeftTransformComponent = topLeftEntity.getComponent(GameEngine.ECS.TransformComponent);
-		topLeftTransformComponent.position.setX(x);
-		topLeftTransformComponent.position.setY(y + 2);
-		topLeftTransformComponent.position.setZ(z);
-		const topLeftSpriteComponent = topLeftEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
-		topLeftSpriteComponent.sprite = topLeft;
-
-		const topRightEntity = scene.createEntity("Medium Pipe [top right] entity");
-		const topRightTransformComponent = topRightEntity.getComponent(GameEngine.ECS.TransformComponent);
-		topRightTransformComponent.position.setX(x + 1);
-		topRightTransformComponent.position.setY(y + 2);
-		topRightTransformComponent.position.setZ(z);
-		const topRightSpriteComponent = topRightEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
-		topRightSpriteComponent.sprite = topRight;
 	}
 
 	private createSmallPipe(

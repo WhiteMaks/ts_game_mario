@@ -69,7 +69,7 @@ export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 		this.marioTransformComponent = this.getComponent(GameEngine.ECS.TransformComponent);
 
 		this.cameraComponent = this.getComponent(GameEngine.ECS.CameraComponent);
-		this.cameraComponent.camera.getPosition().setY(7);
+		this.cameraComponent.camera.getPosition().setY(7.5);
 
 		spriteSheetComponent.remove();
 

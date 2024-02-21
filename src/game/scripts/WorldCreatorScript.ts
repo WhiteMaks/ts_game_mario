@@ -61,7 +61,7 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 			topRightPipeSprite,
 			bottomLeftPipeSprite,
 			bottomRightPipeSprite,
-			20, 0, 0
+			20, 0
 		);
 
 		this.createMediumPipe(
@@ -70,7 +70,7 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 			topRightPipeSprite,
 			bottomLeftPipeSprite,
 			bottomRightPipeSprite,
-			30, 0, 0
+			30, 0
 		);
 
 		this.createBigPipe(
@@ -79,7 +79,7 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 			topRightPipeSprite,
 			bottomLeftPipeSprite,
 			bottomRightPipeSprite,
-			38, 0, 0
+			38, 0
 		);
 
 		this.createBigPipe(
@@ -88,7 +88,7 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 			topRightPipeSprite,
 			bottomLeftPipeSprite,
 			bottomRightPipeSprite,
-			49, 0, 0
+			49, 0
 		);
 	}
 
@@ -487,7 +487,7 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 		topRight: GameEngine.GraphicsEngine.Sprite2D,
 		bottomLeft: GameEngine.GraphicsEngine.Sprite2D,
 		bottomRight: GameEngine.GraphicsEngine.Sprite2D,
-		x: number, y: number, z: number
+		x: number, y: number, z: number = 0.1
 	): void {
 		this.createMediumPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y + 1, z);
 
@@ -514,7 +514,7 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 		topRight: GameEngine.GraphicsEngine.Sprite2D,
 		bottomLeft: GameEngine.GraphicsEngine.Sprite2D,
 		bottomRight: GameEngine.GraphicsEngine.Sprite2D,
-		x: number, y: number, z: number
+		x: number, y: number, z: number = 0.1
 	): void {
 		this.createSmallPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y + 1, z);
 
@@ -541,7 +541,7 @@ export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
 		topRight: GameEngine.GraphicsEngine.Sprite2D,
 		bottomLeft: GameEngine.GraphicsEngine.Sprite2D,
 		bottomRight: GameEngine.GraphicsEngine.Sprite2D,
-		x: number, y: number, z: number
+		x: number, y: number, z: number = 0.1
 	): void {
 		const bottomLeftEntity = scene.createEntity("Small Pipe [bottom left] entity");
 		const bottomLeftTransformComponent = bottomLeftEntity.getComponent(GameEngine.ECS.TransformComponent);

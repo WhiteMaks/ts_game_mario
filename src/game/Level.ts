@@ -34,31 +34,11 @@ export class Level {
 			characterSpriteSheetImage,
 			4
 		);
+		const characterSpriteSize = new GameEngine.GraphicsEngine.Vector2(16, 16);
 
-		const worldEntity = this.scene.createEntity("World");
-		const worldTextureComponent = worldEntity.addComponent(GameEngine.ECS.Texture2DRendererComponent);
-		worldTextureComponent.texture = decorationAndBlockSpriteSheetTexture;
-		worldEntity.addComponent(GameEngine.ECS.TypeScriptComponent).bind(WorldCreatorScript);
-
-		const playerEntity = this.scene.createEntity("Player");
-		const playerCharactersTextureComponent = playerEntity.addComponent(GameEngine.ECS.Texture2DRendererComponent);
-		playerCharactersTextureComponent.texture = characterSpriteSheetTexture;
-		playerEntity.addComponent(GameEngine.ECS.TypeScriptComponent).bind(PlayerControllerScript);
-		const cameraComponent = playerEntity.addComponent(GameEngine.ECS.CameraComponent);
-		cameraComponent.camera = new GameEngine.GraphicsEngine.OrthographicCamera(
-			this.graphicsElement.getWidth(),
-			this.graphicsElement.getHeight(),
-			10
-		);
-		cameraComponent.primary = true;
-
-		const enemyEntity = this.scene.createEntity("Enemy");
-		const enemyTransformComponent = enemyEntity.getComponent(GameEngine.ECS.TransformComponent);
-		enemyTransformComponent.position.setX(9);
-		enemyTransformComponent.position.setZ(0.5);
-		const enemyCharactersTextureComponent = enemyEntity.addComponent(GameEngine.ECS.Texture2DRendererComponent);
-		enemyCharactersTextureComponent.texture = characterSpriteSheetTexture;
-		enemyEntity.addComponent(GameEngine.ECS.TypeScriptComponent).bind(EnemyCreatorScript);
+		this.addWorldOnScene(decorationAndBlockSpriteSheetTexture);
+		this.addMarioOnScene(characterSpriteSheetTexture, characterSpriteSize);
+		this.addEnemiesOnScene(characterSpriteSheetTexture);
 	}
 
 	public resize(width: number, height: number): void {
@@ -88,5 +68,71 @@ export class Level {
 
 	public clean(): void {
 		this.scene.clean();
+	}
+
+	private addWorldOnScene(decorationAndBlockSpriteSheetTexture: GameEngine.GraphicsEngine.ITexture): void {
+		const worldEntity = this.scene.createEntity("World");
+		const worldTextureComponent = worldEntity.addComponent(GameEngine.ECS.Texture2DRendererComponent);
+		worldTextureComponent.texture = decorationAndBlockSpriteSheetTexture;
+		worldEntity.addComponent(GameEngine.ECS.TypeScriptComponent).bind(WorldCreatorScript);
+	}
+
+	private addEnemiesOnScene(characterSpriteSheetTexture: GameEngine.GraphicsEngine.ITexture): void {
+		const enemyEntity = this.scene.createEntity("Enemy");
+		const enemyTransformComponent = enemyEntity.getComponent(GameEngine.ECS.TransformComponent);
+		enemyTransformComponent.position.setX(9);
+		enemyTransformComponent.position.setZ(0.5);
+		const enemyCharactersTextureComponent = enemyEntity.addComponent(GameEngine.ECS.Texture2DRendererComponent);
+		enemyCharactersTextureComponent.texture = characterSpriteSheetTexture;
+		enemyEntity.addComponent(GameEngine.ECS.TypeScriptComponent).bind(EnemyCreatorScript);
+	}
+
+	private addMarioOnScene(
+		characterSpriteSheetTexture: GameEngine.GraphicsEngine.ITexture,
+		characterSpriteSize: GameEngine.GraphicsEngine.Vector2
+	): void {
+		const playerEntity = this.scene.createEntity("Player");
+		playerEntity.addComponent(GameEngine.ECS.TypeScriptComponent).bind(PlayerControllerScript);
+		const playerCameraComponent = playerEntity.addComponent(GameEngine.ECS.CameraComponent);
+		playerCameraComponent.camera = new GameEngine.GraphicsEngine.OrthographicCamera(
+			this.graphicsElement.getWidth(),
+			this.graphicsElement.getHeight(),
+			10
+		);
+		playerCameraComponent.primary = true;
+		const playerSprite2DRendererComponent = playerEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
+		const playerIdleSprite = GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(
+			characterSpriteSheetTexture,
+			new GameEngine.GraphicsEngine.Vector2(0, 1),
+			characterSpriteSize
+		);
+		playerSprite2DRendererComponent.sprite = playerIdleSprite;
+		const playerStateMachineComponent = playerEntity.addComponent(GameEngine.ECS.State2DAnimationMachineComponent);
+		const idle = new GameEngine.ECS.Animation2DSpriteState("Idle");
+		const idleFrameTime = 2000;
+		idle.addFrame(playerIdleSprite, idleFrameTime);
+		const run = new GameEngine.ECS.Animation2DSpriteState("Run");
+		const runFrameTime = 150;
+		run.addFrame(
+			GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(
+				characterSpriteSheetTexture,
+				new GameEngine.GraphicsEngine.Vector2(1, 1),
+				characterSpriteSize
+			), runFrameTime);
+		run.addFrame(
+			GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(
+				characterSpriteSheetTexture,
+				new GameEngine.GraphicsEngine.Vector2(2, 1),
+				characterSpriteSize
+			), runFrameTime);
+		run.addFrame(
+			GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(
+				characterSpriteSheetTexture,
+				new GameEngine.GraphicsEngine.Vector2(3, 1),
+				characterSpriteSize
+			), runFrameTime);
+		playerStateMachineComponent.addState(idle);
+		playerStateMachineComponent.addState(run);
+		playerStateMachineComponent.setDefaultStateName(idle.getName());
 	}
 }

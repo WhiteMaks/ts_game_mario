@@ -6,13 +6,13 @@ export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 	private cameraComponent!: GameEngine.ECS.CameraComponent;
 
 	private marioRunSpeed!: number;
-	
+
 	public init() {
 		this.marioAnimationStateComponent = this.getComponent(GameEngine.ECS.State2DAnimationMachineComponent);
 		this.marioTransformComponent = this.getComponent(GameEngine.ECS.TransformComponent);
 
 		this.cameraComponent = this.getComponent(GameEngine.ECS.CameraComponent);
-		this.cameraComponent.camera.getPosition().setY(7.5);
+		this.cameraComponent.camera.getPosition().setY(5.5);
 
 		this.marioRunSpeed = 5;
 	}
@@ -23,21 +23,31 @@ export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
 		const marioPosition = this.marioTransformComponent.position;
 		const marioRotation = this.marioTransformComponent.rotation;
 
-		if (GameEngine.EventSystem.Input.isKeyboardKeyPressed(GameEngine.EventSystem.Key.D)) {
-			marioRotation.setY(0);
-			marioPosition.setX(marioPosition.getX() + this.marioRunSpeed * deltaTime);
+		const horizontalAxis = GameEngine.EventSystem.Input.getHorizontalAxis();
 
-			this.marioAnimationStateComponent.play("Run");
-		} else if (GameEngine.EventSystem.Input.isKeyboardKeyPressed(GameEngine.EventSystem.Key.A)) {
+		if (horizontalAxis < 0) {
 			marioRotation.setY(180);
-			marioPosition.setX(marioPosition.getX() - this.marioRunSpeed * deltaTime);
-
-			this.marioAnimationStateComponent.play("Run");
-		} else {
-			this.marioAnimationStateComponent.play("Idle");
+		} else if (horizontalAxis > 0) {
+			marioRotation.setY(0);
 		}
 
+		if (horizontalAxis === 0) {
+			this.playIdleAnimation();
+		} else {
+			this.playRunAnimation();
+		}
+
+		marioPosition.setX(marioPosition.getX() + this.marioRunSpeed * deltaTime * horizontalAxis);
+
 		this.cameraComponent.camera.getPosition().setX(marioPosition.getX());
+	}
+
+	private playRunAnimation(): void {
+		this.marioAnimationStateComponent.play("Run");
+	}
+
+	private playIdleAnimation(): void {
+		this.marioAnimationStateComponent.play("Idle");
 	}
 
 }

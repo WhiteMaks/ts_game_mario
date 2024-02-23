@@ -93,13 +93,15 @@ export class Level {
 	): void {
 		const playerEntity = this.scene.createEntity("Player");
 		playerEntity.addComponent(GameEngine.ECS.TypeScriptComponent).bind(PlayerControllerScript);
+
 		const playerCameraComponent = playerEntity.addComponent(GameEngine.ECS.CameraComponent);
 		playerCameraComponent.camera = new GameEngine.GraphicsEngine.OrthographicCamera(
 			this.graphicsElement.getWidth(),
 			this.graphicsElement.getHeight(),
-			10
+			8
 		);
 		playerCameraComponent.primary = true;
+
 		const playerSprite2DRendererComponent = playerEntity.addComponent(GameEngine.ECS.Sprite2DRendererComponent);
 		const playerIdleSprite = GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(
 			characterSpriteSheetTexture,
@@ -107,10 +109,15 @@ export class Level {
 			characterSpriteSize
 		);
 		playerSprite2DRendererComponent.sprite = playerIdleSprite;
+
 		const playerStateMachineComponent = playerEntity.addComponent(GameEngine.ECS.State2DAnimationMachineComponent);
+
 		const idle = new GameEngine.ECS.Animation2DSpriteState("Idle");
 		const idleFrameTime = 2000;
 		idle.addFrame(playerIdleSprite, idleFrameTime);
+		playerStateMachineComponent.addState(idle);
+		playerStateMachineComponent.setDefaultStateName(idle.getName());
+
 		const run = new GameEngine.ECS.Animation2DSpriteState("Run");
 		const runFrameTime = 150;
 		run.addFrame(
@@ -131,8 +138,6 @@ export class Level {
 				new GameEngine.GraphicsEngine.Vector2(3, 1),
 				characterSpriteSize
 			), runFrameTime);
-		playerStateMachineComponent.addState(idle);
 		playerStateMachineComponent.addState(run);
-		playerStateMachineComponent.setDefaultStateName(idle.getName());
 	}
 }

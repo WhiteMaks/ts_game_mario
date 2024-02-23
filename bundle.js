@@ -1,1 +1,4439 @@
-(()=>{"use strict";var e={3580:(e,t,n)=>{n.r(t),n.d(t,{default:()=>r});const r=n.p+"a29134208ca372ec3037f95e39a9d541.png"},100:(e,t,n)=>{n.r(t),n.d(t,{default:()=>r});const r=n.p+"73fb29bb69182dff4442752dca889c96.png"},7848:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0});const r=n(4284);class i extends r.GameEngine.Engine{constructor(e){super(e)}}t.default=i},84:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0});const r=n(8e3),i=n(4284);class s extends i.GameEngine.Layer.BaseLayer{constructor(e){super("Game layer"),this.graphicsElement=e}attach(){const e=new i.GameEngine.Scene(this.graphicsElement.getWidth(),this.graphicsElement.getHeight());this.level=new r.Level(e,this.graphicsElement)}detach(){}elementInput(e){e.getType()===i.GameEngine.EventSystem.ElementEventType.RESIZE&&this.level.resize(e.getWidth(),e.getHeight())}keyboardInput(e){this.level.keyboardInput(e)}mouseInput(e){this.level.mouseInput(e)}update(e){this.level.update(e)}render(){this.level.render()}clean(){this.level.clean()}}t.default=s},8e3:function(e,t,n){var r=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0}),t.Level=void 0;const i=r(n(100)),s=r(n(3580)),o=n(7816),a=n(8228),h=n(6832),c=n(4284);t.Level=class{constructor(e,t){this.scene=e,this.graphicsElement=t,this.color=new c.GameEngine.GraphicsEngine.Vector4(.41,.57,.96,1);const n=this.graphicsElement.getGraphicsContext();n.printDebugInfo();const r=new Image;r.src=i.default;const o=c.GameEngine.GraphicsEngine.ResourceFactory.create2DTexture(n,r,4),a=new Image;a.src=s.default;const h=c.GameEngine.GraphicsEngine.ResourceFactory.create2DTexture(n,a,4),u=new c.GameEngine.GraphicsEngine.Vector2(16,16);this.addWorldOnScene(o),this.addMarioOnScene(h,u),this.addEnemiesOnScene(h)}resize(e,t){this.scene.resize(e,t)}keyboardInput(e){}mouseInput(e){}update(e){this.scene.update(e)}render(){c.GameEngine.Engine.renderer2D.resetStatistics(),c.GameEngine.Engine.renderer2D.setClearColor(this.color),c.GameEngine.Engine.renderer2D.clear(),this.scene.render()}clean(){this.scene.clean()}addWorldOnScene(e){const t=this.scene.createEntity("World");t.addComponent(c.GameEngine.ECS.Texture2DRendererComponent).texture=e,t.addComponent(c.GameEngine.ECS.TypeScriptComponent).bind(o.WorldCreatorScript)}addEnemiesOnScene(e){const t=this.scene.createEntity("Enemy"),n=t.getComponent(c.GameEngine.ECS.TransformComponent);n.position.setX(9),n.position.setZ(.5),t.addComponent(c.GameEngine.ECS.Texture2DRendererComponent).texture=e,t.addComponent(c.GameEngine.ECS.TypeScriptComponent).bind(h.EnemyCreatorScript)}addMarioOnScene(e,t){const n=this.scene.createEntity("Player");n.addComponent(c.GameEngine.ECS.TypeScriptComponent).bind(a.PlayerControllerScript);const r=n.addComponent(c.GameEngine.ECS.CameraComponent);r.camera=new c.GameEngine.GraphicsEngine.OrthographicCamera(this.graphicsElement.getWidth(),this.graphicsElement.getHeight(),10),r.primary=!0;const i=n.addComponent(c.GameEngine.ECS.Sprite2DRendererComponent),s=c.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(e,new c.GameEngine.GraphicsEngine.Vector2(0,1),t);i.sprite=s;const o=n.addComponent(c.GameEngine.ECS.State2DAnimationMachineComponent),h=new c.GameEngine.ECS.Animation2DSpriteState("Idle");h.addFrame(s,2e3);const u=new c.GameEngine.ECS.Animation2DSpriteState("Run");u.addFrame(c.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(e,new c.GameEngine.GraphicsEngine.Vector2(1,1),t),150),u.addFrame(c.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(e,new c.GameEngine.GraphicsEngine.Vector2(2,1),t),150),u.addFrame(c.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(e,new c.GameEngine.GraphicsEngine.Vector2(3,1),t),150),o.addState(h),o.addState(u),o.setDefaultStateName(h.getName())}}},6832:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.EnemyCreatorScript=void 0;const r=n(4284);class i extends r.GameEngine.ECS.BaseScript{init(){const e=this.getComponent(r.GameEngine.ECS.Texture2DRendererComponent),t=e.texture,n=new r.GameEngine.GraphicsEngine.Vector2(16,16);this.enemyRunSpriteIndex=0,this.enemyRunSpriteFlipTime=.25,this.enemyRunSpriteFlipTimeLeft=0,this.enemyRunSprites=[],this.enemyRunSprites.push(r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(0,0),n)),this.enemyRunSprites.push(r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(1,0),n)),this.enemySpriteComponent=this.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent),this.enemySpriteComponent.sprite=this.enemyRunSprites[this.enemyRunSpriteIndex],e.remove()}update(e){const t=e.getDeltaTimeSec();this.updateRunFrame(t)}updateRunFrame(e){this.enemyRunSpriteFlipTimeLeft-=e,this.enemyRunSpriteFlipTimeLeft<0&&(this.enemyRunSpriteFlipTimeLeft=this.enemyRunSpriteFlipTime,this.enemyRunSpriteIndex++,this.enemyRunSpriteIndex>=this.enemyRunSprites.length&&(this.enemyRunSpriteIndex=0),this.enemySpriteComponent.sprite=this.enemyRunSprites[this.enemyRunSpriteIndex])}}t.EnemyCreatorScript=i},8228:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.PlayerControllerScript=void 0;const r=n(4284);class i extends r.GameEngine.ECS.BaseScript{init(){this.marioAnimationStateComponent=this.getComponent(r.GameEngine.ECS.State2DAnimationMachineComponent),this.marioTransformComponent=this.getComponent(r.GameEngine.ECS.TransformComponent),this.cameraComponent=this.getComponent(r.GameEngine.ECS.CameraComponent),this.cameraComponent.camera.getPosition().setY(7.5),this.marioRunSpeed=5}update(e){const t=e.getDeltaTimeSec(),n=this.marioTransformComponent.position,i=this.marioTransformComponent.rotation;r.GameEngine.EventSystem.Input.isKeyboardKeyPressed(r.GameEngine.EventSystem.Key.D)?(i.setY(0),n.setX(n.getX()+this.marioRunSpeed*t),this.marioAnimationStateComponent.play("Run")):r.GameEngine.EventSystem.Input.isKeyboardKeyPressed(r.GameEngine.EventSystem.Key.A)?(i.setY(180),n.setX(n.getX()-this.marioRunSpeed*t),this.marioAnimationStateComponent.play("Run")):this.marioAnimationStateComponent.play("Idle"),this.cameraComponent.camera.getPosition().setX(n.getX())}}t.PlayerControllerScript=i},7816:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WorldCreatorScript=void 0;const r=n(4284);class i extends r.GameEngine.ECS.BaseScript{init(){const e=this.getScene(),t=this.getComponent(r.GameEngine.ECS.Texture2DRendererComponent),n=t.texture,i=new r.GameEngine.GraphicsEngine.Vector2(16,16);this.createDecorations(e,n,i),this.createObstacles(e,n,i),t.remove()}update(e){}createObstacles(e,t,n){const i=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(0,11),n),s=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(2,2),n),o=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(3,2),n),a=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(5,3),n),h=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(6,3),n);this.createFloor(e,i,-8,61),this.createSmallPipe(e,s,o,a,h,20,0),this.createMediumPipe(e,s,o,a,h,30,0),this.createBigPipe(e,s,o,a,h,38,0),this.createBigPipe(e,s,o,a,h,49,0)}createDecorations(e,t,n){const i=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(3,5),n),s=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(4,5),n),o=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(3,6),n),a=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(5,6),n),h=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(5,5),n),c=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(4,6),n),u=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(6,5),n),d=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(6,6),n),m=r.GameEngine.GraphicsEngine.ResourceFactory.createSprite2D(t,new r.GameEngine.GraphicsEngine.Vector2(6,7),n);this.createBigHill(e,i,s,o,a,h,c,-8,0,-.5),this.createBigBush(e,u,d,m,3,0,-.5),this.createSmallHill(e,i,s,h,c,8,0,-.5),this.createSmallBush(e,u,d,m,15,0,-.5),this.createMediumBush(e,u,d,m,33,0,-.5),this.createBigHill(e,i,s,o,a,h,c,40,0,-.5),this.createBigBush(e,u,d,m,51,0,-.5),this.createSmallHill(e,i,s,h,c,56,0,-.5)}createSmallBush(e,t,n,i,s,o,a){const h=e.createEntity("Small Bush [left] entity"),c=h.getComponent(r.GameEngine.ECS.TransformComponent);c.position.setX(s),c.position.setY(o),c.position.setZ(a),h.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=t;const u=e.createEntity("Small Bush [center] entity"),d=u.getComponent(r.GameEngine.ECS.TransformComponent);d.position.setX(s+1),d.position.setY(o),d.position.setZ(a),u.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const m=e.createEntity("Small Bush [right] entity"),p=m.getComponent(r.GameEngine.ECS.TransformComponent);p.position.setX(s+2),p.position.setY(o),p.position.setZ(a),m.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=i}createMediumBush(e,t,n,i,s,o,a){const h=e.createEntity("Big Bush [left] entity"),c=h.getComponent(r.GameEngine.ECS.TransformComponent);c.position.setX(s),c.position.setY(o),c.position.setZ(a),h.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=t;const u=e.createEntity("Big Bush [center left] entity"),d=u.getComponent(r.GameEngine.ECS.TransformComponent);d.position.setX(s+1),d.position.setY(o),d.position.setZ(a),u.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const m=e.createEntity("Big Bush [center right] entity"),p=m.getComponent(r.GameEngine.ECS.TransformComponent);p.position.setX(s+2),p.position.setY(o),p.position.setZ(a),m.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const l=e.createEntity("Big Bush [right] entity"),f=l.getComponent(r.GameEngine.ECS.TransformComponent);f.position.setX(s+3),f.position.setY(o),f.position.setZ(a),l.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=i}createBigBush(e,t,n,i,s,o,a){const h=e.createEntity("Big Bush [left] entity"),c=h.getComponent(r.GameEngine.ECS.TransformComponent);c.position.setX(s),c.position.setY(o),c.position.setZ(a),h.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=t;const u=e.createEntity("Big Bush [center left] entity"),d=u.getComponent(r.GameEngine.ECS.TransformComponent);d.position.setX(s+1),d.position.setY(o),d.position.setZ(a),u.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const m=e.createEntity("Big Bush [center] entity"),p=m.getComponent(r.GameEngine.ECS.TransformComponent);p.position.setX(s+2),p.position.setY(o),p.position.setZ(a),m.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const l=e.createEntity("Big Bush [center right] entity"),f=l.getComponent(r.GameEngine.ECS.TransformComponent);f.position.setX(s+3),f.position.setY(o),f.position.setZ(a),l.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const g=e.createEntity("Big Bush [right] entity"),y=g.getComponent(r.GameEngine.ECS.TransformComponent);y.position.setX(s+4),y.position.setY(o),y.position.setZ(a),g.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=i}createSmallHill(e,t,n,i,s,o,a,h){const c=e.createEntity("Small Hill [bottom left] entity"),u=c.getComponent(r.GameEngine.ECS.TransformComponent);u.position.setX(o),u.position.setY(a),u.position.setZ(h),c.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=t;const d=e.createEntity("Small Hill [bottom center] entity"),m=d.getComponent(r.GameEngine.ECS.TransformComponent);m.position.setX(o+1),m.position.setY(a),m.position.setZ(h),d.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const p=e.createEntity("Small Hill [bottom right] entity"),l=p.getComponent(r.GameEngine.ECS.TransformComponent);l.position.setX(o+2),l.position.setY(a),l.position.setZ(h),p.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=i;const f=e.createEntity("Small Hill [top] entity"),g=f.getComponent(r.GameEngine.ECS.TransformComponent);g.position.setX(o+1),g.position.setY(a+1),g.position.setZ(h),f.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=s}createBigHill(e,t,n,i,s,o,a,h,c,u){const d=e.createEntity("Big Hill [bottom left] entity"),m=d.getComponent(r.GameEngine.ECS.TransformComponent);m.position.setX(h),m.position.setY(c),m.position.setZ(u),d.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=t;const p=e.createEntity("Big Hill [bottom center left] entity"),l=p.getComponent(r.GameEngine.ECS.TransformComponent);l.position.setX(h+1),l.position.setY(c),l.position.setZ(u),p.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const f=e.createEntity("Big Hill [bottom center] entity"),g=f.getComponent(r.GameEngine.ECS.TransformComponent);g.position.setX(h+2),g.position.setY(c),g.position.setZ(u),f.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=i;const y=e.createEntity("Big Hill [bottom center right] entity"),E=y.getComponent(r.GameEngine.ECS.TransformComponent);E.position.setX(h+3),E.position.setY(c),E.position.setZ(u),y.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=s;const x=e.createEntity("Big Hill [bottom right] entity"),S=x.getComponent(r.GameEngine.ECS.TransformComponent);S.position.setX(h+4),S.position.setY(c),S.position.setZ(u),x.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=o;const C=e.createEntity("Big Hill [top left] entity"),v=C.getComponent(r.GameEngine.ECS.TransformComponent);v.position.setX(h+1),v.position.setY(c+1),v.position.setZ(u),C.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=t;const _=e.createEntity("Big Hill [top centre] entity"),b=_.getComponent(r.GameEngine.ECS.TransformComponent);b.position.setX(h+2),b.position.setY(c+1),b.position.setZ(u),_.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n;const T=e.createEntity("Big Hill [top right] entity"),P=T.getComponent(r.GameEngine.ECS.TransformComponent);P.position.setX(h+3),P.position.setY(c+1),P.position.setZ(u),T.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=o;const w=e.createEntity("Big Hill [top] entity"),M=w.getComponent(r.GameEngine.ECS.TransformComponent);M.position.setX(h+2),M.position.setY(c+2),M.position.setZ(u),w.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=a}createFloor(e,t,n,i){for(let s=-1;s>-3;s--)for(let o=n;o<i;o++){const n=e.createEntity("Floor["+s+"]["+o+"] entity"),i=n.getComponent(r.GameEngine.ECS.TransformComponent);i.position.setX(o),i.position.setY(s),n.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=t}}createBigPipe(e,t,n,i,s,o,a,h=.1){this.createMediumPipe(e,t,n,i,s,o,a+1,h);const c=e.createEntity("Big Pipe [bottom left] entity"),u=c.getComponent(r.GameEngine.ECS.TransformComponent);u.position.setX(o),u.position.setY(a),u.position.setZ(h),c.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=i;const d=e.createEntity("Big Pipe [bottom right] entity"),m=d.getComponent(r.GameEngine.ECS.TransformComponent);m.position.setX(o+1),m.position.setY(a),m.position.setZ(h),d.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=s}createMediumPipe(e,t,n,i,s,o,a,h=.1){this.createSmallPipe(e,t,n,i,s,o,a+1,h);const c=e.createEntity("Medium Pipe [bottom left] entity"),u=c.getComponent(r.GameEngine.ECS.TransformComponent);u.position.setX(o),u.position.setY(a),u.position.setZ(h),c.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=i;const d=e.createEntity("Medium Pipe [bottom right] entity"),m=d.getComponent(r.GameEngine.ECS.TransformComponent);m.position.setX(o+1),m.position.setY(a),m.position.setZ(h),d.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=s}createSmallPipe(e,t,n,i,s,o,a,h=.1){const c=e.createEntity("Small Pipe [bottom left] entity"),u=c.getComponent(r.GameEngine.ECS.TransformComponent);u.position.setX(o),u.position.setY(a),u.position.setZ(h),c.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=i;const d=e.createEntity("Small Pipe [bottom right] entity"),m=d.getComponent(r.GameEngine.ECS.TransformComponent);m.position.setX(o+1),m.position.setY(a),m.position.setZ(h),d.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=s;const p=e.createEntity("Small Pipe [top left] entity"),l=p.getComponent(r.GameEngine.ECS.TransformComponent);l.position.setX(o),l.position.setY(a+1),l.position.setZ(h),p.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=t;const f=e.createEntity("Small Pipe [top right] entity"),g=f.getComponent(r.GameEngine.ECS.TransformComponent);g.position.setX(o+1),g.position.setY(a+1),g.position.setZ(h),f.addComponent(r.GameEngine.ECS.Sprite2DRendererComponent).sprite=n}}t.WorldCreatorScript=i},1740:function(e,t,n){var r=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0});const i=r(n(7848)),s=r(n(84)),o=document.getElementById("game");if(!o)throw new Error("Game element nof found");const a=new i.default(o);a.pushLayer(new s.default(a.getGraphicsElement())),a.init2DRenderer(),a.start()},2800:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Engine=void 0;const r=n(6228),i=n(480),s=n(1720),o=n(7864);class a extends o.GraphicsEngine.GraphicsApplication{constructor(e,t=o.GraphicsEngine.RendererAPI.WEB_GL){super(e),o.GraphicsEngine.Renderer.setAPI(t),this.shaderProgramLibrary=new o.GraphicsEngine.ShaderProgramLibrary,this.layerStack=new i.Layer.BaseLayerStack,this.element=new s.EventSystem.Element(16),this.mouse=new s.EventSystem.Mouse(16),this.keyboard=new s.EventSystem.Keyboard(16),this.time=new r.Time,s.EventSystem.Input.instance=new s.EventSystem.BaseInput(this.mouse,this.keyboard)}init(){super.init();const e=this.getGraphicsElement();this.element.onResize(e.getWidth(),e.getHeight());const t=e.getCanvasElement();this.addMouseListener(t),this.addKeyboardListener(t),this.addElementListener(e)}input(){super.input();const e=this.layerStack.getLayers().reverse(),t=this.mouse.read();if(t.isValid())for(let n of e)n.mouseInput(t);const n=this.keyboard.readKey();if(n.isValid())for(let t of e)t.keyboardInput(n);const r=this.element.read();if(r.isValid())for(let t of e)t.elementInput(r)}update(e){super.update(e),this.time.update(e);const t=this.layerStack.getLayers();for(let e of t)e.update(this.time);this.mouse.updateDirection()}render(){const e=this.layerStack.getLayers();for(let t of e)t.render()}clean(){this.mouse.flush(),this.keyboard.flush(),this.element.flush();const e=this.layerStack.getLayers();for(let t of e)t.clean();this.shaderProgramLibrary.clean(),a.renderer2D.clean(),super.clean()}init2DRenderer(e=null){const t=this.getContext();null===e&&(e=o.GraphicsEngine.ShaderProgramFactory.createProgram(t,"2D Default Shader Program",o.GraphicsEngine.Default2DShader.getVertexShader(),o.GraphicsEngine.Default2DShader.getFragmentShader())),this.saveShaderProgram(e),a.renderer2D=o.GraphicsEngine.RendererFactory.create2D(t),a.renderer2D.init(t,e)}saveShaderProgram(e){this.shaderProgramLibrary.add(e)}pushLayer(e){this.layerStack.push(e)}pushOverlayLayer(e){this.layerStack.pushOverlay(e)}getContext(){return this.getGraphicsElement().getGraphicsContext()}addMouseListener(e){e.addEventListener("mousedown",(e=>{0!==e.button?2!==e.button||this.mouse.onRightKeyPressed(e.offsetX,e.offsetY):this.mouse.onLeftKeyPressed(e.offsetX,e.offsetY)})),e.addEventListener("mouseup",(e=>{0!==e.button?2!==e.button||this.mouse.onRightKeyReleased(e.offsetX,e.offsetY):this.mouse.onLeftKeyReleased(e.offsetX,e.offsetY)})),e.addEventListener("mousemove",(e=>this.mouse.onMouseMove(e.offsetX,e.offsetY))),e.addEventListener("mouseenter",(()=>this.mouse.onMouseEnter())),e.addEventListener("mouseleave",(()=>this.mouse.onMouseLeave()))}addKeyboardListener(e){document.addEventListener("keydown",(e=>this.keyboard.onKeyPressed(e.code)),!1),document.addEventListener("keyup",(e=>this.keyboard.onKeyReleased(e.code)),!1),document.addEventListener("keypress",(e=>this.keyboard.onChar(e.key)),!1)}addElementListener(e){window.addEventListener("resize",(()=>{e.resize(),this.element.onResize(e.getWidth(),e.getHeight())}))}}t.Engine=a},6048:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Scene=void 0;const r=n(2800),i=n(2292);class s{constructor(e,t){this.transformSystemComponent=i.ECS.TransformSystemComponent.getInstance(),this.sprite2DRendererSystemComponent=i.ECS.Sprite2DRendererSystemComponent.getInstance(),this.tagSystemComponent=i.ECS.TagSystemComponent.getInstance(),this.cameraSystemComponent=i.ECS.CameraSystemComponent.getInstance(),this.texture2DRendererSystemComponent=i.ECS.Texture2DRendererSystemComponent.getInstance(),this.colorRendererSystemComponent=i.ECS.ColorRendererSystemComponent.getInstance(),this.typeScriptSystemComponent=i.ECS.TypeScriptSystemComponent.getInstance(),this.state2DMachineSystemComponent=i.ECS.State2DAnimationMachineSystemComponent.getInstance(),this.width=e,this.height=t,this.entities=[]}createEntity(e="Entity"){const t=new i.ECS.Entity(s.entityId++,this);return t.addComponent(i.ECS.TransformComponent),t.addComponent(i.ECS.TagComponent).tag=e,this.entities.push(t),t}resizeCamera(){this.cameraSystemComponent.resize(this.width,this.height)}resize(e,t){this.width=e,this.height=t,this.resizeCamera()}update(e){this.transformSystemComponent.update(e),this.sprite2DRendererSystemComponent.update(e),this.tagSystemComponent.update(e),this.cameraSystemComponent.update(e),this.colorRendererSystemComponent.update(e),this.texture2DRendererSystemComponent.update(e),this.typeScriptSystemComponent.update(e),this.state2DMachineSystemComponent.update(e)}render(){const e=this.cameraSystemComponent.getPrimaryCamera();e&&(r.Engine.renderer2D.begin(e),this.colorRendererSystemComponent.render(),this.texture2DRendererSystemComponent.render(),this.sprite2DRendererSystemComponent.render(),r.Engine.renderer2D.end())}clean(){this.transformSystemComponent.clean(),this.sprite2DRendererSystemComponent.clean(),this.tagSystemComponent.clean(),this.cameraSystemComponent.clean(),this.texture2DRendererSystemComponent.clean(),this.colorRendererSystemComponent.clean(),this.typeScriptSystemComponent.clean(),this.state2DMachineSystemComponent.clean()}getEntities(){return this.entities}}t.Scene=s,s.entityId=1},6228:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Time=void 0,t.Time=class{constructor(e=0){this.timestamp=e,this.deltaTime=0}update(e){this.deltaTime=e-this.timestamp,this.timestamp=e}getTimestamp(){return this.timestamp}getDeltaTimeMs(){return this.deltaTime}getDeltaTimeSec(){return this.deltaTime/1e3}}},5828:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Component=void 0,t.Component=class{constructor(e){this.entity=e}}},5792:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.GameComponent=void 0;const r=n(5828);class i extends r.Component{constructor(e){super(e)}}t.GameComponent=i},548:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.CameraComponent=void 0;const r=n(5792),i=n(6392);class s extends r.GameComponent{constructor(e){super(e),i.CameraSystemComponent.getInstance().saveComponent(this)}render(){}update(e){const t=this.entity.getComponent(s);t.primary&&t.camera.update()}remove(){i.CameraSystemComponent.getInstance().removeComponent(this)}}t.CameraComponent=s},9040:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.ColorRendererComponent=void 0;const r=n(2919),i=n(2800),s=n(556),o=n(5792),a=n(7864);class h extends o.GameComponent{constructor(e){super(e),this.color=new a.GraphicsEngine.Vector4(1,1,1,1),s.ColorRendererSystemComponent.getInstance().saveComponent(this)}update(e){}render(){const e=this.entity.getComponent(r.TransformComponent);i.Engine.renderer2D.drawQuadWithColor(e.position,e.rotation,e.scale,this.color)}remove(){s.ColorRendererSystemComponent.getInstance().removeComponent(this)}}t.ColorRendererComponent=h},9135:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Sprite2DRendererComponent=void 0;const r=n(9076),i=n(2919),s=n(2800),o=n(5792);class a extends o.GameComponent{constructor(e){super(e),r.Sprite2DRendererSystemComponent.getInstance().saveComponent(this)}update(e){}render(){const e=this.entity.getComponent(i.TransformComponent);s.Engine.renderer2D.drawQuadWithSprite(e.position,e.rotation,e.scale,this.sprite)}remove(){r.Sprite2DRendererSystemComponent.getInstance().removeComponent(this)}}t.Sprite2DRendererComponent=a},5920:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.State2DAnimationMachineComponent=void 0;const r=n(5792),i=n(9135),s=n(4384);class o extends r.GameComponent{constructor(e){super(e),this.defaultStateName="",this.states=[],s.State2DAnimationMachineSystemComponent.getInstance().saveComponent(this),this.spriteComponent=this.entity.getComponent(i.Sprite2DRendererComponent)}addState(e){this.states.push(e)}play(e){if(this.currentState.getName()!==e)for(const t of this.states)if(t.getName()===e){this.currentState=t;break}}remove(){s.State2DAnimationMachineSystemComponent.getInstance().removeComponent(this)}render(){}update(e){this.currentState.update(e),this.spriteComponent.sprite=this.currentState.getCurrentFrame().getSprite()}setDefaultStateName(e){this.defaultStateName=e;for(const e of this.states)if(e.getName()===this.defaultStateName){this.currentState=e;break}}}t.State2DAnimationMachineComponent=o},3528:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.TagComponent=void 0;const r=n(2756),i=n(5792);class s extends i.GameComponent{constructor(e){super(e),r.TagSystemComponent.getInstance().saveComponent(this)}remove(){r.TagSystemComponent.getInstance().removeComponent(this)}render(){}update(e){}}t.TagComponent=s},4476:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Texture2DRendererComponent=void 0;const r=n(2919),i=n(7683),s=n(5792),o=n(2800);class a extends s.GameComponent{constructor(e){super(e),i.Texture2DRendererSystemComponent.getInstance().saveComponent(this)}remove(){i.Texture2DRendererSystemComponent.getInstance().removeComponent(this)}render(){const e=this.entity.getComponent(r.TransformComponent);o.Engine.renderer2D.drawQuadWithTexture(e.position,e.rotation,e.scale,this.texture)}update(e){}}t.Texture2DRendererComponent=a},2919:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.TransformComponent=void 0;const r=n(6363),i=n(5792),s=n(7864);class o extends i.GameComponent{constructor(e){super(e),this.position=new s.GraphicsEngine.Vector3(0,0,0),this.rotation=new s.GraphicsEngine.Vector3(0,0,0),this.scale=new s.GraphicsEngine.Vector3(1,1,1),r.TransformSystemComponent.getInstance().saveComponent(this)}update(e){}render(){}remove(){r.TransformSystemComponent.getInstance().removeComponent(this)}}t.TransformComponent=o},3740:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.TypeScriptComponent=void 0;const r=n(6924),i=n(5792);class s extends i.GameComponent{constructor(e){super(e),this.instanceFn=()=>{},this.destroyFn=()=>{},this.onInitFn=()=>{},this.onUpdateFn=e=>{},this.onDestroyFn=()=>{},r.TypeScriptSystemComponent.getInstance().saveComponent(this)}bind(e){this.instanceFn=()=>{this.script=new e(this.entity)},this.destroyFn=()=>{this.script=null,this.instanceFn=()=>{},this.destroyFn=()=>{},this.onInitFn=()=>{},this.onUpdateFn=e=>{},this.onDestroyFn=()=>{}},this.onInitFn=()=>{this.script.init()},this.onUpdateFn=e=>{this.script.update(e)},this.onDestroyFn=()=>{this.script.destroy()}}remove(){this.onDestroyFn(),this.destroyFn(),r.TypeScriptSystemComponent.getInstance().removeComponent(this)}render(){}update(e){this.script||(this.instanceFn(),this.onInitFn()),this.onUpdateFn(e)}}t.TypeScriptComponent=s},5468:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Entity=void 0,t.Entity=class{constructor(e,t){this.id=e,this.scene=t,this.components=new Map}addComponent(e){const t=new e(this);return this.components.set(e.name,t),t}hasComponent(e){return this.components.has(e.name)}getComponent(e){const t=e.name;if(this.hasComponent(e))return this.components.get(e.name);throw new Error("Component by type [ "+t+" ] not found into entity [ "+this.id+" ]")}removeComponent(e){this.getComponent(e).remove(),this.components.delete(e.name)}getScene(){return this.scene}clean(){for(const e of this.components.values())e.remove();this.components.clear()}}},9260:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__exportStar||function(e,t){for(var n in e)"default"===n||Object.prototype.hasOwnProperty.call(t,n)||r(t,e,n)};Object.defineProperty(t,"__esModule",{value:!0}),i(n(5828),t),i(n(5792),t),i(n(2919),t),i(n(3528),t),i(n(3740),t),i(n(548),t),i(n(9135),t),i(n(4476),t),i(n(9040),t),i(n(5920),t),i(n(5468),t),i(n(6547),t),i(n(7923),t),i(n(8572),t),i(n(6363),t),i(n(9076),t),i(n(6392),t),i(n(6924),t),i(n(2756),t),i(n(7683),t),i(n(556),t),i(n(4384),t),i(n(7576),t),i(n(3092),t)},2292:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),s=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var n in e)"default"!==n&&Object.prototype.hasOwnProperty.call(e,n)&&r(t,e,n);return i(t,e),t};Object.defineProperty(t,"__esModule",{value:!0}),t.ECS=void 0;const o=s(n(9260));t.ECS=o},6547:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.BaseScript=void 0,t.BaseScript=class{constructor(e){this.entity=e}getComponent(e){return this.entity.getComponent(e)}addComponent(e){return this.entity.addComponent(e)}getScene(){return this.entity.getScene()}init(){}destroy(){}}},7576:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Animation2DSpriteFrame=void 0,t.Animation2DSpriteFrame=class{constructor(e,t){this.sprite=e,this.time=t}getTime(){return this.time}getSprite(){return this.sprite}}},3092:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Animation2DSpriteState=void 0;const r=n(7576);t.Animation2DSpriteState=class{constructor(e){this.name=e,this.frames=[],this.currentFrameIndex=0,this.timeTracker=0}addFrame(e,t){this.frames.push(new r.Animation2DSpriteFrame(e,t))}update(e){this.timeTracker-=e.getDeltaTimeMs(),this.timeTracker<0&&(this.currentFrameIndex++,this.currentFrameIndex>=this.frames.length&&(this.currentFrameIndex=0),this.timeTracker=this.frames[this.currentFrameIndex].getTime())}getCurrentFrame(){return this.frames[this.currentFrameIndex]}getName(){return this.name}}},8572:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.GameSystemComponent=void 0;const r=n(7923);class i extends r.System{constructor(){super()}update(e){for(const t of this.components)t.update(e)}render(){for(const e of this.components)e.render()}}t.GameSystemComponent=i},7923:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.System=void 0,t.System=class{constructor(){this.components=new Array}saveComponent(e){this.components.push(e)}removeComponent(e){const t=this.components.indexOf(e);t>-1&&this.components.splice(t,1)}clean(){for(const e of this.components)e.remove()}}},6392:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.CameraSystemComponent=void 0;const r=n(8572);class i extends r.GameSystemComponent{constructor(){super()}static getInstance(){return i.instance||(i.instance=new i),i.instance}resize(e,t){for(const n of this.components)n.camera.resize(e,t)}getPrimaryCamera(){for(const e of this.components)if(e.primary)return e.camera;return null}}t.CameraSystemComponent=i},556:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.ColorRendererSystemComponent=void 0;const r=n(8572),i=n(2919);class s extends r.GameSystemComponent{constructor(){super()}saveComponent(e){super.saveComponent(e),this.components=this.components.sort(((e,t)=>e.entity.getComponent(i.TransformComponent).position.getZ()-t.entity.getComponent(i.TransformComponent).position.getZ()))}static getInstance(){return s.instance||(s.instance=new s),s.instance}}t.ColorRendererSystemComponent=s},9076:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Sprite2DRendererSystemComponent=void 0;const r=n(8572),i=n(2919);class s extends r.GameSystemComponent{constructor(){super()}saveComponent(e){super.saveComponent(e),this.components=this.components.sort(((e,t)=>(console.log("a",e.entity),console.log("b",t.entity),e.entity.getComponent(i.TransformComponent).position.getZ()-t.entity.getComponent(i.TransformComponent).position.getZ())))}static getInstance(){return s.instance||(s.instance=new s),s.instance}}t.Sprite2DRendererSystemComponent=s},4384:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.State2DAnimationMachineSystemComponent=void 0;const r=n(8572);class i extends r.GameSystemComponent{constructor(){super()}static getInstance(){return i.instance||(i.instance=new i),i.instance}}t.State2DAnimationMachineSystemComponent=i},2756:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.TagSystemComponent=void 0;const r=n(8572);class i extends r.GameSystemComponent{constructor(){super()}static getInstance(){return i.instance||(i.instance=new i),i.instance}}t.TagSystemComponent=i},7683:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Texture2DRendererSystemComponent=void 0;const r=n(8572),i=n(2919);class s extends r.GameSystemComponent{constructor(){super()}saveComponent(e){super.saveComponent(e),this.components=this.components.sort(((e,t)=>e.entity.getComponent(i.TransformComponent).position.getZ()-t.entity.getComponent(i.TransformComponent).position.getZ()))}static getInstance(){return s.instance||(s.instance=new s),s.instance}}t.Texture2DRendererSystemComponent=s},6363:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.TransformSystemComponent=void 0;const r=n(8572);class i extends r.GameSystemComponent{constructor(){super()}static getInstance(){return i.instance||(i.instance=new i),i.instance}}t.TransformSystemComponent=i},6924:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.TypeScriptSystemComponent=void 0;const r=n(8572);class i extends r.GameSystemComponent{constructor(){super()}static getInstance(){return i.instance||(i.instance=new i),i.instance}}t.TypeScriptSystemComponent=i},703:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Element=void 0;const r=n(8624),i=n(5312),s=n(4580);t.Element=class{constructor(e){this.bufferSize=e,this.buffer=new i.BaseQueue,this.width=0,this.height=0}read(){return this.buffer.size()>0?this.buffer.poll():this.generateEvent(s.ElementEventType.INVALID)}getWidth(){return this.width}getHeight(){return this.height}onResize(e,t){this.width===e&&this.height===t||(this.width=e,this.height=t,this.buffer.push(this.generateEvent(s.ElementEventType.RESIZE)),this.trimBuffer())}flush(){this.buffer.flush()}trimBuffer(){for(;this.buffer.size()>this.bufferSize;)this.buffer.poll()}generateEvent(e){return new r.ElementEvent(e,this.width,this.height)}}},8624:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.ElementEvent=void 0;const r=n(4580);t.ElementEvent=class{constructor(e,t,n){this.type=e,this.width=t,this.height=n}isValid(){return this.type!==r.ElementEventType.INVALID}getWidth(){return this.width}getHeight(){return this.height}getType(){return this.type}}},4580:(e,t)=>{var n;Object.defineProperty(t,"__esModule",{value:!0}),t.ElementEventType=void 0,function(e){e[e.RESIZE=0]="RESIZE",e[e.INVALID=1]="INVALID"}(n||(t.ElementEventType=n={}))},7516:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__exportStar||function(e,t){for(var n in e)"default"===n||Object.prototype.hasOwnProperty.call(t,n)||r(t,e,n)};Object.defineProperty(t,"__esModule",{value:!0}),i(n(703),t),i(n(8624),t),i(n(4580),t),i(n(2631),t),i(n(5876),t),i(n(7004),t),i(n(2924),t),i(n(8784),t),i(n(4584),t),i(n(7556),t),i(n(9028),t),i(n(1364),t)},5876:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.BaseInput=void 0;const r=n(2631);class i extends r.Input{constructor(e,t){super(),this.mouse=e,this.keyboard=t}isKeyboardKeyPressedImpl(e){return this.keyboard.keyIsPressed(e)}isLeftMouseKeyPressedImpl(){return this.mouse.isLeftKeyPressed()}isRightMouseKeyPressedImpl(){return this.mouse.isRightKeyPressed()}}t.BaseInput=i},2631:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Input=void 0,t.Input=class{constructor(){}static isKeyboardKeyPressed(e){return this.instance.isKeyboardKeyPressedImpl(e)}static isLeftMouseKeyPressed(){return this.instance.isLeftMouseKeyPressedImpl()}static isRightMouseKeyPressed(){return this.instance.isRightMouseKeyPressedImpl()}}},7004:(e,t)=>{var n;Object.defineProperty(t,"__esModule",{value:!0}),t.Key=void 0,function(e){e.A="KeyA",e.B="KeyB",e.C="KeyC",e.D="KeyD",e.E="KeyE",e.F="KeyF",e.G="KeyG",e.H="KeyH",e.I="KeyI",e.J="KeyJ",e.K="KeyK",e.L="KeyL",e.M="KeyM",e.N="KeyN",e.O="KeyO",e.P="KeyP",e.Q="KeyQ",e.R="KeyR",e.S="KeyS",e.T="KeyT",e.U="KeyU",e.V="KeyV",e.W="KeyW",e.X="KeyX",e.Y="KeyY",e.Z="KeyZ",e.LEFT_SHIFT="ShiftLeft",e.LEFT_CTR="ControlLeft",e.SPACE="Space"}(n||(t.Key=n={}))},2924:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Keyboard=void 0;const r=n(5312),i=n(4584),s=n(8784);t.Keyboard=class{constructor(e){this.bufferSize=16,this.bufferSize=e,this.keyBuffer=new r.BaseQueue,this.charBuffer=new r.BaseQueue,this.keyStates=new Map}keyIsPressed(e){return this.keyStates.get(e)||(this.keyStates.set(e,!1),!1)}readKey(){return this.keyBuffer.size()>0?this.keyBuffer.poll():new s.KeyboardEvent(i.KeyboardEventType.INVALID,"")}keyIsEmpty(){return 0===this.keyBuffer.size()}readChar(){return this.charBuffer.size()>0?this.charBuffer.poll():""}charIsEmpty(){return 0===this.charBuffer.size()}flushKey(){this.keyBuffer.flush()}flushChar(){this.charBuffer.flush()}flush(){this.flushKey(),this.flushChar()}onKeyPressed(e){this.keyStates.set(e,!0),this.keyBuffer.push(new s.KeyboardEvent(i.KeyboardEventType.PRESS,e)),this.trimBuffer(this.keyBuffer)}onKeyReleased(e){this.keyStates.set(e,!1),this.keyBuffer.push(new s.KeyboardEvent(i.KeyboardEventType.RELEASE,e)),this.trimBuffer(this.keyBuffer)}onChar(e){this.charBuffer.push(e),this.trimBuffer(this.charBuffer)}trimBuffer(e){for(;e.size()>this.bufferSize;)e.poll()}}},8784:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.KeyboardEvent=void 0;const r=n(4584);t.KeyboardEvent=class{constructor(e,t){this.type=e,this.code=t}isPress(){return this.type===r.KeyboardEventType.PRESS}isRelease(){return this.type===r.KeyboardEventType.RELEASE}isValid(){return this.type!==r.KeyboardEventType.INVALID}getCode(){return this.code}}},4584:(e,t)=>{var n;Object.defineProperty(t,"__esModule",{value:!0}),t.KeyboardEventType=void 0,function(e){e[e.PRESS=0]="PRESS",e[e.RELEASE=1]="RELEASE",e[e.INVALID=2]="INVALID"}(n||(t.KeyboardEventType=n={}))},7556:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Mouse=void 0;const r=n(5312),i=n(1364),s=n(9028);t.Mouse=class{constructor(e){this.bufferSize=e,this.buffer=new r.BaseQueue,this.directionX=0,this.directionY=0,this.positionX=0,this.positionY=0,this.previousPositionX=0,this.previousPositionY=0,this.leftKeyIsPressed=!1,this.rightKeyIsPressed=!1,this.inFocus=!1}getPositionX(){return this.positionX}getPositionY(){return this.positionY}isInFocus(){return this.inFocus}isLeftKeyPressed(){return this.leftKeyIsPressed}isRightKeyPressed(){return this.rightKeyIsPressed}read(){return this.buffer.size()>0?this.buffer.poll():this.generateEvent(i.MouseEventType.INVALID)}flush(){this.buffer.flush()}onMouseMove(e,t){this.positionX=e,this.positionY=t,this.buffer.push(this.generateEvent(i.MouseEventType.MOVE)),this.trimBuffer()}onMouseLeave(){this.inFocus=!1,this.buffer.push(this.generateEvent(i.MouseEventType.LEAVE)),this.trimBuffer()}onMouseEnter(){this.inFocus=!0,this.buffer.push(this.generateEvent(i.MouseEventType.ENTER)),this.trimBuffer()}onLeftKeyPressed(e,t){this.leftKeyIsPressed=!0,this.buffer.push(this.generateEvent(i.MouseEventType.L_PRESS)),this.trimBuffer()}onLeftKeyReleased(e,t){this.leftKeyIsPressed=!1,this.buffer.push(this.generateEvent(i.MouseEventType.L_RELEASE)),this.trimBuffer()}onRightKeyPressed(e,t){this.rightKeyIsPressed=!0,this.buffer.push(this.generateEvent(i.MouseEventType.R_PRESS)),this.trimBuffer()}onRightKeyReleased(e,t){this.rightKeyIsPressed=!1,this.buffer.push(this.generateEvent(i.MouseEventType.R_RELEASE)),this.trimBuffer()}onWheelUp(e,t){this.buffer.push(this.generateEvent(i.MouseEventType.WHEEL_UP)),this.trimBuffer()}onWheelDown(e,t){this.buffer.push(this.generateEvent(i.MouseEventType.WHEEL_DOWN)),this.trimBuffer()}updateDirection(){this.directionX=0,this.directionY=0,this.previousPositionX>0&&this.previousPositionY>0&&(this.directionX=this.positionY-this.previousPositionY,this.directionY=this.positionX-this.previousPositionX),this.previousPositionX=this.positionX,this.previousPositionY=this.positionY}getDirectionX(){return this.directionX}getDirectionY(){return this.directionY}trimBuffer(){for(;this.buffer.size()>this.bufferSize;)this.buffer.poll()}generateEvent(e){return new s.MouseEvent(e,this.leftKeyIsPressed,this.rightKeyIsPressed,this.positionX,this.positionY)}}},9028:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.MouseEvent=void 0;const r=n(1364);t.MouseEvent=class{constructor(e,t,n,r,i){this.type=e,this.leftKeyIsPressed=t,this.rightKeyIsPressed=n,this.positionX=r,this.positionY=i}isValid(){return this.type!==r.MouseEventType.INVALID}getPositionX(){return this.positionX}getPositionY(){return this.positionY}getType(){return this.type}isLeftKeyIsPressed(){return this.leftKeyIsPressed}isRightKeyIsPressed(){return this.rightKeyIsPressed}}},1364:(e,t)=>{var n;Object.defineProperty(t,"__esModule",{value:!0}),t.MouseEventType=void 0,function(e){e[e.L_PRESS=0]="L_PRESS",e[e.L_RELEASE=1]="L_RELEASE",e[e.R_PRESS=2]="R_PRESS",e[e.R_RELEASE=3]="R_RELEASE",e[e.WHEEL_UP=4]="WHEEL_UP",e[e.WHEEL_DOWN=5]="WHEEL_DOWN",e[e.MOVE=6]="MOVE",e[e.ENTER=7]="ENTER",e[e.LEAVE=8]="LEAVE",e[e.INVALID=9]="INVALID"}(n||(t.MouseEventType=n={}))},1720:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),s=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var n in e)"default"!==n&&Object.prototype.hasOwnProperty.call(e,n)&&r(t,e,n);return i(t,e),t};Object.defineProperty(t,"__esModule",{value:!0}),t.EventSystem=void 0;const o=s(n(7516));t.EventSystem=o},5312:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.BaseQueue=void 0,t.BaseQueue=class{constructor(){this.array=[]}peek(){return this.array[0]}poll(){let e=this.array.shift();if(!e)throw new Error("Нет элементов в очереди");return e}push(e){this.array.push(e)}size(){return this.array.length}flush(){for(;0!==this.size();)this.poll()}}},9280:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLFloat32VertexDynamicBuffer=void 0;const r=n(7936);class i extends r.WebGLVertexDynamicBuffer{constructor(e,t){super(e,t)}}t.WebGLFloat32VertexDynamicBuffer=i},3380:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLFloat32VertexStaticBuffer=void 0;const r=n(4944);class i extends r.WebGLVertexStaticBuffer{constructor(e,t){super(e,t,t.length)}}t.WebGLFloat32VertexStaticBuffer=i},2616:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLFrameBuffer=void 0;const r=n(9664);class i extends r.FrameBuffer{constructor(e,t){super(t),this.gl=e,this.frameBuffer=null,this.colorAttachment=null,this.depthAttachment=null,this.init()}init(){this.frameBuffer=this.gl.createFrameBuffers(),this.bind(),this.colorAttachment=this.gl.createTexture(),this.gl.bindTexture2D(this.colorAttachment),this.gl.textImage2DRGBA8Ubyte(0,this.data.width,this.data.height,0,null),this.gl.tex2DParameteriMinFilterLinear(),this.gl.tex2DParameteriMagFilterLinear(),this.gl.frameBufferTexture2DColorAttachment0(this.colorAttachment,0),this.depthAttachment=this.gl.createTexture(),this.gl.bindTexture2D(this.depthAttachment),this.gl.textImage2DDepth24Stencil8Uint24_8(0,this.data.width,this.data.height,0,null),this.gl.frameBufferTexture2DDepthStencilAttachment(this.depthAttachment,0),this.gl.checkFrameBufferStatusComplete(),this.unbind()}bind(){this.gl.bindFrameBuffer(this.frameBuffer)}unbind(){this.gl.unbindFrameBuffer()}clean(){this.gl.deleteFrameBuffer(this.frameBuffer),this.gl.deleteTexture(this.colorAttachment),this.gl.deleteTexture(this.depthAttachment)}resize(e,t){this.clean(),this.data.width=e,this.data.height=t,this.init()}}t.WebGLFrameBuffer=i},4460:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLIndexStaticBuffer=void 0,t.WebGLIndexStaticBuffer=class{constructor(e,t,n){this.gl=e,this.buffer=e.createBuffer(),this.count=n,this.bind(),e.elementArrayBufferStaticData(t)}bind(){this.gl.bindElementArrayBuffer(this.buffer)}unbind(){this.gl.bindElementArrayBuffer(this.buffer)}getCount(){return this.count}clean(){this.gl.deleteBuffer(this.buffer)}setLayout(e){throw new Error("setLayout: not implemented method")}getLayout(){throw new Error("getLayout: not implemented method")}setFloat32Data(e){throw new Error("Index Static buffer not supported setFloat32Data")}}},4132:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLUint16IndexStaticBuffer=void 0;const r=n(4460);class i extends r.WebGLIndexStaticBuffer{constructor(e,t){super(e,t,t.length)}}t.WebGLUint16IndexStaticBuffer=i},7376:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLVertexArrayBuffer=void 0;const r=n(8992);t.WebGLVertexArrayBuffer=class{constructor(e){this.gl=e,this.vertexBuffers=[],this.indexBuffer=null,this.buffer=e.createVertexArray(),this.bind()}getCount(){return 0}addVertexBuffer(e){this.bind(),e.bind();const t=e.getLayout(),n=e.getLayout().getElements();for(let e=0;e<n.length;e++){const i=n[e];switch(this.gl.enableVertexAttribArray(e),i.type){case r.ShaderDataType.FLOAT_4:case r.ShaderDataType.FLOAT_3:case r.ShaderDataType.FLOAT_2:case r.ShaderDataType.FLOAT_1:this.gl.vertexAttribPointerFloat(e,(0,r.getComponentCountFromShaderDataType)(i.type),i.normalized,t.getStride(),i.offset);break;case r.ShaderDataType.INT_4:case r.ShaderDataType.INT_3:case r.ShaderDataType.INT_2:case r.ShaderDataType.INT_1:this.gl.vertexAttribPointerUint(e,(0,r.getComponentCountFromShaderDataType)(i.type),i.normalized,t.getStride(),i.offset);break;default:throw new Error("ShaderDataType [ "+i.type+" ] not supported")}}this.vertexBuffers.push(e)}setIndexBuffer(e){this.bind(),e.bind(),this.indexBuffer=e}bind(){this.gl.bindVertexArray(this.buffer)}unbind(){this.gl.unbindVertexArray()}clean(){var e;this.gl.deleteVertexArray(this.buffer);for(const e of this.vertexBuffers)e.clean();null===(e=this.indexBuffer)||void 0===e||e.clean()}setLayout(e){throw new Error("setLayout: not implemented method")}getLayout(){throw new Error("getLayout: not implemented method")}getVertexBuffers(){return this.vertexBuffers}getIndexBuffer(){return this.indexBuffer}setFloat32Data(e){throw new Error("Vertex Array buffer not supported setFloat32Data")}}},7936:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLVertexDynamicBuffer=void 0,t.WebGLVertexDynamicBuffer=class{constructor(e,t){this.gl=e,this.buffer=e.createBuffer(),this.layout=null,this.bind(),e.arrayBufferDynamicData(t)}bind(){this.gl.bindArrayBuffer(this.buffer)}unbind(){this.gl.unbindArrayBuffer()}getCount(){throw new Error("getCount not supported in Vertex Buffer")}clean(){this.gl.deleteBuffer(this.buffer)}setLayout(e){this.layout=e}getLayout(){return this.layout}setFloat32Data(e){this.bind(),this.gl.arrayBufferSubData(e)}}},4944:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLVertexStaticBuffer=void 0,t.WebGLVertexStaticBuffer=class{constructor(e,t,n){this.gl=e,this.buffer=e.createBuffer(),this.count=n,this.layout=null,this.bind(),e.arrayBufferStaticData(t)}bind(){this.gl.bindArrayBuffer(this.buffer)}unbind(){this.gl.unbindArrayBuffer()}getCount(){return this.count}clean(){this.gl.deleteBuffer(this.buffer)}setLayout(e){this.layout=e}getLayout(){return this.layout}setFloat32Data(e){throw new Error("Vertex Static buffer not supported setFloat32Data")}}},4544:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGL2DRenderer=void 0;const r=n(5036);class i extends r.Renderer2D{constructor(e){super(),this.gl=e}clear(){this.gl.clearColorBuffer(),this.gl.clearDepthBuffer()}setClearColor(e){this.gl.clearColor(e.getX(),e.getY(),e.getZ(),e.getW())}drawTrianglesImpl(e,t=0){const n=0===t?e.getCount():t;this.gl.drawTriangleElementsUshort(n,0)}initImpl(){this.gl.enableDepthTest(),this.gl.enableBlend(),this.gl.blendFuncSrcAlphaOneMinusSrcAlpha()}}t.WebGL2DRenderer=i},2516:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLContext=void 0;const r=n(1467);t.WebGLContext=class{constructor(e){this.canvasElement=e;const t=this.canvasElement.getContext("webgl2");if(!t)throw new Error("Невозможно проинициализировать WebGL. Данный браузер не поддерживает данный контекст [ webgl2 ]");this.gl=new r.WebGLExt(t)}init(){}setViewport(e,t,n,r){this.gl.setViewport(e,t,n,r)}printDebugInfo(){console.log("Vendor: "+this.gl.getVendor()),console.log("Renderer: "+this.gl.getRenderer())}getGL(){return this.gl}}},6168:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGL2DTexture=void 0;const r=n(12);t.WebGL2DTexture=class{constructor(e,t,n,i=!1){if(this.gl=e,this.id=r.Random.uuid(),this.image=t,this.texture=this.gl.createTexture(),i)return this.prepareTexture(),void this.gl.texImage2DRGBAUbyteWithPixels(0,t,new Uint8Array([255,255,255,255]));const s=()=>{this.prepareTexture(),4===n&&this.gl.texImage2DRGBAUbyte(0,t),3===n&&this.gl.texImage2DRGBUbyte(0,t),t.removeEventListener("load",s)};t.addEventListener("load",s)}bind(e){this.gl.activeTexture(e),this.gl.bindTexture2D(this.texture)}unbind(){this.gl.unbindTexture2D()}clean(){this.gl.deleteTexture(this.texture)}equal(e){return this.id===e.getId()}prepareTexture(){this.gl.bindTexture2D(this.texture),this.gl.tex2DParameteriMinFilterLinear(),this.gl.tex2DParameteriMagFilterNearest(),this.gl.tex2DParameteriWrapSClampToEdge(),this.gl.tex2DParameteriWrapTClampToEdge()}getHeight(){return this.image.height}getId(){return this.id}getWidth(){return this.image.width}getImage(){return this.image}}},5156:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLFragmentShader=void 0,t.WebGLFragmentShader=class{constructor(e,t){this.gl=e,this.vs=this.gl.createFragmentShader(),this.gl.setShaderSource(this.vs,t)}getShader(){return this.vs}clean(){this.gl.deleteShader(this.vs)}}},8260:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLShaderProgram=void 0,t.WebGLShaderProgram=class{constructor(e,t,n,r){this.locationsCache=new Map,this.gl=e,this.name=t,this.vertexShader=n,this.fragmentShader=r,this.program=this.gl.createProgram(),this.gl.attachShader(this.program,this.vertexShader.getShader()),this.gl.attachShader(this.program,this.fragmentShader.getShader()),this.gl.linkProgram(this.program),this.vertexShader.clean(),this.fragmentShader.clean()}getName(){return this.name}bind(){this.gl.useProgram(this.program)}unbind(){this.gl.removeProgram()}setVector3f(e,t){this.gl.uniform3f(this.getUniformLocation(e),t)}setVector4f(e,t){this.gl.uniform4f(this.getUniformLocation(e),t)}setValue1i(e,t){this.gl.uniform1i(this.getUniformLocation(e),t)}setValueArrayI(e,t){this.gl.uniform1iv(this.getUniformLocation(e),t)}setMatrix4f(e,t){this.gl.uniformMatrix4fv(this.getUniformLocation(e),!1,new Float32Array(t.getArray()))}getUniformLocation(e){let t=this.locationsCache.get(e);return t||(t=this.gl.getUniformLocation(this.program,e),this.locationsCache.set(e,t)),t}clean(){this.vertexShader.clean(),this.fragmentShader.clean(),this.gl.deleteProgram(this.program)}}},6368:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLVertexShader=void 0,t.WebGLVertexShader=class{constructor(e,t){this.gl=e,this.vs=this.gl.createVertexShader(),this.gl.setShaderSource(this.vs,t)}getShader(){return this.vs}clean(){this.gl.deleteShader(this.vs)}}},1467:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.WebGLExt=void 0,t.WebGLExt=class{constructor(e){this.context=e,this.clearColor(0,0,0,1);const t=this.context.getExtension("WEBGL_debug_renderer_info");t?(this.vendor=this.context.getParameter(t.UNMASKED_VENDOR_WEBGL),this.renderer=this.context.getParameter(t.UNMASKED_RENDERER_WEBGL)):(this.vendor="HIDDEN",this.renderer="HIDDEN")}enableDepthTest(){this.context.enable(this.context.DEPTH_TEST)}enableBlend(){this.context.enable(this.context.BLEND)}disableBlend(){this.context.disable(this.context.BLEND)}blendFuncSrcAlphaOneMinusSrcAlpha(){this.context.blendFunc(this.context.SRC_ALPHA,this.context.ONE_MINUS_SRC_ALPHA)}clearColor(e,t,n,r){this.context.clearColor(e,t,n,r)}clearColorBuffer(){this.context.clear(this.context.COLOR_BUFFER_BIT)}clearDepthBuffer(){this.context.clear(this.context.DEPTH_BUFFER_BIT)}setViewport(e,t,n,r){this.context.viewport(0,0,n,r)}createVertexShader(){let e=this.context.createShader(this.context.VERTEX_SHADER);if(!e)throw new Error("Ошибка создания вершинного шейдера");return e}createFragmentShader(){let e=this.context.createShader(this.context.FRAGMENT_SHADER);if(!e)throw new Error("Ошибка создания фрагментного шейдера");return e}deleteShader(e){this.context.deleteShader(e)}setShaderSource(e,t){if(this.context.shaderSource(e,t),this.context.compileShader(e),!this.context.getShaderParameter(e,this.context.COMPILE_STATUS)){const t=this.context.getShaderInfoLog(e);throw this.deleteShader(e),new Error(null!=t?t:"Ошибка компиляции шейдера")}}createProgram(){let e=this.context.createProgram();if(!e)throw new Error("Ошибка создания программы");return e}deleteProgram(e){this.context.deleteProgram(e)}attachShader(e,t){this.context.attachShader(e,t)}linkProgram(e){if(this.context.linkProgram(e),!this.context.getProgramParameter(e,this.context.LINK_STATUS)){const t=this.context.getProgramInfoLog(e);throw new Error(null!=t?t:"Ошибка связывания программы с шейдерами")}}useProgram(e){this.context.useProgram(e)}removeProgram(){this.context.useProgram(null)}createVertexArray(){let e=this.context.createVertexArray();if(!e)throw new Error("Ошибка создания VAO");return e}deleteVertexArray(e){this.context.deleteVertexArray(e)}bindVertexArray(e){this.context.bindVertexArray(e)}unbindVertexArray(){this.context.bindVertexArray(null)}createTexture(){const e=this.context.createTexture();if(!e)throw new Error("Ошибка создания текстуры");return e}createFrameBuffers(){const e=this.context.createFramebuffer();if(!e)throw new Error("Ошибка создания буфера кадра");return e}textImage2DRGBA8Ubyte(e,t,n,r,i){this.context.texImage2D(this.context.TEXTURE_2D,e,this.context.RGBA8,t,n,r,this.context.RGBA,this.context.UNSIGNED_BYTE,i)}textImage2DDepth24Stencil8Uint24_8(e,t,n,r,i){this.context.texImage2D(this.context.TEXTURE_2D,e,this.context.DEPTH24_STENCIL8,t,n,r,this.context.DEPTH_STENCIL,this.context.UNSIGNED_INT_24_8,i)}deleteFrameBuffer(e){this.context.deleteFramebuffer(e)}bindFrameBuffer(e){this.context.bindFramebuffer(this.context.FRAMEBUFFER,e)}unbindFrameBuffer(){this.context.bindFramebuffer(this.context.FRAMEBUFFER,null)}checkFrameBufferStatusComplete(){if(this.context.checkFramebufferStatus(this.context.FRAMEBUFFER)!==this.context.FRAMEBUFFER_COMPLETE)throw new Error("Буфер кадров не готов")}frameBufferTexture2DColorAttachment0(e,t){this.context.framebufferTexture2D(this.context.FRAMEBUFFER,this.context.COLOR_ATTACHMENT0,this.context.TEXTURE_2D,e,t)}frameBufferTexture2DDepthStencilAttachment(e,t){this.context.framebufferTexture2D(this.context.FRAMEBUFFER,this.context.DEPTH_STENCIL_ATTACHMENT,this.context.TEXTURE_2D,e,t)}texStorage2DDepth24Stencil8(e,t,n){this.context.texStorage2D(this.context.TEXTURE_2D,e,this.context.DEPTH24_STENCIL8,t,n)}deleteTexture(e){this.context.deleteTexture(e)}unbindTexture2D(){this.context.bindTexture(this.context.TEXTURE_2D,null)}bindTexture2D(e){this.context.bindTexture(this.context.TEXTURE_2D,e)}tex2DParameteriMinFilterLinear(){this.context.texParameteri(this.context.TEXTURE_2D,this.context.TEXTURE_MIN_FILTER,this.context.LINEAR)}tex2DParameteriMagFilterLinear(){this.context.texParameteri(this.context.TEXTURE_2D,this.context.TEXTURE_MAG_FILTER,this.context.LINEAR)}tex2DParameteriMagFilterNearest(){this.context.texParameteri(this.context.TEXTURE_2D,this.context.TEXTURE_MAG_FILTER,this.context.NEAREST)}tex2DParameteriWrapSClampToEdge(){this.context.texParameteri(this.context.TEXTURE_2D,this.context.TEXTURE_WRAP_S,this.context.CLAMP_TO_EDGE)}tex2DParameteriWrapTClampToEdge(){this.context.texParameteri(this.context.TEXTURE_2D,this.context.TEXTURE_WRAP_T,this.context.CLAMP_TO_EDGE)}texImage2DRGBAUbyteWithPixels(e,t,n){this.context.texImage2D(this.context.TEXTURE_2D,e,this.context.RGBA8,t.width,t.height,0,this.context.RGBA,this.context.UNSIGNED_BYTE,n)}texImage2DRGBAUbyte(e,t){this.context.texImage2D(this.context.TEXTURE_2D,e,this.context.RGBA8,t.width,t.height,0,this.context.RGBA,this.context.UNSIGNED_BYTE,t)}texImage2DRGBUbyte(e,t){this.context.texImage2D(this.context.TEXTURE_2D,e,this.context.RGB8,t.width,t.height,0,this.context.RGB,this.context.UNSIGNED_BYTE,t)}generateMipmap2D(){this.context.generateMipmap(this.context.TEXTURE_2D)}createBuffer(){const e=this.context.createBuffer();if(!e)throw new Error("Ошибка создания буфера");return e}deleteBuffer(e){this.context.deleteBuffer(e)}bindArrayBuffer(e){this.context.bindBuffer(this.context.ARRAY_BUFFER,e)}unbindArrayBuffer(){this.context.bindBuffer(this.context.ARRAY_BUFFER,null)}bindElementArrayBuffer(e){this.context.bindBuffer(this.context.ELEMENT_ARRAY_BUFFER,e)}arrayBufferDynamicData(e){this.context.bufferData(this.context.ARRAY_BUFFER,e,this.context.DYNAMIC_DRAW)}getArrayBufferSize(){return this.context.getBufferParameter(this.context.ARRAY_BUFFER,this.context.BUFFER_SIZE)}arrayBufferSubData(e){this.context.bufferSubData(this.context.ARRAY_BUFFER,0,e)}arrayBufferStaticData(e){this.context.bufferData(this.context.ARRAY_BUFFER,e,this.context.STATIC_DRAW)}elementArrayBufferStaticData(e){this.context.bufferData(this.context.ELEMENT_ARRAY_BUFFER,e,this.context.STATIC_DRAW)}enableVertexAttribArray(e){this.context.enableVertexAttribArray(e)}disableVertexAttribArray(e){this.context.disableVertexAttribArray(e)}vertexAttribDivisor(e,t){this.context.vertexAttribDivisor(e,t)}vertexAttribPointerFloat(e,t,n,r,i){this.context.vertexAttribPointer(e,t,this.context.FLOAT,n,r,i)}vertexAttribPointerUint(e,t,n,r,i){this.context.vertexAttribPointer(e,t,this.context.UNSIGNED_INT,n,r,i)}drawTriangleArrays(e,t){this.context.drawArrays(this.context.TRIANGLES,e,t)}drawTriangleElementsUshort(e,t){this.context.drawElements(this.context.TRIANGLES,e,this.context.UNSIGNED_SHORT,t)}drawTriangleElementsUint(e,t){this.context.drawElements(this.context.TRIANGLES,e,this.context.UNSIGNED_INT,t)}drawLineElementsUshort(e,t){this.context.drawElements(this.context.LINES,e,this.context.UNSIGNED_SHORT,t)}getUniformLocation(e,t){const n=this.context.getUniformLocation(e,t);if(!n)throw new Error("Ошибка получения униформы с именем [ "+t+" ]");return n}uniformMatrix4fv(e,t,n){this.context.uniformMatrix4fv(e,t,n)}uniform3f(e,t){this.context.uniform3f(e,t.getX(),t.getY(),t.getZ())}uniform4f(e,t){this.context.uniform4f(e,t.getX(),t.getY(),t.getZ(),t.getW())}uniform1iv(e,t){this.context.uniform1iv(e,new Int32Array(t))}uniform1i(e,t){this.context.uniform1i(e,t)}uniformF(e,t){this.context.uniform1f(e,t)}activeTexture(e){this.context.activeTexture(this.context.TEXTURE0+e)}getVendor(){return this.vendor}getRenderer(){return this.renderer}}},2152:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.NewBufferElement=void 0,t.NewBufferElement=function(e,t,n=!1){return{type:e,name:t,size:e.valueOf(),offset:0,normalized:n}}},4780:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.BufferLayout=void 0,t.BufferLayout=class{constructor(e){this.elements=e,this.stride=0,this.calculateStride()}getElements(){return this.elements}getStride(){return this.stride}sizeof(){let e=0;for(const t of this.elements)e+=t.size;return e}calculateStride(){let e=0;for(const t of this.elements)t.offset=e,e+=t.size,this.stride+=t.size}}},9664:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.FrameBuffer=void 0,t.FrameBuffer=class{constructor(e){this.data=e}getData(){return this.data}}},8736:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},531:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},8:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},4908:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.OrthographicCamera=void 0;const r=n(1756),i=n(3301);class s extends i.BaseCamera{constructor(e,t,n=1){super(r.Transformation.getOrthogonalProjectionMatrix(-1*e/t*n,e/t*n,-1*n,n,-1,1),e,t),this.zoomLevel=n}update(){this.recalculateViewMatrix(),this.recalculateViewProjectionMatrix()}setZoomLevel(e){e<=1?this.zoomLevel=1:(this.zoomLevel=e,this.resize(this.width,this.height))}getZoomLevel(){return this.zoomLevel}recalculateViewMatrix(){this.viewMatrix=r.Transformation.getViewMatrix(this.position,this.rotation)}recalculateViewProjectionMatrix(){this.viewProjectionMatrix=this.viewMatrix.multiplyMatrix(this.projectionMatrix)}resize(e,t){this.width=e,this.height=t;const n=this.width/this.height;this.projectionMatrix=r.Transformation.getOrthogonalProjectionMatrix(-1*n*this.zoomLevel,n*this.zoomLevel,-1*this.zoomLevel,this.zoomLevel,-1,1)}}t.OrthographicCamera=s},3296:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.PerspectiveCamera=void 0;const r=n(3301),i=n(1756);class s extends r.BaseCamera{constructor(e,t,n,r,s){super(i.Transformation.getPerspectiveProjectionMatrix(e/t,i.Transformation.degreesToRadians(n),r,s),e,t),this.zNear=r,this.zFar=s,this.fieldOfView=i.Transformation.degreesToRadians(n)}update(){this.recalculateViewMatrix(),this.recalculateViewProjectionMatrix()}resize(e,t){this.width=e,this.height=t,this.projectionMatrix=i.Transformation.getPerspectiveProjectionMatrix(this.width/this.height,this.fieldOfView,this.zNear,this.zFar)}recalculateViewMatrix(){this.viewMatrix=i.Transformation.getViewMatrix(this.position,this.rotation)}recalculateViewProjectionMatrix(){this.viewProjectionMatrix=this.viewMatrix.multiplyMatrix(this.projectionMatrix)}}t.PerspectiveCamera=s},3301:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.BaseCamera=void 0;const r=n(2440),i=n(1756);t.BaseCamera=class{constructor(e,t,n){this.projectionMatrix=e,this.width=t,this.height=n,this.position=new r.Vector3(0,0,0),this.rotation=new r.Vector3(0,0,0),this.viewMatrix=i.Transformation.getViewMatrix(this.position,this.rotation),this.viewProjectionMatrix=this.viewMatrix.multiplyMatrix(this.projectionMatrix)}getPosition(){return this.position}getProjectionMatrix(){return this.projectionMatrix}getRotation(){return this.rotation}getViewMatrix(){return this.viewMatrix}getViewProjectionMatrix(){return this.viewProjectionMatrix}setPosition(e){this.position=e}setRotation(e){this.rotation=e}}},4248:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.BufferFactory=void 0;const r=n(3848),i=n(7264),s=n(7376),o=n(4132),a=n(3380),h=n(9280),c=n(2616);t.BufferFactory=class{static createFloat32VertexDynamicBuffer(e,t){if(r.Renderer.getAPI()===i.RendererAPI.WEB_GL){const n=e.getGL();return new h.WebGLFloat32VertexDynamicBuffer(n,t)}}static createFloat32VertexStaticBuffer(e,t){if(r.Renderer.getAPI()===i.RendererAPI.WEB_GL){const n=e.getGL();return new a.WebGLFloat32VertexStaticBuffer(n,t)}}static createUint16IndexStaticBuffer(e,t){if(r.Renderer.getAPI()===i.RendererAPI.WEB_GL){const n=e.getGL();return new o.WebGLUint16IndexStaticBuffer(n,t)}}static createVertexArrayBuffer(e){if(r.Renderer.getAPI()===i.RendererAPI.WEB_GL){const t=e.getGL();return new s.WebGLVertexArrayBuffer(t)}}static createFrameBuffer(e,t){if(r.Renderer.getAPI()===i.RendererAPI.WEB_GL){const n=e.getGL();return new c.WebGLFrameBuffer(n,t)}}}},5392:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.GraphicsContextFactory=void 0;const r=n(7264),i=n(2516),s=n(3848);t.GraphicsContextFactory=class{static createContext(e){if(s.Renderer.getAPI()===r.RendererAPI.WEB_GL)return new i.WebGLContext(e)}}},6092:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.RendererFactory=void 0;const r=n(3848),i=n(7264),s=n(4544);t.RendererFactory=class{static create2D(e){if(r.Renderer.getAPI()===i.RendererAPI.WEB_GL){const t=e.getGL();return new s.WebGL2DRenderer(t)}}}},6452:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.ResourceFactory=void 0;const r=n(3848),i=n(7264),s=n(6168),o=n(9984),a=n(1116);class h{static create2DFullWhiteTexture(e){const t=new Image(1,1);return h.create2DTexture(e,t,4,!0)}static create2DTexture(e,t,n,o=!1){if(r.Renderer.getAPI()===i.RendererAPI.WEB_GL){const r=e.getGL();return new s.WebGL2DTexture(r,t,n,o)}}static createSprite2D(e,t,n,r=new a.Vector2(1,1)){const i=new o.Sprite2D(e);if(0===e.getWidth()||0===e.getHeight()){const s=()=>{h.updateSpriteCoordinates(i,t,n,r,e,.5),e.getImage().removeEventListener("load",s)};e.getImage().addEventListener("load",s)}else h.updateSpriteCoordinates(i,t,n,r,e,.5);return i}static updateSpriteCoordinates(e,t,n,r,i,s){const o=(t.getX()*n.getX()+s)/i.getWidth(),h=(t.getY()*n.getY()+s)/i.getHeight(),c=new a.Vector2(o,h),u=((t.getX()+r.getX())*n.getX()-s)/i.getWidth(),d=((t.getY()+r.getY())*n.getY()-s)/i.getHeight(),m=new a.Vector2(u,d);e.updateCoordinates(c,m)}}t.ResourceFactory=h},9751:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.ShaderProgramFactory=void 0;const r=n(3848),i=n(7264),s=n(6368),o=n(5156),a=n(8260);t.ShaderProgramFactory=class{static createProgram(e,t,n,h){if(r.Renderer.getAPI()===i.RendererAPI.WEB_GL){const r=e.getGL(),i=new s.WebGLVertexShader(r,n),c=new o.WebGLFragmentShader(r,h);return new a.WebGLShaderProgram(r,t,i,c)}}}},3131:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.GraphicsApplication=void 0;const r=n(792);t.GraphicsApplication=class{constructor(e){this.graphicElement=new r.GraphicsElement(e),this.frame=0,this.shouldBeClosed=!1}start(){this.init(),this.startNewFrame()}stop(){this.shouldBeClosed=!0}init(){this.graphicElement.init()}startNewFrame(){if(this.graphicElement.notExist()||this.shouldBeClosed)return window.cancelAnimationFrame(this.frame),void this.clean();this.frame=window.requestAnimationFrame((e=>this.loop(e)))}loop(e){this.input(),this.update(e),this.render(),this.endFrame(),this.startNewFrame()}input(){}update(e){this.graphicElement.update()}render(){this.graphicElement.render()}endFrame(){}clean(){this.graphicElement.destroy()}getGraphicsElement(){return this.graphicElement}}},792:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.GraphicsElement=void 0;const r=n(5392);t.GraphicsElement=class{constructor(e){this.parentElement=e,this.canvasElement=document.createElement("canvas"),this.canvasElement.style.display="block",this.canvasElement.style.width="100%",this.canvasElement.style.height="100%",this.canvasElement.oncontextmenu=function(){return!1},this.graphicsContext=r.GraphicsContextFactory.createContext(this.canvasElement)}notExist(){return null==this.canvasElement.offsetParent}init(){this.embedToElement(),this.graphicsContext.init()}render(){}getGraphicsContext(){return this.graphicsContext}getWidth(){return this.canvasElement.width}getHeight(){return this.canvasElement.height}update(){}destroy(){this.canvasElement.remove()}getCanvasElement(){return this.canvasElement}embedToElement(){this.parentElement.append(this.canvasElement),this.resize()}updateViewport(){this.graphicsContext.setViewport(0,0,this.canvasElement.width,this.canvasElement.height)}resize(){this.canvasElement.width=this.parentElement.offsetWidth,this.canvasElement.height=this.parentElement.offsetHeight,this.updateViewport()}}},8808:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__exportStar||function(e,t){for(var n in e)"default"===n||Object.prototype.hasOwnProperty.call(t,n)||r(t,e,n)};Object.defineProperty(t,"__esModule",{value:!0}),i(n(2152),t),i(n(4780),t),i(n(9664),t),i(n(8736),t),i(n(531),t),i(n(8),t),i(n(3301),t),i(n(3296),t),i(n(4908),t),i(n(4248),t),i(n(5392),t),i(n(6092),t),i(n(6452),t),i(n(9751),t),i(n(3131),t),i(n(792),t),i(n(8124),t),i(n(6416),t),i(n(7084),t),i(n(824),t),i(n(1116),t),i(n(2440),t),i(n(7628),t),i(n(1756),t),i(n(2408),t),i(n(3848),t),i(n(5036),t),i(n(7264),t),i(n(7748),t),i(n(6580),t),i(n(9984),t),i(n(6868),t),i(n(8992),t),i(n(1232),t),i(n(420),t),i(n(9744),t),i(n(7740),t),i(n(12),t)},6416:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},8124:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},7084:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.RandomWalk2D=void 0;const r=n(1116),i=n(12);t.RandomWalk2D=class{constructor(e,t){this.width=e,this.height=t}generate(e){const t=new Array(this.width);for(let e=0;e<this.width;e++)t[e]=new Array(this.height).fill(!1);let n=new r.Vector2(i.Random.int(this.width),i.Random.int(this.height));t[n.getX()][n.getY()]=!0;const s=[r.Vector2.up(),r.Vector2.down(),r.Vector2.left(),r.Vector2.right()];for(let o=0;o<e;o++)for(;;){const e=s[i.Random.int(s.length)],o=n.plus(new r.Vector2(e.getX(),e.getY()));if(o.getX()>=0&&o.getX()<this.width&&o.getY()>=0&&o.getY()<this.height){t[o.getX()][o.getY()]=!0,n=o;break}}return t}}},824:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Matrix4=void 0;const r=n(7628);class i{constructor(e){this.arrayMatrix=e}static identity(){return new i([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1])}getArray(){return this.arrayMatrix}multiplyMatrix(e){const t=this.a11()*e.a11()+this.a12()*e.a21()+this.a13()*e.a31()+this.a14()*e.a41(),n=this.a11()*e.a12()+this.a12()*e.a22()+this.a13()*e.a32()+this.a14()*e.a42(),r=this.a11()*e.a13()+this.a12()*e.a23()+this.a13()*e.a33()+this.a14()*e.a43(),s=this.a11()*e.a14()+this.a12()*e.a24()+this.a13()*e.a34()+this.a14()*e.a44(),o=this.a21()*e.a11()+this.a22()*e.a21()+this.a23()*e.a31()+this.a24()*e.a41(),a=this.a21()*e.a12()+this.a22()*e.a22()+this.a23()*e.a32()+this.a24()*e.a42(),h=this.a21()*e.a13()+this.a22()*e.a23()+this.a23()*e.a33()+this.a24()*e.a43(),c=this.a21()*e.a14()+this.a22()*e.a24()+this.a23()*e.a34()+this.a24()*e.a44(),u=this.a31()*e.a11()+this.a32()*e.a21()+this.a33()*e.a31()+this.a34()*e.a41(),d=this.a31()*e.a12()+this.a32()*e.a22()+this.a33()*e.a32()+this.a34()*e.a42(),m=this.a31()*e.a13()+this.a32()*e.a23()+this.a33()*e.a33()+this.a34()*e.a43(),p=this.a31()*e.a14()+this.a32()*e.a24()+this.a33()*e.a34()+this.a34()*e.a44(),l=this.a41()*e.a11()+this.a42()*e.a21()+this.a43()*e.a31()+this.a44()*e.a41(),f=this.a41()*e.a12()+this.a42()*e.a22()+this.a43()*e.a32()+this.a44()*e.a42(),g=this.a41()*e.a13()+this.a42()*e.a23()+this.a43()*e.a33()+this.a44()*e.a43(),y=this.a41()*e.a14()+this.a42()*e.a24()+this.a43()*e.a34()+this.a44()*e.a44();return new i([t,n,r,s,o,a,h,c,u,d,m,p,l,f,g,y])}multiplyVector(e){return new r.Vector4(this.a11()*e.getX()+this.a12()*e.getY()+this.a13()*e.getZ()+this.a14()*e.getW(),this.a21()*e.getX()+this.a22()*e.getY()+this.a23()*e.getZ()+this.a24()*e.getW(),this.a31()*e.getX()+this.a32()*e.getY()+this.a33()*e.getZ()+this.a34()*e.getW(),this.a41()*e.getX()+this.a42()*e.getY()+this.a43()*e.getZ()+this.a44()*e.getW())}a11(){return this.arrayMatrix[0]}a12(){return this.arrayMatrix[1]}a13(){return this.arrayMatrix[2]}a14(){return this.arrayMatrix[3]}a21(){return this.arrayMatrix[4]}a22(){return this.arrayMatrix[5]}a23(){return this.arrayMatrix[6]}a24(){return this.arrayMatrix[7]}a31(){return this.arrayMatrix[8]}a32(){return this.arrayMatrix[9]}a33(){return this.arrayMatrix[10]}a34(){return this.arrayMatrix[11]}a41(){return this.arrayMatrix[12]}a42(){return this.arrayMatrix[13]}a43(){return this.arrayMatrix[14]}a44(){return this.arrayMatrix[15]}transpose(){return new i([this.a11(),this.a21(),this.a31(),this.a41(),this.a12(),this.a22(),this.a32(),this.a42(),this.a13(),this.a23(),this.a33(),this.a43(),this.a14(),this.a24(),this.a34(),this.a44()])}determinant(){const e=this.a33()*this.a44()-this.a43()*this.a34(),t=this.a32()*this.a44()-this.a42()*this.a34(),n=this.a32()*this.a43()-this.a42()*this.a33(),r=this.a31()*this.a44()-this.a41()*this.a34(),i=this.a31()*this.a43()-this.a41()*this.a33(),s=this.a31()*this.a42()-this.a41()*this.a32();return this.a11()*(this.a22()*e-this.a23()*t+this.a24()*n)-this.a12()*(this.a21()*e-this.a23()*r+this.a24()*i)+this.a13()*(this.a21()*t-this.a22()*r+this.a24()*s)-this.a14()*(this.a21()*n-this.a22()*i+this.a23()*s)}}t.Matrix4=i},1116:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Vector2=void 0;class n{constructor(e,t){this.x=e,this.y=t}static up(){return new n(0,1)}static down(){return new n(0,-1)}static right(){return new n(1,0)}static left(){return new n(-1,0)}setX(e){this.x=e}setY(e){this.y=e}getX(){return this.x}getY(){return this.y}getInversionLength(){return 1/this.getLength()}getLength(){return Math.sqrt(this.x*this.x+this.y*this.y)}getNormalization(){const e=this.getInversionLength();return new n(this.x*e,this.y*e)}plus(e){return new n(this.x+e.getX(),this.y+e.getY())}}t.Vector2=n},2440:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Vector3=void 0;const r=n(1116);class i extends r.Vector2{constructor(e,t,n){super(e,t),this.z=n}setZ(e){this.z=e}getZ(){return this.z}getLength(){return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z)}getNormalization(){const e=this.getInversionLength();return new i(this.x*e,this.y*e,this.z*e)}plus(e){return new i(this.x+e.getX(),this.y+e.getY(),this.z+e.getZ())}}t.Vector3=i},7628:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Vector4=void 0;const r=n(2440);class i extends r.Vector3{constructor(e,t,n,r){super(e,t,n),this.w=r}getW(){return this.w}setW(e){this.w=e}getLength(){return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z+this.w*this.w)}getNormalization(){const e=this.getInversionLength();return new i(this.x*e,this.y*e,this.z*e,this.w*e)}plus(e){return new i(this.x+e.getX(),this.y+e.getY(),this.z+e.getZ(),this.w+e.getW())}}t.Vector4=i},1756:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Transformation=void 0;const r=n(2440),i=n(824);class s{static getWorldMatrix(e,t,n){const r=this.getTranslationMatrix(i.Matrix4.identity(),e),o=this.rotationX(r,s.degreesToRadians(t.getX())),a=this.rotationY(o,s.degreesToRadians(t.getY())),h=this.rotationZ(a,s.degreesToRadians(t.getZ()));return this.scale(h,n)}static getPerspectiveProjectionMatrix(e,t,n,r){const s=1/Math.tan(t/2),o=1/(n-r);return new i.Matrix4([s/e,0,0,0,0,s,0,0,0,0,(r+n)*o,-1,0,0,2*r*n*o,0])}static getOrthogonalProjectionMatrix(e,t,n,r,s,o){const a=1/(e-t),h=1/(n-r),c=1/(o-s);return new i.Matrix4([-2*a,0,0,0,0,-2*h,0,0,0,0,-2*c,0,(e+t)*a,(r+n)*h,-1*(o+s)*c,1])}static getViewMatrix(e,t){const n=this.getRotationMatrix(i.Matrix4.identity(),s.degreesToRadians(t.getX()),new r.Vector3(1,0,0)),o=this.getRotationMatrix(n,s.degreesToRadians(t.getY()),new r.Vector3(0,1,0));return this.getTranslationMatrix(o,new r.Vector3(-e.getX(),-e.getY(),-e.getZ()))}static degreesToRadians(e){return e*(Math.PI/180)}static getTranslationMatrix(e,t){return new i.Matrix4([e.a11(),e.a12(),e.a13(),e.a14(),e.a21(),e.a22(),e.a23(),e.a24(),e.a31(),e.a32(),e.a33(),e.a34(),t.getX(),t.getY(),t.getZ(),e.a44()])}static translate(e,t){return new i.Matrix4([e.a11(),e.a12(),e.a13(),t.getX(),e.a21(),e.a22(),e.a23(),t.getY(),e.a31(),e.a32(),e.a33(),t.getZ(),e.a41(),e.a42(),e.a43(),e.a44()])}static rotationX(e,t){const n=Math.sin(t),r=Math.cos(t),s=new i.Matrix4([1,0,0,0,0,r,-n,0,0,n,r,0,0,0,0,1]);return e.multiplyMatrix(s)}static rotationY(e,t){const n=Math.sin(t),r=Math.cos(t),s=new i.Matrix4([r,0,n,0,0,1,0,0,-n,0,r,0,0,0,0,1]);return e.multiplyMatrix(s)}static rotationZ(e,t){const n=Math.sin(t),r=Math.cos(t),s=new i.Matrix4([r,-n,0,0,n,r,0,0,0,0,1,0,0,0,0,1]);return e.multiplyMatrix(s)}static scale(e,t){return new i.Matrix4([e.a11()*t.getX(),e.a12()*t.getX(),e.a13()*t.getX(),e.a14()*t.getX(),e.a21()*t.getY(),e.a22()*t.getY(),e.a23()*t.getY(),e.a24()*t.getY(),e.a31()*t.getZ(),e.a32()*t.getZ(),e.a33()*t.getZ(),e.a34()*t.getZ(),e.a41(),e.a42(),e.a43(),e.a44()])}static getRotationMatrix(e,t,n){const r=Math.sin(t),s=Math.cos(t),o=1-s,a=n.getNormalization(),h=a.getX()*a.getX()*o+s,c=a.getY()*a.getX()*o+a.getZ()*r,u=a.getZ()*a.getX()*o-a.getY()*r,d=a.getX()*a.getY()*o-a.getZ()*r,m=a.getY()*a.getY()*o+s,p=a.getZ()*a.getY()*o+a.getX()*r,l=a.getX()*a.getZ()*o+a.getY()*r,f=a.getY()*a.getZ()*o-a.getX()*r,g=a.getZ()*a.getZ()*o+s;return new i.Matrix4([e.a11()*h+e.a21()*c+e.a31()*u,e.a12()*h+e.a22()*c+e.a32()*u,e.a13()*h+e.a23()*c+e.a33()*u,e.a14()*h+e.a24()*c+e.a34()*u,e.a11()*d+e.a21()*m+e.a31()*p,e.a12()*d+e.a22()*m+e.a32()*p,e.a13()*d+e.a23()*m+e.a33()*p,e.a14()*d+e.a24()*m+e.a34()*p,e.a11()*l+e.a21()*f+e.a31()*g,e.a12()*l+e.a22()*f+e.a32()*g,e.a13()*l+e.a23()*f+e.a33()*g,e.a14()*l+e.a24()*f+e.a34()*g,e.a41(),e.a42(),e.a43(),e.a44()])}}t.Transformation=s},7864:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),s=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var n in e)"default"!==n&&Object.prototype.hasOwnProperty.call(e,n)&&r(t,e,n);return i(t,e),t};Object.defineProperty(t,"__esModule",{value:!0}),t.GraphicsEngine=void 0;const o=s(n(8808));t.GraphicsEngine=o},2408:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},3848:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Renderer=void 0;const r=n(7264);class i{static getAPI(){return this.rendererAPI}static setAPI(e){i.rendererAPI=e}}t.Renderer=i,i.rendererAPI=r.RendererAPI.WEB_GL},5036:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Renderer2D=void 0;const r=n(7628),i=n(6452),s=n(4780),o=n(2152),a=n(8992),h=n(4248),c=n(2440),u=n(1756),d=n(7748),m=n(1116);class p{constructor(){this.quadVertexBuffer=new Float32Array(0),this.quadVertexBufferIndex=0,this.quadIndexCount=0,this.textureSlots=new Array(p.maxTextureSlots),this.textureSlotIndex=1,this.quadPositions=[new r.Vector4(-.5,-.5,0,1),new r.Vector4(.5,-.5,0,1),new r.Vector4(.5,.5,0,1),new r.Vector4(-.5,.5,0,1)],this.textureCoordinates=[new m.Vector2(0,0),new m.Vector2(1,0),new m.Vector2(1,1),new m.Vector2(0,1)],this.statistics=new d.RendererStatistics}init(e,t){this.shaderProgram=t,this.whiteColor=new r.Vector4(1,1,1,1),this.whiteTexture=i.ResourceFactory.create2DFullWhiteTexture(e),this.initImpl();const n=new s.BufferLayout([(0,o.NewBufferElement)(a.ShaderDataType.FLOAT_3,"a_Position"),(0,o.NewBufferElement)(a.ShaderDataType.FLOAT_4,"a_Color"),(0,o.NewBufferElement)(a.ShaderDataType.FLOAT_2,"a_TextureCoordinate"),(0,o.NewBufferElement)(a.ShaderDataType.FLOAT_1,"a_TextureIndex"),(0,o.NewBufferElement)(a.ShaderDataType.FLOAT_3,"a_Translate"),(0,o.NewBufferElement)(a.ShaderDataType.FLOAT_3,"a_Rotation"),(0,o.NewBufferElement)(a.ShaderDataType.FLOAT_3,"a_Scale")]);this.vertexBuffer=h.BufferFactory.createFloat32VertexDynamicBuffer(e,p.maxVertices*n.sizeof()),this.vertexBuffer.setLayout(n),this.quadVertexBuffer=new Float32Array(p.maxVertices*n.sizeof());const c=new Uint16Array(p.maxIndices);let u=0;for(let e=0;e<c.length;e+=6)c[e]=u,c[e+1]=u+1,c[e+2]=u+2,c[e+3]=u+2,c[e+4]=u+3,c[e+5]=u,u+=4;const d=h.BufferFactory.createUint16IndexStaticBuffer(e,c);this.vertexArray=h.BufferFactory.createVertexArrayBuffer(e),this.vertexArray.addVertexBuffer(this.vertexBuffer),this.vertexArray.setIndexBuffer(d),this.vertexArray.unbind(),this.vertexBuffer.unbind(),d.unbind();const m=new Array(p.maxTextureSlots);for(let e=0;e<p.maxTextureSlots;e++)m[e]=e;this.shaderProgram.bind(),this.shaderProgram.setValueArrayI("u_Textures",m),this.shaderProgram.unbind(),this.textureSlots[0]=this.whiteTexture,this.statistics.increaseTextureSlotsCount()}begin(e){this.shaderProgram.bind(),this.shaderProgram.setMatrix4f("u_ViewProjectionMatrix",e.getViewProjectionMatrix()),this.quadIndexCount=0,this.quadVertexBufferIndex=0,this.textureSlotIndex=1}drawQuadWithColor(e,t,n,r){this.drawQuad(e,t,n,r,this.whiteTexture,this.textureCoordinates)}drawQuadWithTexture(e,t,n,r){this.drawQuad(e,t,n,this.whiteColor,r,this.textureCoordinates)}drawQuadWithSprite(e,t,n,r){this.drawQuad(e,t,n,this.whiteColor,r.getTexture(),r.getCoordinates())}drawQuad(e,t,n,r,i,s){this.quadIndexCount>=p.maxIndices&&this.newBatch();let o=-1;for(let e=0;this.textureSlotIndex&&this.textureSlots[e];e++)if(this.textureSlots[e].equal(i)){o=e;break}-1===o&&(o=this.textureSlotIndex,this.textureSlots[this.textureSlotIndex]=i,this.statistics.increaseTextureSlotsCount(),this.textureSlotIndex++);const a=new c.Vector3(u.Transformation.degreesToRadians(t.getX()),u.Transformation.degreesToRadians(t.getY()),u.Transformation.degreesToRadians(t.getZ()));this.fillQuadVertexBuffer(this.quadPositions[0],r,s[0],o,e,a,n),this.fillQuadVertexBuffer(this.quadPositions[1],r,s[1],o,e,a,n),this.fillQuadVertexBuffer(this.quadPositions[2],r,s[2],o,e,a,n),this.fillQuadVertexBuffer(this.quadPositions[3],r,s[3],o,e,a,n),this.quadIndexCount+=6,this.statistics.increaseQuadsCount()}end(){this.vertexBuffer.setFloat32Data(this.quadVertexBuffer.subarray(0,this.quadVertexBufferIndex)),this.vertexArray.bind();for(let e=0;e<p.maxTextureSlots;e++){const t=this.textureSlots[e];if(!t)break;t.bind(e)}this.drawTrianglesImpl(this.vertexArray,this.quadIndexCount),this.statistics.increaseDrawMethodCallsCount()}newBatch(){this.end(),this.quadIndexCount=0,this.quadVertexBufferIndex=0,this.textureSlotIndex=1}fillQuadVertexBuffer(e,t,n,r,i,s,o){this.quadVertexBuffer[this.quadVertexBufferIndex]=e.getX(),this.quadVertexBuffer[this.quadVertexBufferIndex+1]=e.getY(),this.quadVertexBuffer[this.quadVertexBufferIndex+2]=e.getZ(),this.quadVertexBuffer[this.quadVertexBufferIndex+3]=t.getX(),this.quadVertexBuffer[this.quadVertexBufferIndex+4]=t.getY(),this.quadVertexBuffer[this.quadVertexBufferIndex+5]=t.getZ(),this.quadVertexBuffer[this.quadVertexBufferIndex+6]=t.getW(),this.quadVertexBuffer[this.quadVertexBufferIndex+7]=n.getX(),this.quadVertexBuffer[this.quadVertexBufferIndex+8]=n.getY(),this.quadVertexBuffer[this.quadVertexBufferIndex+9]=r,this.quadVertexBuffer[this.quadVertexBufferIndex+10]=i.getX(),this.quadVertexBuffer[this.quadVertexBufferIndex+11]=i.getY(),this.quadVertexBuffer[this.quadVertexBufferIndex+12]=i.getZ(),this.quadVertexBuffer[this.quadVertexBufferIndex+13]=s.getX(),this.quadVertexBuffer[this.quadVertexBufferIndex+14]=s.getY(),this.quadVertexBuffer[this.quadVertexBufferIndex+15]=s.getZ(),this.quadVertexBuffer[this.quadVertexBufferIndex+16]=o.getX(),this.quadVertexBuffer[this.quadVertexBufferIndex+17]=o.getY(),this.quadVertexBuffer[this.quadVertexBufferIndex+18]=o.getZ(),this.quadVertexBufferIndex+=19}getStatics(){return this.statistics}resetStatistics(){this.statistics.reset()}clean(){this.vertexBuffer.clean(),this.vertexArray.clean();for(const e of this.textureSlots){if(!e)break;e.clean()}this.shaderProgram.clean()}}t.Renderer2D=p,p.maxQuads=1e4,p.maxVertices=4*p.maxQuads,p.maxIndices=6*p.maxQuads,p.maxTextureSlots=16},7264:(e,t)=>{var n;Object.defineProperty(t,"__esModule",{value:!0}),t.RendererAPI=void 0,function(e){e[e.WEB_GL=0]="WEB_GL"}(n||(t.RendererAPI=n={}))},7748:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.RendererStatistics=void 0,t.RendererStatistics=class{constructor(){this.drawMethodCallsCount=0,this.quadsCount=0,this.textureSlotsCount=0}increaseDrawMethodCallsCount(){this.drawMethodCallsCount++}increaseQuadsCount(){this.quadsCount++}increaseTextureSlotsCount(){this.textureSlotsCount++}reset(){this.drawMethodCallsCount=0,this.quadsCount=0}getDrawMethodCallsCount(){return this.drawMethodCallsCount}getQuadsCount(){return this.quadsCount}getTextureSlotsCount(){return this.textureSlotsCount}}},6580:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},9984:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Sprite2D=void 0;const r=n(1116);t.Sprite2D=class{constructor(e){this.texture=e,this.coordinates=new Array(4),this.coordinates[0]=new r.Vector2(0,0),this.coordinates[1]=new r.Vector2(0,0),this.coordinates[2]=new r.Vector2(0,0),this.coordinates[3]=new r.Vector2(0,0)}updateCoordinates(e,t){this.coordinates[0]=new r.Vector2(e.getX(),e.getY()),this.coordinates[1]=new r.Vector2(t.getX(),e.getY()),this.coordinates[2]=new r.Vector2(t.getX(),t.getY()),this.coordinates[3]=new r.Vector2(e.getX(),t.getY())}getTexture(){return this.texture}getCoordinates(){return this.coordinates}}},6868:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},8992:(e,t,n)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.getComponentCountFromShaderDataType=t.ShaderDataType=void 0;const r=n(7740);var i;!function(e){e[e.FLOAT_1=r.NumberType.FLOAT.valueOf()]="FLOAT_1",e[e.FLOAT_2=2*r.NumberType.FLOAT.valueOf()]="FLOAT_2",e[e.FLOAT_3=3*r.NumberType.FLOAT.valueOf()]="FLOAT_3",e[e.FLOAT_4=4*r.NumberType.FLOAT.valueOf()]="FLOAT_4",e[e.INT_1=r.NumberType.INT.valueOf()]="INT_1",e[e.INT_2=2*r.NumberType.INT.valueOf()]="INT_2",e[e.INT_3=3*r.NumberType.INT.valueOf()]="INT_3",e[e.INT_4=4*r.NumberType.INT.valueOf()]="INT_4"}(i||(t.ShaderDataType=i={})),t.getComponentCountFromShaderDataType=function(e){switch(e){case i.FLOAT_1:return 1;case i.FLOAT_2:return 2;case i.FLOAT_3:return 3;case i.FLOAT_4:return 4;case i.INT_1:return 1;case i.INT_2:return 2;case i.INT_3:return 3;case i.INT_4:return 4}throw new Error("ShaderDataType [ "+e+" ] not supported")}},1232:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.ShaderProgramLibrary=void 0,t.ShaderProgramLibrary=class{constructor(){this.shaderPrograms=new Map}add(e){this.shaderPrograms.set(e.getName(),e)}get(e){const t=this.shaderPrograms.get(e);if(!t)throw new Error("Shader program by name [ "+e+" ] not found in library");return t}clean(){this.shaderPrograms.clear()}}},420:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},9744:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Default2DShader=void 0,t.Default2DShader=class{static getVertexShader(){return"#version 300 es\n\t\t\t\tlayout (location = 0) in vec4 a_Position;\n\t\t\t\tlayout (location = 1) in vec4 a_Color;\n\t\t\t\tlayout (location = 2) in vec2 a_TextCoord;\n\t\t\t\tlayout (location = 3) in float a_TextIndex;\n\t\t\t\tlayout (location = 4) in vec3 a_Translate;\n\t\t\t\tlayout (location = 5) in vec3 a_Rotation;\n\t\t\t\tlayout (location = 6) in vec3 a_Scale;\n\t\t\t\t\n\t\t\t\tout vec4 v_Color;\n\t\t\t\tout vec2 v_TextCoord;\n\t\t\t\tout float v_TextIndex;\n\t\t\t\t\n\t\t\t\tuniform mat4 u_ViewProjectionMatrix;\n\t\t\t\t\n\t\t\t\tmat4 getWorldMatrix() {\n\t\t\t\t\tmat4 translationMatrix = mat4(1.0);\n\t\t\t\t\t\n\t\t\t\t\ttranslationMatrix[3] = vec4(a_Translate, 1.0);\n\t\t\t\t\t\n\t\t\t\t\tmat4 rotationMatrixX = mat4(\n\t\t\t\t\t\t1.0, 0.0, 0.0, 0.0,\n\t\t\t\t\t\t0.0, cos(a_Rotation.x), -sin(a_Rotation.x), 0.0,\n\t\t\t\t\t\t0.0, sin(a_Rotation.x), cos(a_Rotation.x), 0.0,\n\t\t\t\t\t\t0.0, 0.0, 0.0, 1.0\n\t\t\t\t\t);\n\t\t\t\t\t\n\t\t\t\t\tmat4 rotationMatrixY = mat4(\n\t\t\t\t\t\tcos(a_Rotation.y), 0.0, sin(a_Rotation.y), 0.0,\n\t\t\t\t\t\t0.0, 1.0, 0.0, 0.0,\n\t\t\t\t\t\t-sin(a_Rotation.y), 0.0, cos(a_Rotation.y), 0.0,\n\t\t\t\t\t\t0.0, 0.0, 0.0, 1.0\n\t\t\t\t\t);\n\t\t\t\t\t\n\t\t\t\t\tmat4 rotationMatrixZ = mat4(\n\t\t\t\t\t\tcos(a_Rotation.z), -sin(a_Rotation.z), 0.0, 0.0,\n\t\t\t\t\t\tsin(a_Rotation.z), cos(a_Rotation.z), 0.0, 0.0,\n\t\t\t\t\t\t0.0, 0.0, 1.0, 0.0,\n\t\t\t\t\t\t0.0, 0.0, 0.0, 1.0\n\t\t\t\t\t);\n\t\t\t\t\t\n\t\t\t\t\tmat4 scaleMatrix = mat4(\n\t\t\t\t\t\ta_Scale.x, 0.0, 0.0, 0.0,\n\t\t\t\t\t\t0.0, a_Scale.y, 0.0, 0.0,\n\t\t\t\t\t\t0.0, 0.0, a_Scale.z, 0.0,\n\t\t\t\t\t\t0.0, 0.0, 0.0, 1.0\n\t\t\t\t\t);\n\t\t\t\t\n\t\t\t\t\treturn translationMatrix * rotationMatrixX * rotationMatrixY * rotationMatrixZ * scaleMatrix;\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tvoid main() {\n\t\t\t\t\tv_TextCoord = vec2(a_TextCoord.x, 1.0f - a_TextCoord.y);\n\t\t\t\t\tv_TextIndex = a_TextIndex;\n\t\t\t\t\tv_Color = a_Color;\n\t\t\t\t\t\n\t\t\t\t\tmat4 worldMatrix = getWorldMatrix();\n\t\t\t\t\tgl_Position = u_ViewProjectionMatrix * worldMatrix * a_Position;\n\t\t\t\t}"}static getFragmentShader(){return"#version 300 es\n\t\t\t\tprecision lowp float; //модификатор точности для фрагментного шейдера\n\t\t\t\t\n\t\t\t\tin vec4 v_Color;\n\t\t\t\tin vec2 v_TextCoord;\n\t\t\t\tin float v_TextIndex;\n\t\t\t\t\n\t\t\t\tuniform sampler2D u_Textures[16];\n\t\t\t\t\n\t\t\t\tout vec4 fragColor; //выходная переменная итогового цвета\n\t\t\t\t\n\t\t\t\tvec4 getColorByTexture() {\n\t\t\t\t\tint index = int(v_TextIndex);\n\t\t\t\t\t\n\t\t\t\t\t//amd, intel, nvidia support\n\t\t\t\t\tswitch (index) {\n\t\t\t\t\t\tcase 0: return texture(u_Textures[0], v_TextCoord);\n\t\t\t\t\t\tcase 1: return texture(u_Textures[1], v_TextCoord);\n\t\t\t\t\t\tcase 2: return texture(u_Textures[2], v_TextCoord);\n\t\t\t\t\t\tcase 3: return texture(u_Textures[3], v_TextCoord);\n\t\t\t\t\t\tcase 4: return texture(u_Textures[4], v_TextCoord);\n\t\t\t\t\t\tcase 5: return texture(u_Textures[5], v_TextCoord);\n\t\t\t\t\t\tcase 6: return texture(u_Textures[6], v_TextCoord);\n\t\t\t\t\t\tcase 7: return texture(u_Textures[7], v_TextCoord);\n\t\t\t\t\t\tcase 8: return texture(u_Textures[8], v_TextCoord);\n\t\t\t\t\t\tcase 9: return texture(u_Textures[9], v_TextCoord);\n\t\t\t\t\t\tcase 10: return texture(u_Textures[10], v_TextCoord);\n\t\t\t\t\t\tcase 11: return texture(u_Textures[11], v_TextCoord);\n\t\t\t\t\t\tcase 12: return texture(u_Textures[12], v_TextCoord);\n\t\t\t\t\t\tcase 13: return texture(u_Textures[13], v_TextCoord);\n\t\t\t\t\t\tcase 14: return texture(u_Textures[14], v_TextCoord);\n\t\t\t\t\t\tcase 15: return texture(u_Textures[15], v_TextCoord);\n\t\t\t\t\t};\n\t\t\t\t\t\n\t\t\t\t\treturn vec4(1.0, 1.0, 1.0, 1.0);\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tvoid main() {\n\t\t\t\t\tfragColor = v_Color * getColorByTexture();\n\t\t\t\t}"}}},7740:(e,t)=>{var n;Object.defineProperty(t,"__esModule",{value:!0}),t.NumberType=void 0,function(e){e[e.FLOAT=4]="FLOAT",e[e.INT=4]="INT",e[e.UNSIGNED_INT=4]="UNSIGNED_INT"}(n||(t.NumberType=n={}))},12:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.Random=void 0,t.Random=class{static uuid(){return"10000000-1000-4000-8000-100000000000".replace(/[018]/g,(e=>{const t=Number(e);return((15&(t^crypto.getRandomValues(new Uint8Array(1))[0]))>>t/4).toString(16)}))}static int(e){return Math.floor(Math.random()*e)}}},6776:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__exportStar||function(e,t){for(var n in e)"default"===n||Object.prototype.hasOwnProperty.call(t,n)||r(t,e,n)};Object.defineProperty(t,"__esModule",{value:!0}),t.GraphicsEngine=t.EventSystem=t.ECS=t.Layer=void 0,i(n(2800),t),i(n(6048),t),i(n(6228),t);var s=n(480);Object.defineProperty(t,"Layer",{enumerable:!0,get:function(){return s.Layer}});var o=n(2292);Object.defineProperty(t,"ECS",{enumerable:!0,get:function(){return o.ECS}});var a=n(1720);Object.defineProperty(t,"EventSystem",{enumerable:!0,get:function(){return a.EventSystem}});var h=n(7864);Object.defineProperty(t,"GraphicsEngine",{enumerable:!0,get:function(){return h.GraphicsEngine}})},6188:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},7712:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0})},4756:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.BaseLayer=void 0,t.BaseLayer=class{constructor(e="layer"){this.name=e}getName(){return this.name}}},1660:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.BaseLayerStack=void 0,t.BaseLayerStack=class{constructor(){this.layers=[],this.layerInsert=0}push(e){this.layers.splice(this.layerInsert,0,e),e.attach(),this.layerInsert++}pushOverlay(e){this.layers.push(e),e.attach()}clean(){for(;this.layers.length>0;)this.layers.pop()}getLayers(){return this.layers}}},9496:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__exportStar||function(e,t){for(var n in e)"default"===n||Object.prototype.hasOwnProperty.call(t,n)||r(t,e,n)};Object.defineProperty(t,"__esModule",{value:!0}),i(n(6188),t),i(n(7712),t),i(n(4756),t),i(n(1660),t)},480:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),s=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var n in e)"default"!==n&&Object.prototype.hasOwnProperty.call(e,n)&&r(t,e,n);return i(t,e),t};Object.defineProperty(t,"__esModule",{value:!0}),t.Layer=void 0;const o=s(n(9496));t.Layer=o},4284:function(e,t,n){var r=this&&this.__createBinding||(Object.create?function(e,t,n,r){void 0===r&&(r=n);var i=Object.getOwnPropertyDescriptor(t,n);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[n]}}),Object.defineProperty(e,r,i)}:function(e,t,n,r){void 0===r&&(r=n),e[r]=t[n]}),i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),s=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var n in e)"default"!==n&&Object.prototype.hasOwnProperty.call(e,n)&&r(t,e,n);return i(t,e),t};Object.defineProperty(t,"__esModule",{value:!0}),t.GameEngine=void 0;const o=s(n(6776));t.GameEngine=o}},t={};function n(r){var i=t[r];if(void 0!==i)return i.exports;var s=t[r]={exports:{}};return e[r].call(s.exports,s,s.exports,n),s.exports}n.d=(e,t)=>{for(var r in t)n.o(t,r)&&!n.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},n.g=function(){if("object"==typeof globalThis)return globalThis;try{return this||new Function("return this")()}catch(e){if("object"==typeof window)return window}}(),n.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),n.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},(()=>{var e;n.g.importScripts&&(e=n.g.location+"");var t=n.g.document;if(!e&&t&&(t.currentScript&&(e=t.currentScript.src),!e)){var r=t.getElementsByTagName("script");if(r.length)for(var i=r.length-1;i>-1&&!e;)e=r[i--].src}if(!e)throw new Error("Automatic publicPath is not supported in this browser");e=e.replace(/#.*$/,"").replace(/\?.*$/,"").replace(/\/[^\/]+$/,"/"),n.p=e})(),n(1740)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript)
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && !scriptUrl) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/Time.ts
+class Time {
+    constructor(timestamp = 0) {
+        this.timestamp = timestamp;
+        this.deltaTime = 0;
+    }
+    update(timestamp) {
+        this.deltaTime = timestamp - this.timestamp;
+        this.timestamp = timestamp;
+    }
+    getTimestamp() {
+        return this.timestamp;
+    }
+    getDeltaTimeMs() {
+        return this.deltaTime;
+    }
+    getDeltaTimeSec() {
+        return this.deltaTime / 1000;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/layer/impl/BaseLayerStack.ts
+class BaseLayerStack {
+    constructor() {
+        this.layers = [];
+        this.layerInsert = 0;
+    }
+    push(layer) {
+        this.layers.splice(this.layerInsert, 0, layer);
+        layer.attach();
+        this.layerInsert++;
+    }
+    pushOverlay(layer) {
+        this.layers.push(layer);
+        layer.attach();
+    }
+    clean() {
+        while (this.layers.length > 0) {
+            this.layers.pop();
+        }
+    }
+    getLayers() {
+        return this.layers;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/element/ElementEventType.ts
+var ElementEventType;
+(function (ElementEventType) {
+    ElementEventType[ElementEventType["RESIZE"] = 0] = "RESIZE";
+    ElementEventType[ElementEventType["INVALID"] = 1] = "INVALID";
+})(ElementEventType || (ElementEventType = {}));
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/element/ElementEvent.ts
+
+class ElementEvent {
+    constructor(type, width, height) {
+        this.type = type;
+        this.width = width;
+        this.height = height;
+    }
+    isValid() {
+        return this.type !== ElementEventType.INVALID;
+    }
+    getWidth() {
+        return this.width;
+    }
+    getHeight() {
+        return this.height;
+    }
+    getType() {
+        return this.type;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/structures/impl/BaseQueue.ts
+/**
+ * Класс реализации базовой очереди
+ */
+class BaseQueue {
+    constructor() {
+        this.array = [];
+    }
+    peek() {
+        return this.array[0];
+    }
+    poll() {
+        let result = this.array.shift();
+        if (!result) {
+            throw new Error("Нет элементов в очереди");
+        }
+        return result;
+    }
+    push(element) {
+        this.array.push(element);
+    }
+    size() {
+        return this.array.length;
+    }
+    flush() {
+        //пока в очереди есть записи, берем первый из очереди
+        while (this.size() !== 0) {
+            this.poll();
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/element/Element.ts
+
+
+
+class Element {
+    constructor(bufferSize) {
+        this.bufferSize = bufferSize;
+        this.buffer = new BaseQueue();
+        this.width = 0;
+        this.height = 0;
+    }
+    read() {
+        //если в буфере есть записи, то возвращается первая из очереди
+        if (this.buffer.size() > 0) {
+            return this.buffer.poll();
+        }
+        return this.generateEvent(ElementEventType.INVALID);
+    }
+    getWidth() {
+        return this.width;
+    }
+    getHeight() {
+        return this.height;
+    }
+    onResize(width, height) {
+        if (this.width !== width || this.height !== height) {
+            this.width = width;
+            this.height = height;
+            this.buffer.push(this.generateEvent(ElementEventType.RESIZE));
+            this.trimBuffer();
+        }
+    }
+    flush() {
+        this.buffer.flush();
+    }
+    trimBuffer() {
+        //пока в буфере больше записей, чем в значении bufferSize, берем первый из очереди
+        while (this.buffer.size() > this.bufferSize) {
+            this.buffer.poll();
+        }
+    }
+    generateEvent(type) {
+        return new ElementEvent(type, this.width, this.height);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/inputs/Input.ts
+class Input {
+    constructor() { }
+    static isKeyboardKeyPressed(key) {
+        return this.instance.isKeyboardKeyPressedImpl(key);
+    }
+    static isLeftMouseKeyPressed() {
+        return this.instance.isLeftMouseKeyPressedImpl();
+    }
+    static isRightMouseKeyPressed() {
+        return this.instance.isRightMouseKeyPressedImpl();
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/inputs/BaseInput.ts
+
+class BaseInput extends Input {
+    constructor(mouse, keyboard) {
+        super();
+        this.mouse = mouse;
+        this.keyboard = keyboard;
+    }
+    isKeyboardKeyPressedImpl(key) {
+        return this.keyboard.keyIsPressed(key);
+    }
+    isLeftMouseKeyPressedImpl() {
+        return this.mouse.isLeftKeyPressed();
+    }
+    isRightMouseKeyPressedImpl() {
+        return this.mouse.isRightKeyPressed();
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/keyboard/Key.ts
+/**
+ * Перечисления клавиш
+ */
+var Key;
+(function (Key) {
+    Key["A"] = "KeyA";
+    Key["B"] = "KeyB";
+    Key["C"] = "KeyC";
+    Key["D"] = "KeyD";
+    Key["E"] = "KeyE";
+    Key["F"] = "KeyF";
+    Key["G"] = "KeyG";
+    Key["H"] = "KeyH";
+    Key["I"] = "KeyI";
+    Key["J"] = "KeyJ";
+    Key["K"] = "KeyK";
+    Key["L"] = "KeyL";
+    Key["M"] = "KeyM";
+    Key["N"] = "KeyN";
+    Key["O"] = "KeyO";
+    Key["P"] = "KeyP";
+    Key["Q"] = "KeyQ";
+    Key["R"] = "KeyR";
+    Key["S"] = "KeyS";
+    Key["T"] = "KeyT";
+    Key["U"] = "KeyU";
+    Key["V"] = "KeyV";
+    Key["W"] = "KeyW";
+    Key["X"] = "KeyX";
+    Key["Y"] = "KeyY";
+    Key["Z"] = "KeyZ";
+    Key["LEFT_SHIFT"] = "ShiftLeft";
+    Key["LEFT_CTR"] = "ControlLeft";
+    Key["SPACE"] = "Space";
+})(Key || (Key = {}));
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/keyboard/KeyboardEventType.ts
+var KeyboardEventType;
+(function (KeyboardEventType) {
+    KeyboardEventType[KeyboardEventType["PRESS"] = 0] = "PRESS";
+    KeyboardEventType[KeyboardEventType["RELEASE"] = 1] = "RELEASE";
+    KeyboardEventType[KeyboardEventType["INVALID"] = 2] = "INVALID";
+})(KeyboardEventType || (KeyboardEventType = {}));
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/keyboard/KeyboardEvent.ts
+
+/**
+ * Класс для описания событий клавиатуры
+ */
+class KeyboardEvent {
+    /**
+     * Конструктор для создания события клавиатуры
+     * @param type тип события
+     * @param code код кнопки
+     */
+    constructor(type, code) {
+        this.type = type; //сохранение типа события
+        this.code = code; //сохранение кода кнопки
+    }
+    isPress() {
+        return this.type === KeyboardEventType.PRESS;
+    }
+    isRelease() {
+        return this.type === KeyboardEventType.RELEASE;
+    }
+    isValid() {
+        return this.type !== KeyboardEventType.INVALID;
+    }
+    getCode() {
+        return this.code;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/keyboard/Keyboard.ts
+
+
+
+/**
+ * Класс для работы с событиями клавиатуры
+ */
+class Keyboard {
+    /**
+     * Конструктор для создания объекта клавиатуры
+     */
+    constructor(bufferSize) {
+        /**
+         * Размер буфера хранения событий клавиатуры
+         * @private
+         */
+        this.bufferSize = 16;
+        this.bufferSize = bufferSize;
+        //инициализация буфера хранения событий клавиатуры
+        this.keyBuffer = new BaseQueue();
+        //инициализация буфера хранения введенных символов
+        this.charBuffer = new BaseQueue();
+        //инициализация статуса кнопок
+        this.keyStates = new Map();
+    }
+    /**
+     * Проверка нажата ли данная кнопка на клавиатуре
+     * @param key кнопка для проверки
+     */
+    keyIsPressed(key) {
+        let result = this.keyStates.get(key);
+        //если в Map не храниться записи по данному ключу, то сохраняем новую запись с параметром false и возвращаем false
+        if (!result) {
+            this.keyStates.set(key, false);
+            return false;
+        }
+        return result;
+    }
+    /**
+     * Получение из буфера событие от клавиатуры
+     */
+    readKey() {
+        //если в буфере есть записи, то возвращается первая из очереди
+        if (this.keyBuffer.size() > 0) {
+            return this.keyBuffer.poll();
+        }
+        return new KeyboardEvent(KeyboardEventType.INVALID, ""); //инициализация пустого события
+    }
+    /**
+     * Проверка есть ли записи в буфере событий клавиатуры
+     */
+    keyIsEmpty() {
+        return this.keyBuffer.size() === 0;
+    }
+    /**
+     * Получение из буфера введенный символ
+     */
+    readChar() {
+        //если в буфере есть записи, то возвращается первый их очереди
+        if (this.charBuffer.size() > 0) {
+            return this.charBuffer.poll();
+        }
+        return ""; //инициализация пустого символа
+    }
+    /**
+     * Проверка есть ли записи в буфере введенных символов
+     */
+    charIsEmpty() {
+        return this.charBuffer.size() === 0;
+    }
+    /**
+     * Отчистка буфера событий клавиатуры
+     */
+    flushKey() {
+        this.keyBuffer.flush();
+    }
+    /**
+     * Отчистка буфера введенных символов
+     */
+    flushChar() {
+        this.charBuffer.flush();
+    }
+    /**
+     * Отчистка буферов
+     */
+    flush() {
+        this.flushKey();
+        this.flushChar();
+    }
+    /**
+     * Сохранение события нажатия по кнопке на клавиатуре
+     * @param keycode название кнопки
+     */
+    onKeyPressed(keycode) {
+        this.keyStates.set(keycode, true);
+        this.keyBuffer.push(new KeyboardEvent(KeyboardEventType.PRESS, keycode));
+        this.trimBuffer(this.keyBuffer);
+    }
+    /**
+     * Сохранение события отжатия по кнопке на клавиатуре
+     * @param keycode название кнопки
+     */
+    onKeyReleased(keycode) {
+        this.keyStates.set(keycode, false);
+        this.keyBuffer.push(new KeyboardEvent(KeyboardEventType.RELEASE, keycode));
+        this.trimBuffer(this.keyBuffer);
+    }
+    /**
+     * Сохранение события ввода символа
+     * @param char введенный символ
+     */
+    onChar(char) {
+        this.charBuffer.push(char);
+        this.trimBuffer(this.charBuffer);
+    }
+    /**
+     * Удаление устаревших записей в выбранном буфере
+     * @param buffer выбранный буфер
+     * @private
+     */
+    trimBuffer(buffer) {
+        //пока в буфере больше записей, чем в значении bufferSize, берем первый из очереди
+        while (buffer.size() > this.bufferSize) {
+            buffer.poll();
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/mouse/MouseEventType.ts
+var MouseEventType;
+(function (MouseEventType) {
+    MouseEventType[MouseEventType["L_PRESS"] = 0] = "L_PRESS";
+    MouseEventType[MouseEventType["L_RELEASE"] = 1] = "L_RELEASE";
+    MouseEventType[MouseEventType["R_PRESS"] = 2] = "R_PRESS";
+    MouseEventType[MouseEventType["R_RELEASE"] = 3] = "R_RELEASE";
+    MouseEventType[MouseEventType["WHEEL_UP"] = 4] = "WHEEL_UP";
+    MouseEventType[MouseEventType["WHEEL_DOWN"] = 5] = "WHEEL_DOWN";
+    MouseEventType[MouseEventType["MOVE"] = 6] = "MOVE";
+    MouseEventType[MouseEventType["ENTER"] = 7] = "ENTER";
+    MouseEventType[MouseEventType["LEAVE"] = 8] = "LEAVE";
+    MouseEventType[MouseEventType["INVALID"] = 9] = "INVALID";
+})(MouseEventType || (MouseEventType = {}));
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/mouse/MouseEvent.ts
+
+/**
+ * Класс для описания событий мышки
+ */
+class MouseEvent {
+    constructor(type, leftKeyIsPressed, rightKeyIsPressed, positionX, positionY) {
+        this.type = type;
+        this.leftKeyIsPressed = leftKeyIsPressed;
+        this.rightKeyIsPressed = rightKeyIsPressed;
+        this.positionX = positionX;
+        this.positionY = positionY;
+    }
+    isValid() {
+        return this.type !== MouseEventType.INVALID;
+    }
+    getPositionX() {
+        return this.positionX;
+    }
+    getPositionY() {
+        return this.positionY;
+    }
+    getType() {
+        return this.type;
+    }
+    isLeftKeyIsPressed() {
+        return this.leftKeyIsPressed;
+    }
+    isRightKeyIsPressed() {
+        return this.rightKeyIsPressed;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/mouse/Mouse.ts
+
+
+
+/**
+ * Класс для работы с событиями мышки
+ */
+class Mouse {
+    /**
+     * Конструктор для создания объекта мышки
+     */
+    constructor(bufferSize) {
+        this.bufferSize = bufferSize;
+        //инициализация буфера хранения событий мышки
+        this.buffer = new BaseQueue();
+        //инициализация направления мышки
+        this.directionX = 0;
+        this.directionY = 0;
+        this.positionX = 0; //инициализация начального положения мышки по оси X
+        this.positionY = 0; //инициализация начального положения мышки по оси Y
+        this.previousPositionX = 0; //инициализация предыдущего положения мышки по оси X
+        this.previousPositionY = 0; //инициализация предыдущего положения мышки по оси Y
+        this.leftKeyIsPressed = false; //инициализация статуса нажатия левой кнопки мышки
+        this.rightKeyIsPressed = false; //инициализация статуса нажатия правой кнопки мышки
+        this.inFocus = false; //инициализация статуса нахождения в графическом элементе
+    }
+    /**
+     * Получение позиции мышки по оси X
+     */
+    getPositionX() {
+        return this.positionX;
+    }
+    /**
+     * Получение позиции мышки по оси Y
+     */
+    getPositionY() {
+        return this.positionY;
+    }
+    /**
+     * Получение статуса идентификатора нахождения в фокусе
+     */
+    isInFocus() {
+        return this.inFocus;
+    }
+    /**
+     * Получение статуса нажатия левой кнопки мышки
+     */
+    isLeftKeyPressed() {
+        return this.leftKeyIsPressed;
+    }
+    /**
+     * Получение статуса нажатия правой кнопки мышки
+     */
+    isRightKeyPressed() {
+        return this.rightKeyIsPressed;
+    }
+    /**
+     * Получение из буфера событие от мышки
+     */
+    read() {
+        //если в буфере есть записи, то возвращается первая из очереди
+        if (this.buffer.size() > 0) {
+            return this.buffer.poll();
+        }
+        return this.generateEvent(MouseEventType.INVALID);
+    }
+    /**
+     * Отчистка буфера событий мышки
+     */
+    flush() {
+        this.buffer.flush();
+    }
+    /**
+     * Сохранение события перемещения мышки
+     * @param newPositionX новая координата мышки по оси X
+     * @param newPositionY новая координата мышки по оси Y
+     */
+    onMouseMove(newPositionX, newPositionY) {
+        this.positionX = newPositionX; //сохранение новой координаты по оси X
+        this.positionY = newPositionY; //сохранение новой координаты по оси Y
+        this.buffer.push(this.generateEvent(MouseEventType.MOVE));
+        this.trimBuffer();
+    }
+    /**
+     * Сохранение события выхода мышки за пределы фокуса
+     */
+    onMouseLeave() {
+        this.inFocus = false; //переключения статуса
+        this.buffer.push(this.generateEvent(MouseEventType.LEAVE));
+        this.trimBuffer();
+    }
+    /**
+     * Сохранение события перемещения мышки внутрь фокуса
+     */
+    onMouseEnter() {
+        this.inFocus = true; //переключения статуса
+        this.buffer.push(this.generateEvent(MouseEventType.ENTER));
+        this.trimBuffer();
+    }
+    /**
+     * Сохранение события нажатия на левую кнопку мыши
+     * @param positionX позиция нажатия кнопки мыши по оси X
+     * @param positionY позиция нажатия кнопки мыши по оси Y
+     */
+    onLeftKeyPressed(positionX, positionY) {
+        this.leftKeyIsPressed = true;
+        this.buffer.push(this.generateEvent(MouseEventType.L_PRESS));
+        this.trimBuffer();
+    }
+    /**
+     * Сохранение события отжатия левой кнопки мыши
+     * @param positionX позиция отжатия кнопки мыши по оси X
+     * @param positionY позиция отжатия кнопки мыши по оси Y
+     */
+    onLeftKeyReleased(positionX, positionY) {
+        this.leftKeyIsPressed = false;
+        this.buffer.push(this.generateEvent(MouseEventType.L_RELEASE));
+        this.trimBuffer();
+    }
+    /**
+     * Сохранение события нажатия на правую кнопку мыши
+     * @param positionX позиция нажатия кнопки мыши по оси X
+     * @param positionY позиция нажатия кнопки мыши по оси Y
+     */
+    onRightKeyPressed(positionX, positionY) {
+        this.rightKeyIsPressed = true;
+        this.buffer.push(this.generateEvent(MouseEventType.R_PRESS));
+        this.trimBuffer();
+    }
+    /**
+     * Сохранение события отжатия правой кнопки мыши
+     * @param positionX позиция отжатия кнопки мыши по оси X
+     * @param positionY позиция отжатия кнопки мыши по оси Y
+     */
+    onRightKeyReleased(positionX, positionY) {
+        this.rightKeyIsPressed = false;
+        this.buffer.push(this.generateEvent(MouseEventType.R_RELEASE));
+        this.trimBuffer();
+    }
+    /**
+     * Сохранение события прокрутки барабанчика вверх
+     * @param positionX позиция прокрутки мыши по оси X
+     * @param positionY позиция прокрутки мыши по оси Y
+     */
+    onWheelUp(positionX, positionY) {
+        this.buffer.push(this.generateEvent(MouseEventType.WHEEL_UP));
+        this.trimBuffer();
+    }
+    /**
+     * Сохранение события прокрутки барабанчика вниз
+     * @param positionX позиция прокрутки мыши по оси X
+     * @param positionY позиция прокрутки мыши по оси Y
+     */
+    onWheelDown(positionX, positionY) {
+        this.buffer.push(this.generateEvent(MouseEventType.WHEEL_DOWN));
+        this.trimBuffer();
+    }
+    /**
+     * Обновление вектора направления мышки
+     */
+    updateDirection() {
+        this.directionX = 0;
+        this.directionY = 0;
+        if (this.previousPositionX > 0 && this.previousPositionY > 0) {
+            this.directionX = this.positionY - this.previousPositionY;
+            this.directionY = this.positionX - this.previousPositionX;
+        }
+        this.previousPositionX = this.positionX;
+        this.previousPositionY = this.positionY;
+    }
+    /**
+     * Получение направления мышки по оси X
+     */
+    getDirectionX() {
+        return this.directionX;
+    }
+    /**
+     * Получение направления мышки по оси Y
+     */
+    getDirectionY() {
+        return this.directionY;
+    }
+    /**
+     * Удаление устаревших записей в буфере событий мышки
+     * @private
+     */
+    trimBuffer() {
+        //пока в буфере больше записей, чем в значении bufferSize, берем первый из очереди
+        while (this.buffer.size() > this.bufferSize) {
+            this.buffer.poll();
+        }
+    }
+    generateEvent(type) {
+        return new MouseEvent(type, this.leftKeyIsPressed, this.rightKeyIsPressed, this.positionX, this.positionY);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/index.ts
+
+
+
+
+
+
+
+
+
+
+
+
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/namespace/event_system.ts
+
+
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/maths/impl/Vector2.ts
+class Vector2 {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    static up() {
+        return new Vector2(0, 1);
+    }
+    static down() {
+        return new Vector2(0, -1);
+    }
+    static right() {
+        return new Vector2(1, 0);
+    }
+    static left() {
+        return new Vector2(-1, 0);
+    }
+    /**
+     * Установка значения компоненты вектора X
+     * @param x новое значение компонента X для вектора
+     */
+    setX(x) {
+        this.x = x;
+    }
+    /**
+     * Установка значения компоненты вектора Y
+     * @param y новое значение компонента Y для вектора
+     */
+    setY(y) {
+        this.y = y;
+    }
+    /**
+     * Получение значения компоненты X
+     */
+    getX() {
+        return this.x;
+    }
+    /**
+     * Получение значения компоненты Y
+     */
+    getY() {
+        return this.y;
+    }
+    getInversionLength() {
+        return 1 / this.getLength();
+    }
+    getLength() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+    getNormalization() {
+        const inversionLength = this.getInversionLength();
+        return new Vector2(this.x * inversionLength, this.y * inversionLength);
+    }
+    plus(vector) {
+        return new Vector2(this.x + vector.getX(), this.y + vector.getY());
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/maths/impl/Vector3.ts
+
+/**
+ * Класс для работы с векторами
+ */
+class Vector3 extends Vector2 {
+    /**
+     * Конструктор для создания нового вектора
+     * @param x компонента вектора X
+     * @param y компонента вектора Y
+     * @param z компонента вектора Z
+     */
+    constructor(x, y, z) {
+        super(x, y);
+        this.z = z;
+    }
+    /**
+     * Установка значения компоненты вектора Z
+     * @param z новое значение компонента Z для вектора
+     */
+    setZ(z) {
+        this.z = z;
+    }
+    /**
+     * Получение значения компоненты Z
+     */
+    getZ() {
+        return this.z;
+    }
+    getLength() {
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    }
+    getNormalization() {
+        const inversionLength = this.getInversionLength();
+        return new Vector3(this.x * inversionLength, this.y * inversionLength, this.z * inversionLength);
+    }
+    plus(vector) {
+        return new Vector3(this.x + vector.getX(), this.y + vector.getY(), this.z + vector.getZ());
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/maths/impl/Vector4.ts
+
+/**
+ * Класс для работы с векторами
+ */
+class Vector4 extends Vector3 {
+    /**
+     * Конструктор для создания нового вектора
+     * @param x компонента вектора X
+     * @param y компонента вектора Y
+     * @param z компонента вектора Z
+     * @param w компонента вектора W
+     */
+    constructor(x, y, z, w) {
+        super(x, y, z);
+        this.w = w;
+    }
+    /**
+     * Получение значения компоненты W
+     */
+    getW() {
+        return this.w;
+    }
+    /**
+     * Установка значения компоненты вектора W
+     * @param w новое значение компонента W для вектора
+     */
+    setW(w) {
+        this.w = w;
+    }
+    getLength() {
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
+    }
+    getNormalization() {
+        const inversionLength = this.getInversionLength();
+        return new Vector4(this.x * inversionLength, this.y * inversionLength, this.z * inversionLength, this.w * inversionLength);
+    }
+    plus(vector) {
+        return new Vector4(this.x + vector.getX(), this.y + vector.getY(), this.z + vector.getZ(), this.w + vector.getW());
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/maths/impl/Matrix4.ts
+
+class Matrix4 {
+    constructor(arrayMatrix) {
+        this.arrayMatrix = arrayMatrix;
+    }
+    /**
+     * Единичная матрица 4x4
+     */
+    static identity() {
+        return new Matrix4([
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ]);
+    }
+    getArray() {
+        return this.arrayMatrix;
+    }
+    multiplyMatrix(matrix) {
+        const a11 = this.a11() * matrix.a11() + this.a12() * matrix.a21() + this.a13() * matrix.a31() + this.a14() * matrix.a41();
+        const a12 = this.a11() * matrix.a12() + this.a12() * matrix.a22() + this.a13() * matrix.a32() + this.a14() * matrix.a42();
+        const a13 = this.a11() * matrix.a13() + this.a12() * matrix.a23() + this.a13() * matrix.a33() + this.a14() * matrix.a43();
+        const a14 = this.a11() * matrix.a14() + this.a12() * matrix.a24() + this.a13() * matrix.a34() + this.a14() * matrix.a44();
+        const a21 = this.a21() * matrix.a11() + this.a22() * matrix.a21() + this.a23() * matrix.a31() + this.a24() * matrix.a41();
+        const a22 = this.a21() * matrix.a12() + this.a22() * matrix.a22() + this.a23() * matrix.a32() + this.a24() * matrix.a42();
+        const a23 = this.a21() * matrix.a13() + this.a22() * matrix.a23() + this.a23() * matrix.a33() + this.a24() * matrix.a43();
+        const a24 = this.a21() * matrix.a14() + this.a22() * matrix.a24() + this.a23() * matrix.a34() + this.a24() * matrix.a44();
+        const a31 = this.a31() * matrix.a11() + this.a32() * matrix.a21() + this.a33() * matrix.a31() + this.a34() * matrix.a41();
+        const a32 = this.a31() * matrix.a12() + this.a32() * matrix.a22() + this.a33() * matrix.a32() + this.a34() * matrix.a42();
+        const a33 = this.a31() * matrix.a13() + this.a32() * matrix.a23() + this.a33() * matrix.a33() + this.a34() * matrix.a43();
+        const a34 = this.a31() * matrix.a14() + this.a32() * matrix.a24() + this.a33() * matrix.a34() + this.a34() * matrix.a44();
+        const a41 = this.a41() * matrix.a11() + this.a42() * matrix.a21() + this.a43() * matrix.a31() + this.a44() * matrix.a41();
+        const a42 = this.a41() * matrix.a12() + this.a42() * matrix.a22() + this.a43() * matrix.a32() + this.a44() * matrix.a42();
+        const a43 = this.a41() * matrix.a13() + this.a42() * matrix.a23() + this.a43() * matrix.a33() + this.a44() * matrix.a43();
+        const a44 = this.a41() * matrix.a14() + this.a42() * matrix.a24() + this.a43() * matrix.a34() + this.a44() * matrix.a44();
+        return new Matrix4([
+            a11, a12, a13, a14,
+            a21, a22, a23, a24,
+            a31, a32, a33, a34,
+            a41, a42, a43, a44,
+        ]);
+    }
+    multiplyVector(vector) {
+        return new Vector4(this.a11() * vector.getX() + this.a12() * vector.getY() + this.a13() * vector.getZ() + this.a14() * vector.getW(), this.a21() * vector.getX() + this.a22() * vector.getY() + this.a23() * vector.getZ() + this.a24() * vector.getW(), this.a31() * vector.getX() + this.a32() * vector.getY() + this.a33() * vector.getZ() + this.a34() * vector.getW(), this.a41() * vector.getX() + this.a42() * vector.getY() + this.a43() * vector.getZ() + this.a44() * vector.getW());
+    }
+    a11() {
+        return this.arrayMatrix[0];
+    }
+    a12() {
+        return this.arrayMatrix[1];
+    }
+    a13() {
+        return this.arrayMatrix[2];
+    }
+    a14() {
+        return this.arrayMatrix[3];
+    }
+    a21() {
+        return this.arrayMatrix[4];
+    }
+    a22() {
+        return this.arrayMatrix[5];
+    }
+    a23() {
+        return this.arrayMatrix[6];
+    }
+    a24() {
+        return this.arrayMatrix[7];
+    }
+    a31() {
+        return this.arrayMatrix[8];
+    }
+    a32() {
+        return this.arrayMatrix[9];
+    }
+    a33() {
+        return this.arrayMatrix[10];
+    }
+    a34() {
+        return this.arrayMatrix[11];
+    }
+    a41() {
+        return this.arrayMatrix[12];
+    }
+    a42() {
+        return this.arrayMatrix[13];
+    }
+    a43() {
+        return this.arrayMatrix[14];
+    }
+    a44() {
+        return this.arrayMatrix[15];
+    }
+    transpose() {
+        return new Matrix4([
+            this.a11(), this.a21(), this.a31(), this.a41(),
+            this.a12(), this.a22(), this.a32(), this.a42(),
+            this.a13(), this.a23(), this.a33(), this.a43(),
+            this.a14(), this.a24(), this.a34(), this.a44()
+        ]);
+    }
+    /*
+               | a11  a12  a13  a14 |         | a22  a23  a24 |         | a21  a23  a24 |         | a21  a22  a24 |         | a21  a22  a23 |
+        detA = | a21  a22  a23  a24 | = a11 * | a32  a33  a34 | - a12 * | a31  a33  a34 | + a13 * | a31  a32  a34 | - a14 * | a31  a32  a33 | = a11 * (a22 * | a33  a34 | - a23 * | a32  a34 | + a24 * | a32  a33 |) - a12 * (a21 * | a33  a34 | - a23 * | a31  a34 | + a24 * | a31  a33 |) + a13 * (a21 * | a32  a34 | - a22 * | a31  a34 | + a24 * | a31  a32 |) - a14 * (a21 * | a32  a33 | - a22 * | a31  a33 | + a23 * | a31  a32 |) =
+               | a31  a32  a33  a34 |         | a42  a43  a44 |         | a41  a43  a44 |         | a41  a42  a44 |         | a41  a42  a43 |                | a43  a44 |         | a42  a44 |         | a42  a43 |                 | a43  a44 |         | a41  a44 |         | a41  a43 |                 | a42  a44 |         | a41  a44 |         | a41  a42 |                 | a42  a43 |         | a41  a43 |         | a41  a42 |
+               | a41  a42  a43  a44 |
+
+             = a11 * (a22 * (a33 * a44 - a43 * a34) - a23 * (a32 * a44 - a42 * a34) + a24 * (a32 * a43 - a42 * a33)) - a12 * (a21 * (a33 * a44 - a43 * a34) - a23 * (a31 * a44 - a41 * a34) + a24 * (a31 * a43 - a41 * a33)) + a13 * (a21 * (a32 * a44 - a42 * a34) - a22 * (a31 * a44 - a41 * a34) + a24 * (a31 * a42 - a41 * a32)) - a14 * (a21 * (a32 * a43 - a42 * a33) - a22 * (a31 * a43 - a41 * a33) + a23 * (a31 * a42 - a41 * a32)) =
+             = a11 * (a22 * a33a44_43a34 - a23 * a32a44_a42a34 + a24 * a32a43_a42a33) - a12 * (a21 * a33a44_43a34 - a23 * a31a44_a41a34 + a24 * a31a43_a41a33) + a13 * (a21 * a32a44_a42a34 - a22 * a31a44_a41a34 + a24 * a31a42_a41a32) - a14 * (a21 * a32a43_a42a33 - a22 * a31a43_a41a33 + a23 * a31a42_a41a32)
+     */
+    determinant() {
+        const a33a44_43a34 = this.a33() * this.a44() - this.a43() * this.a34();
+        const a32a44_a42a34 = this.a32() * this.a44() - this.a42() * this.a34();
+        const a32a43_a42a33 = this.a32() * this.a43() - this.a42() * this.a33();
+        const a31a44_a41a34 = this.a31() * this.a44() - this.a41() * this.a34();
+        const a31a43_a41a33 = this.a31() * this.a43() - this.a41() * this.a33();
+        const a31a42_a41a32 = this.a31() * this.a42() - this.a41() * this.a32();
+        return this.a11() * (this.a22() * a33a44_43a34 - this.a23() * a32a44_a42a34 + this.a24() * a32a43_a42a33) - this.a12() * (this.a21() * a33a44_43a34 - this.a23() * a31a44_a41a34 + this.a24() * a31a43_a41a33) + this.a13() * (this.a21() * a32a44_a42a34 - this.a22() * a31a44_a41a34 + this.a24() * a31a42_a41a32) - this.a14() * (this.a21() * a32a43_a42a33 - this.a22() * a31a43_a41a33 + this.a23() * a31a42_a41a32);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/maths/support/Transformation.ts
+
+
+/**
+ * Класс для работы с трансформациями
+ */
+class Transformation {
+    /**
+     * Получение мировой матрицы (матрицы модели)
+     * @param translationVector вектор перемещения
+     * @param rotationVector вектор поворота
+     * @param scale вектор масштабирования
+     */
+    static getWorldMatrix(translationVector, rotationVector, scale) {
+        const translationMatrix = this.getTranslationMatrix(Matrix4.identity(), translationVector);
+        const rotationXMatrix = this.rotationX(translationMatrix, Transformation.degreesToRadians(rotationVector.getX()));
+        const rotationXYMatrix = this.rotationY(rotationXMatrix, Transformation.degreesToRadians(rotationVector.getY()));
+        const rotationXYZMatrix = this.rotationZ(rotationXYMatrix, Transformation.degreesToRadians(rotationVector.getZ()));
+        return this.scale(rotationXYZMatrix, scale);
+    }
+    /**
+     * Получение матрицы перспективной проекции (для корректного отображения 3D пространства)
+     * @param aspectRatio отношение между высотой и шириной экрана
+     * @param fieldOfView угол поля зрения (в радианах)
+     * @param zNear расстояние до ближней плоскости
+     * @param zFar расстояние до дальней плоскости
+     */
+    static getPerspectiveProjectionMatrix(aspectRatio, fieldOfView, zNear, zFar) {
+        const f = 1 / Math.tan(fieldOfView / 2);
+        const nf = 1 / (zNear - zFar);
+        return new Matrix4([
+            f / aspectRatio, 0, 0, 0,
+            0, f, 0, 0,
+            0, 0, (zFar + zNear) * nf, -1,
+            0, 0, 2 * zFar * zNear * nf, 0
+        ]);
+    }
+    /**
+     * Получение матрицы ортогональной проекции (для корректного отображения 2D пространства)
+     * @param left левая граница усеченного конуса
+     * @param right правая граница усеченного конуса
+     * @param bottom нижняя граница усеченного конуса
+     * @param top верхняя граница усеченного конуса
+     * @param near ближайшая граница усеченного конуса
+     * @param far дальняя граница усеченного конуса
+     */
+    static getOrthogonalProjectionMatrix(left, right, bottom, top, near, far) {
+        const leftMinusRight = 1 / (left - right);
+        const bottomMinusTop = 1 / (bottom - top);
+        const farMinusNear = 1 / (far - near);
+        return new Matrix4([
+            (-2) * leftMinusRight, 0, 0, 0,
+            0, (-2) * bottomMinusTop, 0, 0,
+            0, 0, (-2) * farMinusNear, 0,
+            (left + right) * leftMinusRight, (top + bottom) * bottomMinusTop, (-1) * (far + near) * farMinusNear, 1
+        ]);
+    }
+    /**
+     * Получение матрицы просмотра
+     * @param position позиция с которой необходимо получить матрицу
+     * @param rotation поворот по которому необходимо получить матрицу
+     */
+    static getViewMatrix(position, rotation) {
+        const rotationXMatrix = this.getRotationMatrix(Matrix4.identity(), Transformation.degreesToRadians(rotation.getX()), new Vector3(1, 0, 0));
+        const rotationXYMatrix = this.getRotationMatrix(rotationXMatrix, Transformation.degreesToRadians(rotation.getY()), new Vector3(0, 1, 0));
+        return this.getTranslationMatrix(rotationXYMatrix, new Vector3(-position.getX(), -position.getY(), -position.getZ()));
+    }
+    /**
+     * Перевод градусов в радианы
+     * @param angle значение угла в градусах
+     */
+    static degreesToRadians(angle) {
+        return angle * (Math.PI / 180);
+    }
+    /**
+     * Получение матрицы перемещения
+     * @param matrix матрица, которую необходимо преобразовать
+     * @param translationVector вектор перемещения
+     */
+    static getTranslationMatrix(matrix, translationVector) {
+        return new Matrix4([
+            matrix.a11(), matrix.a12(), matrix.a13(), matrix.a14(),
+            matrix.a21(), matrix.a22(), matrix.a23(), matrix.a24(),
+            matrix.a31(), matrix.a32(), matrix.a33(), matrix.a34(),
+            translationVector.getX(), translationVector.getY(), translationVector.getZ(), matrix.a44()
+        ]);
+    }
+    static translate(matrix, translation) {
+        return new Matrix4([
+            matrix.a11(), matrix.a12(), matrix.a13(), translation.getX(),
+            matrix.a21(), matrix.a22(), matrix.a23(), translation.getY(),
+            matrix.a31(), matrix.a32(), matrix.a33(), translation.getZ(),
+            matrix.a41(), matrix.a42(), matrix.a43(), matrix.a44(),
+        ]);
+    }
+    /**
+     * Получение матрицы поворота по оси X
+     * @param matrix матрица, которую необходимо преобразовать
+     * @param angleX угол по оси X (в радианах) на который необходимо повернуть
+     */
+    static rotationX(matrix, angleX) {
+        const sinAngle = Math.sin(angleX);
+        const cosAngle = Math.cos(angleX);
+        const tempMatrix = new Matrix4([
+            1, 0, 0, 0,
+            0, cosAngle, -sinAngle, 0,
+            0, sinAngle, cosAngle, 0,
+            0, 0, 0, 1
+        ]);
+        return matrix.multiplyMatrix(tempMatrix);
+    }
+    /**
+     * Получение матрицы поворота по оси Y
+     * @param matrix матрица, которую необходимо преобразовать
+     * @param angleY угол по оси Y (в радианах) на который необходимо повернуть
+     */
+    static rotationY(matrix, angleY) {
+        const sinAngle = Math.sin(angleY);
+        const cosAngle = Math.cos(angleY);
+        const tempMatrix = new Matrix4([
+            cosAngle, 0, sinAngle, 0,
+            0, 1, 0, 0,
+            -sinAngle, 0, cosAngle, 0,
+            0, 0, 0, 1
+        ]);
+        return matrix.multiplyMatrix(tempMatrix);
+    }
+    /**
+     * Получение матрицы поворота по оси Z
+     * @param matrix матрица, которую необходимо преобразовать
+     * @param angleZ угол по оси Z (в радианах) на который необходимо повернуть
+     */
+    static rotationZ(matrix, angleZ) {
+        const sinAngle = Math.sin(angleZ);
+        const cosAngle = Math.cos(angleZ);
+        const tempMatrix = new Matrix4([
+            cosAngle, -sinAngle, 0, 0,
+            sinAngle, cosAngle, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ]);
+        return matrix.multiplyMatrix(tempMatrix);
+    }
+    /**
+     * Получение матрицы масштабирования
+     * @param matrix матрица, которую необходимо преобразовать
+     * @param scale вектор масштабирования
+     */
+    static scale(matrix, scale) {
+        return new Matrix4([
+            matrix.a11() * scale.getX(), matrix.a12() * scale.getX(), matrix.a13() * scale.getX(), matrix.a14() * scale.getX(),
+            matrix.a21() * scale.getY(), matrix.a22() * scale.getY(), matrix.a23() * scale.getY(), matrix.a24() * scale.getY(),
+            matrix.a31() * scale.getZ(), matrix.a32() * scale.getZ(), matrix.a33() * scale.getZ(), matrix.a34() * scale.getZ(),
+            matrix.a41(), matrix.a42(), matrix.a43(), matrix.a44()
+        ]);
+    }
+    /**
+     * Получение матрицы поворота по заданной оси вращения
+     * @param matrix матрица, которую необходимо преобразовать
+     * @param angle угол поворота (в радианах)
+     * @param axis вектор оси вращения
+     * @private
+     */
+    static getRotationMatrix(matrix, angle, axis) {
+        const sinAngle = Math.sin(angle);
+        const cosAngle = Math.cos(angle);
+        const oneMinusCosAngle = 1 - cosAngle;
+        const normalizedVector = axis.getNormalization();
+        const a = normalizedVector.getX() * normalizedVector.getX() * oneMinusCosAngle + cosAngle;
+        const b = normalizedVector.getY() * normalizedVector.getX() * oneMinusCosAngle + normalizedVector.getZ() * sinAngle;
+        const c = normalizedVector.getZ() * normalizedVector.getX() * oneMinusCosAngle - normalizedVector.getY() * sinAngle;
+        const d = normalizedVector.getX() * normalizedVector.getY() * oneMinusCosAngle - normalizedVector.getZ() * sinAngle;
+        const e = normalizedVector.getY() * normalizedVector.getY() * oneMinusCosAngle + cosAngle;
+        const f = normalizedVector.getZ() * normalizedVector.getY() * oneMinusCosAngle + normalizedVector.getX() * sinAngle;
+        const g = normalizedVector.getX() * normalizedVector.getZ() * oneMinusCosAngle + normalizedVector.getY() * sinAngle;
+        const h = normalizedVector.getY() * normalizedVector.getZ() * oneMinusCosAngle - normalizedVector.getX() * sinAngle;
+        const i = normalizedVector.getZ() * normalizedVector.getZ() * oneMinusCosAngle + cosAngle;
+        return new Matrix4([
+            matrix.a11() * a + matrix.a21() * b + matrix.a31() * c, matrix.a12() * a + matrix.a22() * b + matrix.a32() * c, matrix.a13() * a + matrix.a23() * b + matrix.a33() * c, matrix.a14() * a + matrix.a24() * b + matrix.a34() * c,
+            matrix.a11() * d + matrix.a21() * e + matrix.a31() * f, matrix.a12() * d + matrix.a22() * e + matrix.a32() * f, matrix.a13() * d + matrix.a23() * e + matrix.a33() * f, matrix.a14() * d + matrix.a24() * e + matrix.a34() * f,
+            matrix.a11() * g + matrix.a21() * h + matrix.a31() * i, matrix.a12() * g + matrix.a22() * h + matrix.a32() * i, matrix.a13() * g + matrix.a23() * h + matrix.a33() * i, matrix.a14() * g + matrix.a24() * h + matrix.a34() * i,
+            matrix.a41(), matrix.a42(), matrix.a43(), matrix.a44()
+        ]);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/camera/impl/BaseCamera.ts
+
+
+class BaseCamera {
+    constructor(projectionMatrix, width, height) {
+        this.projectionMatrix = projectionMatrix;
+        this.width = width;
+        this.height = height;
+        this.position = new Vector3(0, 0, 0);
+        this.rotation = new Vector3(0, 0, 0);
+        this.viewMatrix = Transformation.getViewMatrix(this.position, this.rotation);
+        this.viewProjectionMatrix = this.viewMatrix.multiplyMatrix(this.projectionMatrix);
+    }
+    getPosition() {
+        return this.position;
+    }
+    getProjectionMatrix() {
+        return this.projectionMatrix;
+    }
+    getRotation() {
+        return this.rotation;
+    }
+    getViewMatrix() {
+        return this.viewMatrix;
+    }
+    getViewProjectionMatrix() {
+        return this.viewProjectionMatrix;
+    }
+    setPosition(position) {
+        this.position = position;
+    }
+    setRotation(rotation) {
+        this.rotation = rotation;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/camera/ext/PerspectiveCamera.ts
+
+
+class PerspectiveCamera extends BaseCamera {
+    constructor(width, height, fieldOfView, zNear, zFar) {
+        super(Transformation.getPerspectiveProjectionMatrix(width / height, Transformation.degreesToRadians(fieldOfView), zNear, zFar), width, height);
+        this.zNear = zNear;
+        this.zFar = zFar;
+        this.fieldOfView = Transformation.degreesToRadians(fieldOfView);
+    }
+    update() {
+        this.recalculateViewMatrix();
+        this.recalculateViewProjectionMatrix();
+    }
+    resize(width, height) {
+        this.width = width;
+        this.height = height;
+        this.projectionMatrix = Transformation.getPerspectiveProjectionMatrix(this.width / this.height, this.fieldOfView, this.zNear, this.zFar);
+    }
+    recalculateViewMatrix() {
+        this.viewMatrix = Transformation.getViewMatrix(this.position, this.rotation);
+    }
+    recalculateViewProjectionMatrix() {
+        this.viewProjectionMatrix = this.viewMatrix.multiplyMatrix(this.projectionMatrix);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/camera/ext/OrthographicCamera.ts
+
+
+class OrthographicCamera extends BaseCamera {
+    constructor(width, height, zoomLevel = 1) {
+        super(Transformation.getOrthogonalProjectionMatrix((-1) * width / height * zoomLevel, width / height * zoomLevel, -1 * zoomLevel, zoomLevel, -1.0, 1.0), width, height);
+        this.zoomLevel = zoomLevel;
+    }
+    update() {
+        this.recalculateViewMatrix();
+        this.recalculateViewProjectionMatrix();
+    }
+    setZoomLevel(zoomLevel) {
+        if (zoomLevel <= 1) {
+            this.zoomLevel = 1;
+            return;
+        }
+        this.zoomLevel = zoomLevel;
+        this.resize(this.width, this.height);
+    }
+    getZoomLevel() {
+        return this.zoomLevel;
+    }
+    recalculateViewMatrix() {
+        this.viewMatrix = Transformation.getViewMatrix(this.position, this.rotation);
+    }
+    recalculateViewProjectionMatrix() {
+        this.viewProjectionMatrix = this.viewMatrix.multiplyMatrix(this.projectionMatrix);
+    }
+    resize(width, height) {
+        this.width = width;
+        this.height = height;
+        const aspectRation = this.width / this.height;
+        this.projectionMatrix = Transformation.getOrthogonalProjectionMatrix((-1) * aspectRation * this.zoomLevel, aspectRation * this.zoomLevel, -1 * this.zoomLevel, this.zoomLevel, -1.0, 1.0);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/renderer/RendererAPI.ts
+var RendererAPI;
+(function (RendererAPI) {
+    RendererAPI[RendererAPI["WEB_GL"] = 0] = "WEB_GL";
+})(RendererAPI || (RendererAPI = {}));
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/renderer/Renderer.ts
+
+class Renderer {
+    static getAPI() {
+        return this.rendererAPI;
+    }
+    static setAPI(api) {
+        Renderer.rendererAPI = api;
+    }
+}
+Renderer.rendererAPI = RendererAPI.WEB_GL;
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/support/NumberType.ts
+var NumberType;
+(function (NumberType) {
+    NumberType[NumberType["FLOAT"] = 4] = "FLOAT";
+    NumberType[NumberType["INT"] = 4] = "INT";
+    NumberType[NumberType["UNSIGNED_INT"] = 4] = "UNSIGNED_INT";
+})(NumberType || (NumberType = {}));
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/shader/ShaderDataType.ts
+
+var ShaderDataType;
+(function (ShaderDataType) {
+    ShaderDataType[ShaderDataType["FLOAT_1"] = NumberType.FLOAT.valueOf()] = "FLOAT_1";
+    ShaderDataType[ShaderDataType["FLOAT_2"] = NumberType.FLOAT.valueOf() * 2] = "FLOAT_2";
+    ShaderDataType[ShaderDataType["FLOAT_3"] = NumberType.FLOAT.valueOf() * 3] = "FLOAT_3";
+    ShaderDataType[ShaderDataType["FLOAT_4"] = NumberType.FLOAT.valueOf() * 4] = "FLOAT_4";
+    ShaderDataType[ShaderDataType["INT_1"] = NumberType.INT.valueOf()] = "INT_1";
+    ShaderDataType[ShaderDataType["INT_2"] = NumberType.INT.valueOf() * 2] = "INT_2";
+    ShaderDataType[ShaderDataType["INT_3"] = NumberType.INT.valueOf() * 3] = "INT_3";
+    ShaderDataType[ShaderDataType["INT_4"] = NumberType.INT.valueOf() * 4] = "INT_4";
+})(ShaderDataType || (ShaderDataType = {}));
+function getComponentCountFromShaderDataType(type) {
+    switch (type) {
+        case ShaderDataType.FLOAT_1: return 1;
+        case ShaderDataType.FLOAT_2: return 2;
+        case ShaderDataType.FLOAT_3: return 3;
+        case ShaderDataType.FLOAT_4: return 4;
+        case ShaderDataType.INT_1: return 1;
+        case ShaderDataType.INT_2: return 2;
+        case ShaderDataType.INT_3: return 3;
+        case ShaderDataType.INT_4: return 4;
+    }
+    throw new Error("ShaderDataType [ " + type + " ] not supported");
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/buffer/WebGLVertexArrayBuffer.ts
+
+class WebGLVertexArrayBuffer {
+    constructor(gl) {
+        this.gl = gl;
+        this.vertexBuffers = [];
+        this.indexBuffer = null;
+        this.buffer = gl.createVertexArray();
+        this.bind();
+    }
+    getCount() {
+        return 0;
+    }
+    addVertexBuffer(buffer) {
+        this.bind();
+        buffer.bind();
+        const layout = buffer.getLayout();
+        const elements = buffer.getLayout().getElements();
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            this.gl.enableVertexAttribArray(i);
+            switch (element.type) {
+                case ShaderDataType.FLOAT_4:
+                case ShaderDataType.FLOAT_3:
+                case ShaderDataType.FLOAT_2:
+                case ShaderDataType.FLOAT_1: {
+                    this.gl.vertexAttribPointerFloat(i, getComponentCountFromShaderDataType(element.type), element.normalized, layout.getStride(), element.offset);
+                    break;
+                }
+                case ShaderDataType.INT_4:
+                case ShaderDataType.INT_3:
+                case ShaderDataType.INT_2:
+                case ShaderDataType.INT_1: {
+                    this.gl.vertexAttribPointerUint(i, getComponentCountFromShaderDataType(element.type), element.normalized, layout.getStride(), element.offset);
+                    break;
+                }
+                default: {
+                    throw new Error("ShaderDataType [ " + element.type + " ] not supported");
+                }
+            }
+        }
+        this.vertexBuffers.push(buffer);
+    }
+    setIndexBuffer(buffer) {
+        this.bind();
+        buffer.bind();
+        this.indexBuffer = buffer;
+    }
+    bind() {
+        this.gl.bindVertexArray(this.buffer);
+    }
+    unbind() {
+        this.gl.unbindVertexArray();
+    }
+    clean() {
+        var _a;
+        this.gl.deleteVertexArray(this.buffer);
+        for (const buffer of this.vertexBuffers) {
+            buffer.clean();
+        }
+        (_a = this.indexBuffer) === null || _a === void 0 ? void 0 : _a.clean();
+    }
+    setLayout(layout) {
+        throw new Error("setLayout: not implemented method");
+    }
+    getLayout() {
+        throw new Error("getLayout: not implemented method");
+    }
+    getVertexBuffers() {
+        return this.vertexBuffers;
+    }
+    getIndexBuffer() {
+        return this.indexBuffer;
+    }
+    setFloat32Data(data) {
+        throw new Error("Vertex Array buffer not supported setFloat32Data");
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/buffer/WebGLIndexStaticBuffer.ts
+class WebGLIndexStaticBuffer {
+    constructor(gl, data, count) {
+        this.gl = gl;
+        this.buffer = gl.createBuffer();
+        this.count = count;
+        this.bind();
+        gl.elementArrayBufferStaticData(data);
+    }
+    bind() {
+        this.gl.bindElementArrayBuffer(this.buffer);
+    }
+    unbind() {
+        this.gl.bindElementArrayBuffer(this.buffer);
+    }
+    getCount() {
+        return this.count;
+    }
+    clean() {
+        this.gl.deleteBuffer(this.buffer);
+    }
+    setLayout(layout) {
+        throw new Error("setLayout: not implemented method");
+    }
+    getLayout() {
+        throw new Error("getLayout: not implemented method");
+    }
+    setFloat32Data(data) {
+        throw new Error("Index Static buffer not supported setFloat32Data");
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/buffer/WebGLUint16IndexStaticBuffer.ts
+
+class WebGLUint16IndexStaticBuffer extends WebGLIndexStaticBuffer {
+    constructor(gl, data) {
+        super(gl, data, data.length);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/buffer/WebGLVertexStaticBuffer.ts
+class WebGLVertexStaticBuffer {
+    constructor(gl, data, count) {
+        this.gl = gl;
+        this.buffer = gl.createBuffer();
+        this.count = count;
+        this.layout = null;
+        this.bind();
+        gl.arrayBufferStaticData(data);
+    }
+    bind() {
+        this.gl.bindArrayBuffer(this.buffer);
+    }
+    unbind() {
+        this.gl.unbindArrayBuffer();
+    }
+    getCount() {
+        return this.count;
+    }
+    clean() {
+        this.gl.deleteBuffer(this.buffer);
+    }
+    setLayout(layout) {
+        this.layout = layout;
+    }
+    getLayout() {
+        return this.layout;
+    }
+    setFloat32Data(data) {
+        throw new Error("Vertex Static buffer not supported setFloat32Data");
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/buffer/WebGLFloat32VertexStaticBuffer.ts
+
+class WebGLFloat32VertexStaticBuffer extends WebGLVertexStaticBuffer {
+    constructor(gl, data) {
+        super(gl, data, data.length);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/buffer/WebGLVertexDynamicBuffer.ts
+class WebGLVertexDynamicBuffer {
+    constructor(gl, size) {
+        this.gl = gl;
+        this.buffer = gl.createBuffer();
+        this.layout = null;
+        this.bind();
+        gl.arrayBufferDynamicData(size);
+    }
+    bind() {
+        this.gl.bindArrayBuffer(this.buffer);
+    }
+    unbind() {
+        this.gl.unbindArrayBuffer();
+    }
+    getCount() {
+        throw new Error("getCount not supported in Vertex Buffer");
+    }
+    clean() {
+        this.gl.deleteBuffer(this.buffer);
+    }
+    setLayout(layout) {
+        this.layout = layout;
+    }
+    getLayout() {
+        return this.layout;
+    }
+    setFloat32Data(data) {
+        this.bind();
+        this.gl.arrayBufferSubData(data);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/buffer/WebGLFloat32VertexDynamicBuffer.ts
+
+class WebGLFloat32VertexDynamicBuffer extends WebGLVertexDynamicBuffer {
+    constructor(gl, size) {
+        super(gl, size);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/buffer/FrameBuffer.ts
+class FrameBuffer {
+    constructor(data) {
+        this.data = data;
+    }
+    getData() {
+        return this.data;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/buffer/WebGLFrameBuffer.ts
+
+class WebGLFrameBuffer extends FrameBuffer {
+    constructor(gl, data) {
+        super(data);
+        this.gl = gl;
+        this.frameBuffer = null;
+        this.colorAttachment = null;
+        this.depthAttachment = null;
+        this.init();
+    }
+    init() {
+        this.frameBuffer = this.gl.createFrameBuffers();
+        this.bind();
+        this.colorAttachment = this.gl.createTexture();
+        this.gl.bindTexture2D(this.colorAttachment);
+        this.gl.textImage2DRGBA8Ubyte(0, this.data.width, this.data.height, 0, null);
+        this.gl.tex2DParameteriMinFilterLinear();
+        this.gl.tex2DParameteriMagFilterLinear();
+        this.gl.frameBufferTexture2DColorAttachment0(this.colorAttachment, 0);
+        this.depthAttachment = this.gl.createTexture();
+        this.gl.bindTexture2D(this.depthAttachment);
+        // this.gl.texStorage2DDepth24Stencil8(0, this.data.width, this.data.height);
+        this.gl.textImage2DDepth24Stencil8Uint24_8(0, this.data.width, this.data.height, 0, null);
+        this.gl.frameBufferTexture2DDepthStencilAttachment(this.depthAttachment, 0);
+        this.gl.checkFrameBufferStatusComplete();
+        this.unbind();
+    }
+    bind() {
+        this.gl.bindFrameBuffer(this.frameBuffer);
+        //this.gl.setViewport(0, 0, this.data.width, this.data.height);
+    }
+    unbind() {
+        this.gl.unbindFrameBuffer();
+    }
+    clean() {
+        this.gl.deleteFrameBuffer(this.frameBuffer);
+        this.gl.deleteTexture(this.colorAttachment);
+        this.gl.deleteTexture(this.depthAttachment);
+    }
+    resize(width, height) {
+        this.clean();
+        this.data.width = width;
+        this.data.height = height;
+        this.init();
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/factories/BufferFactory.ts
+
+
+
+
+
+
+
+class BufferFactory {
+    static createFloat32VertexDynamicBuffer(graphicsContext, size) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: {
+                const gl = graphicsContext.getGL();
+                return new WebGLFloat32VertexDynamicBuffer(gl, size);
+            }
+        }
+    }
+    static createFloat32VertexStaticBuffer(graphicsContext, data) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: {
+                const gl = graphicsContext.getGL();
+                return new WebGLFloat32VertexStaticBuffer(gl, data);
+            }
+        }
+    }
+    static createUint16IndexStaticBuffer(graphicsContext, data) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: {
+                const gl = graphicsContext.getGL();
+                return new WebGLUint16IndexStaticBuffer(gl, data);
+            }
+        }
+    }
+    static createVertexArrayBuffer(graphicsContext) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: {
+                const gl = graphicsContext.getGL();
+                return new WebGLVertexArrayBuffer(gl);
+            }
+        }
+    }
+    static createFrameBuffer(graphicsContext, data) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: {
+                const gl = graphicsContext.getGL();
+                return new WebGLFrameBuffer(gl, data);
+            }
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/wrappers/WebGLExt.ts
+/**
+ * Класс обертка над стандартными методами WebGL
+ */
+class WebGLExt {
+    /**
+     * Конструктор создания объекта WebGL
+     * @param context выбранный контекст для работы с WebGL
+     */
+    constructor(context) {
+        this.context = context; //сохранение контекста
+        this.clearColor(0, 0, 0, 1);
+        const debugInfo = this.context.getExtension('WEBGL_debug_renderer_info');
+        if (debugInfo) {
+            this.vendor = this.context.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+            this.renderer = this.context.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        }
+        else {
+            this.vendor = "HIDDEN";
+            this.renderer = "HIDDEN";
+        }
+    }
+    /**
+     * Включение тесты глубины
+     */
+    enableDepthTest() {
+        this.context.enable(this.context.DEPTH_TEST);
+    }
+    /**
+     * Включение смешивания пикселей
+     */
+    enableBlend() {
+        this.context.enable(this.context.BLEND);
+    }
+    /**
+     * Выключение смешивания пикселей
+     */
+    disableBlend() {
+        this.context.disable(this.context.BLEND);
+    }
+    /**
+     * Включение прозрачности пикселей
+     */
+    blendFuncSrcAlphaOneMinusSrcAlpha() {
+        //Функция для математического преобразования цвета для получения итогового цвета смешивания
+        this.context.blendFunc(this.context.SRC_ALPHA, //SRC; Канал для математических преобразований (в данном случае канал отвечающий за прозрачность (A) в RGBA)
+        this.context.ONE_MINUS_SRC_ALPHA //DEST: для получения правильного цвета смешивания нужно из единицы вычесть канал A
+        );
+        //R = (R(SCR) * SRC) + (R(DEST) * (1 - DEST))
+        //G = (G(SCR) * SRC) + (G(DEST) * (1 - DEST))
+        //B = (B(SCR) * SRC) + (B(DEST) * (1 - DEST))
+        //A = (A(SCR) * SRC) + (A(DEST) * (1 - DEST))
+        //
+        //К примеру есть цветовой вектор красного цвета на половину прозрачный (канал A = 0.5) (1.0, 0.0, 0.0, 0.5)
+        //SRC(red) = 0.5
+        //DEST(red) = 1.0 - 0.5 = 0.5
+        //И есть цветовой вектор синего цвета не прозрачный (канал A = 1.0) (0.0, 0.0, 1.0, 1.0)
+        //Тогда итоговый цвет будет равен
+        //R = ((1.0 * 0.5) + (0.0 * (1 - 0.5))) = 0.5
+        //G = ((0.0 * 0.5) + (0.0 * (1 - 0.5))) = 0.0
+        //B = ((0.0 * 0.5) + (1.0 * (1 - 0.5))) = 0.5
+        //A = ((0.5 * 0.5) + (1.0 * (1 - 0.5))) = 0.75
+    }
+    /**
+     * Заливка экрана выбранным цветом с прозрачностью
+     * @param red значение красного цвета
+     * @param green значение зеленого цвета
+     * @param blue значение синего цвета
+     * @param alpha значение прозрачности цвета
+     */
+    clearColor(red, green, blue, alpha) {
+        this.context.clearColor(red, green, blue, alpha);
+    }
+    /**
+     * Отчистка буфера цвета
+     */
+    clearColorBuffer() {
+        this.context.clear(this.context.COLOR_BUFFER_BIT);
+    }
+    /**
+     * Отчистка буфера глубины
+     */
+    clearDepthBuffer() {
+        this.context.clear(this.context.DEPTH_BUFFER_BIT);
+    }
+    /**
+     * Установка новой области просмотра
+     * @param x значение x левого нижнего угла
+     * @param y значение y левого нижнего угла
+     * @param width значение ширины окна
+     * @param height значение высоты окна
+     */
+    setViewport(x, y, width, height) {
+        this.context.viewport(0, 0, width, height);
+    }
+    /**
+     * Создание объекта для хранения вершинного шейдера
+     */
+    createVertexShader() {
+        let result = this.context.createShader(this.context.VERTEX_SHADER);
+        //если возникла ошибка во время создания шейдера, то Exception
+        if (!result) {
+            throw new Error("Ошибка создания вершинного шейдера");
+        }
+        return result;
+    }
+    /**
+     * Создание объекта для хранения фрагментного шейдера
+     */
+    createFragmentShader() {
+        let result = this.context.createShader(this.context.FRAGMENT_SHADER);
+        //если возникла ошибка во время создания шейдера, то Exception
+        if (!result) {
+            throw new Error("Ошибка создания фрагментного шейдера");
+        }
+        return result;
+    }
+    /**
+     * Удаление шейдера
+     * @param shader
+     */
+    deleteShader(shader) {
+        this.context.deleteShader(shader);
+    }
+    /**
+     * Установка исходного кода для шейдера
+     * @param shader шейдер в котором необходимо установить исходный код
+     * @param sourceCode исходный код для шейдера
+     */
+    setShaderSource(shader, sourceCode) {
+        this.context.shaderSource(shader, sourceCode);
+        this.context.compileShader(shader);
+        //если возникла ошибка при компиляции шейдера, то подсказка будет в консоли
+        if (!this.context.getShaderParameter(shader, this.context.COMPILE_STATUS)) {
+            const shaderLog = this.context.getShaderInfoLog(shader);
+            this.deleteShader(shader);
+            throw new Error(shaderLog !== null && shaderLog !== void 0 ? shaderLog : "Ошибка компиляции шейдера");
+        }
+    }
+    /**
+     * Создание программы
+     */
+    createProgram() {
+        let result = this.context.createProgram();
+        //если возникла ошибка во время создания программы, то Exception
+        if (!result) {
+            throw new Error("Ошибка создания программы");
+        }
+        return result;
+    }
+    /**
+     * Удаление программы
+     */
+    deleteProgram(program) {
+        this.context.deleteProgram(program);
+    }
+    /**
+     * Прикрепление шейдера к программе
+     * @param program шейдерная программа
+     * @param shader шейдер для прикрепления к программе
+     */
+    attachShader(program, shader) {
+        this.context.attachShader(program, shader);
+    }
+    /**
+     * Связывание программы с шейдерами
+     * @param program
+     */
+    linkProgram(program) {
+        this.context.linkProgram(program);
+        //если возникла ошибка при связывании шейдеров с программой, то подсказка будет в консоли
+        if (!this.context.getProgramParameter(program, this.context.LINK_STATUS)) {
+            const programLog = this.context.getProgramInfoLog(program);
+            throw new Error(programLog !== null && programLog !== void 0 ? programLog : "Ошибка связывания программы с шейдерами");
+        }
+    }
+    /**
+     * Установка программы как часть текущего состояния рендеринга
+     * @param program программа для использования
+     */
+    useProgram(program) {
+        this.context.useProgram(program);
+    }
+    /**
+     * Удаление программы из текущего состояния рендеринга
+     */
+    removeProgram() {
+        this.context.useProgram(null);
+    }
+    /**
+     * Создание VAO
+     */
+    createVertexArray() {
+        let result = this.context.createVertexArray();
+        //если возникла ошибка во время создания VAO, то Exception
+        if (!result) {
+            throw new Error("Ошибка создания VAO");
+        }
+        return result;
+    }
+    /**
+     * Удаление VAO
+     * @param vao
+     */
+    deleteVertexArray(vao) {
+        this.context.deleteVertexArray(vao);
+    }
+    /**
+     * Связывание VAO с массивом имен
+     * @param vao
+     */
+    bindVertexArray(vao) {
+        this.context.bindVertexArray(vao);
+    }
+    /**
+     * Отвязывание VAO от массива имен
+     */
+    unbindVertexArray() {
+        this.context.bindVertexArray(null);
+    }
+    /**
+     * Создание текстуры
+     */
+    createTexture() {
+        const result = this.context.createTexture();
+        //если возникла ошибка во время создания текстуры, то Exception
+        if (!result) {
+            throw new Error("Ошибка создания текстуры");
+        }
+        return result;
+    }
+    /**
+     * Создание буфера кадров
+     */
+    createFrameBuffers() {
+        const result = this.context.createFramebuffer();
+        //если возникла ошибка во время создания буфера, то Exception
+        if (!result) {
+            throw new Error("Ошибка создания буфера кадра");
+        }
+        return result;
+    }
+    textImage2DRGBA8Ubyte(level, width, height, border, pixels) {
+        this.context.texImage2D(this.context.TEXTURE_2D, level, this.context.RGBA8, width, height, border, this.context.RGBA, this.context.UNSIGNED_BYTE, pixels);
+    }
+    textImage2DDepth24Stencil8Uint24_8(level, width, height, border, pixels) {
+        this.context.texImage2D(this.context.TEXTURE_2D, level, this.context.DEPTH24_STENCIL8, width, height, border, this.context.DEPTH_STENCIL, this.context.UNSIGNED_INT_24_8, pixels);
+    }
+    /**
+     * Удаление буфера кадров
+     * @param frameBuffer
+     */
+    deleteFrameBuffer(frameBuffer) {
+        this.context.deleteFramebuffer(frameBuffer);
+    }
+    /**
+     * Связать буфер кадров с целью буфера кадров
+     */
+    bindFrameBuffer(frameBuffer) {
+        this.context.bindFramebuffer(this.context.FRAMEBUFFER, frameBuffer);
+    }
+    /**
+     * Отвязать буфер кадров от цели буфера кадров
+     */
+    unbindFrameBuffer() {
+        this.context.bindFramebuffer(this.context.FRAMEBUFFER, null);
+    }
+    checkFrameBufferStatusComplete() {
+        if (this.context.checkFramebufferStatus(this.context.FRAMEBUFFER) !== this.context.FRAMEBUFFER_COMPLETE) {
+            throw new Error("Буфер кадров не готов");
+        }
+    }
+    frameBufferTexture2DColorAttachment0(texture, level) {
+        this.context.framebufferTexture2D(this.context.FRAMEBUFFER, this.context.COLOR_ATTACHMENT0, this.context.TEXTURE_2D, texture, level);
+    }
+    frameBufferTexture2DDepthStencilAttachment(texture, level) {
+        this.context.framebufferTexture2D(this.context.FRAMEBUFFER, this.context.DEPTH_STENCIL_ATTACHMENT, this.context.TEXTURE_2D, texture, level);
+    }
+    texStorage2DDepth24Stencil8(levels, width, height) {
+        this.context.texStorage2D(this.context.TEXTURE_2D, levels, this.context.DEPTH24_STENCIL8, width, height);
+    }
+    /**
+     * Удаление текстуры
+     */
+    deleteTexture(texture) {
+        this.context.deleteTexture(texture);
+    }
+    /**
+     * Отвязывание текстуры от цели текстурирования
+     */
+    unbindTexture2D() {
+        this.context.bindTexture(this.context.TEXTURE_2D, null);
+    }
+    /**
+     * Связывание текстуры к цели текстурирования
+     * @param texture текстура для связывания
+     */
+    bindTexture2D(texture) {
+        this.context.bindTexture(this.context.TEXTURE_2D, texture);
+    }
+    /**
+     * Установка параметра для текстуры
+     */
+    tex2DParameteriMinFilterLinear() {
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MIN_FILTER, this.context.LINEAR);
+    }
+    /**
+     * Установка параметра для текстуры
+     */
+    tex2DParameteriMagFilterLinear() {
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MAG_FILTER, this.context.LINEAR);
+    }
+    /**
+     * Установка параметра для текстуры
+     */
+    tex2DParameteriMagFilterNearest() {
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MAG_FILTER, this.context.NEAREST);
+    }
+    /**
+     * Установка параметра для текстуры
+     */
+    tex2DParameteriWrapSClampToEdge() {
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_S, this.context.CLAMP_TO_EDGE);
+    }
+    /**
+     * Установка параметра для текстуры
+     */
+    tex2DParameteriWrapTClampToEdge() {
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_T, this.context.CLAMP_TO_EDGE);
+    }
+    texImage2DRGBAUbyteWithPixels(level, texture, pixels) {
+        this.context.texImage2D(this.context.TEXTURE_2D, level, this.context.RGBA8, texture.width, texture.height, 0, this.context.RGBA, this.context.UNSIGNED_BYTE, pixels);
+    }
+    /**
+     * Установка 2D изображение текстуры
+     * @param level уровень детализации
+     * @param texture изображение текстуры
+     */
+    texImage2DRGBAUbyte(level, texture) {
+        this.context.texImage2D(this.context.TEXTURE_2D, level, this.context.RGBA8, texture.width, texture.height, 0, this.context.RGBA, this.context.UNSIGNED_BYTE, texture);
+    }
+    /**
+     * Установка 2D изображение текстуры
+     * @param level уровень детализации
+     * @param texture изображение текстуры
+     */
+    texImage2DRGBUbyte(level, texture) {
+        this.context.texImage2D(this.context.TEXTURE_2D, level, this.context.RGB8, texture.width, texture.height, 0, this.context.RGB, this.context.UNSIGNED_BYTE, texture);
+    }
+    /**
+     * Генерация MIM карты для указанной цели текстурирования
+     */
+    generateMipmap2D() {
+        this.context.generateMipmap(this.context.TEXTURE_2D);
+    }
+    /**
+     * Создание буфера
+     */
+    createBuffer() {
+        const result = this.context.createBuffer();
+        //если возникла ошибка во время создания буфера, то Exception
+        if (!result) {
+            throw new Error("Ошибка создания буфера");
+        }
+        return result;
+    }
+    /**
+     * Удаление буфера
+     * @param buffer буфер для удаления
+     */
+    deleteBuffer(buffer) {
+        this.context.deleteBuffer(buffer);
+    }
+    /**
+     * Связывание объекта буфера с атрибутами вершин
+     * @param vbo буфер который необходимо связать
+     */
+    bindArrayBuffer(vbo) {
+        this.context.bindBuffer(this.context.ARRAY_BUFFER, vbo);
+    }
+    /**
+     * Отвязывание объекта буфера от атрибутов вершин
+     */
+    unbindArrayBuffer() {
+        this.context.bindBuffer(this.context.ARRAY_BUFFER, null);
+    }
+    /**
+     * Связывание объекта буфера с элементами атрибутов вершин
+     * @param vbo буфер который необходимо связать
+     */
+    bindElementArrayBuffer(vbo) {
+        this.context.bindBuffer(this.context.ELEMENT_ARRAY_BUFFER, vbo);
+    }
+    /**
+     * Создание нового динамического хранилища данных для буфера
+     * @param size размер буфера
+     */
+    arrayBufferDynamicData(size) {
+        this.context.bufferData(this.context.ARRAY_BUFFER, size, this.context.DYNAMIC_DRAW);
+    }
+    /**
+     * Размер используемого буфера
+     */
+    getArrayBufferSize() {
+        return this.context.getBufferParameter(this.context.ARRAY_BUFFER, this.context.BUFFER_SIZE);
+    }
+    /**
+     * Обновление хранилища данных
+     * @param data
+     */
+    arrayBufferSubData(data) {
+        this.context.bufferSubData(this.context.ARRAY_BUFFER, 0, data);
+    }
+    /**
+     * Создание нового статического хранилища данных для буфера с атрибутами вершин
+     * @param data массив данных
+     */
+    arrayBufferStaticData(data) {
+        this.context.bufferData(this.context.ARRAY_BUFFER, data, this.context.STATIC_DRAW);
+    }
+    /**
+     * Создание нового статического хранилища данных для буфера с элементами атрибутов вершин
+     * @param data массив данных
+     */
+    elementArrayBufferStaticData(data) {
+        this.context.bufferData(this.context.ELEMENT_ARRAY_BUFFER, data, this.context.STATIC_DRAW);
+    }
+    /**
+     * Включение массива атрибутов вершин по указанному индексу
+     * @param index индекс для включения
+     */
+    enableVertexAttribArray(index) {
+        this.context.enableVertexAttribArray(index);
+    }
+    /**
+     * Выключение массива атрибутов вершин по указанному индексу
+     * @param index индекс для выключения
+     */
+    disableVertexAttribArray(index) {
+        this.context.disableVertexAttribArray(index);
+    }
+    vertexAttribDivisor(index, divisor) {
+        this.context.vertexAttribDivisor(index, divisor);
+    }
+    /**
+     * Определение массива данных типа Float атрибутов вершин
+     * @param index индекс на котором будет расположен массив данных
+     * @param size количество компонентов на компонент (если в массиве на одну точку приходиться координаты x, y, z, то size должен быть равен 3)
+     * @param normalized
+     * @param stride шаг от одного атрибута к другом (если все идет по порядку (x1, y1, z1, x2, y2, z2, ...), то stride должен быть равен 0)
+     * @param offset смещение первого компонента
+     */
+    vertexAttribPointerFloat(index, size, normalized, stride, offset) {
+        this.context.vertexAttribPointer(index, size, this.context.FLOAT, normalized, stride, offset);
+    }
+    /**
+     * Определение массива данных типа UNSIGNED_INT атрибутов вершин
+     * @param index индекс на котором будет расположен массив данных
+     * @param size количество компонентов на компонент (если в массиве на одну точку приходиться координаты x, y, z, то size должен быть равен 3)
+     * @param normalized
+     * @param stride шаг от одного атрибута к другом (если все идет по порядку (x1, y1, z1, x2, y2, z2, ...), то stride должен быть равен 0)
+     * @param offset смещение первого компонента
+     */
+    vertexAttribPointerUint(index, size, normalized, stride, offset) {
+        this.context.vertexAttribPointer(index, size, this.context.UNSIGNED_INT, normalized, stride, offset);
+    }
+    /**
+     * Визуализация треугольников из VAO
+     * @param first начальный индекс
+     * @param count количество треугольников для визуализации
+     */
+    drawTriangleArrays(first, count) {
+        this.context.drawArrays(this.context.TRIANGLES, first, count);
+    }
+    /**
+     * Визуализация треугольников из элементов VAO
+     * @param count количество треугольников для визуализации
+     * @param offset смещение
+     */
+    drawTriangleElementsUshort(count, offset) {
+        this.context.drawElements(this.context.TRIANGLES, count, this.context.UNSIGNED_SHORT, offset);
+    }
+    /**
+     * Визуализация треугольников из элементов VAO
+     * @param count количество треугольников для визуализации
+     * @param offset смещение
+     */
+    drawTriangleElementsUint(count, offset) {
+        this.context.drawElements(this.context.TRIANGLES, count, this.context.UNSIGNED_INT, offset);
+    }
+    /**
+     * Визуализация линий из элементов VAO
+     * @param count количество линий для визуализации
+     * @param offset смещение
+     */
+    drawLineElementsUshort(count, offset) {
+        this.context.drawElements(this.context.LINES, count, this.context.UNSIGNED_SHORT, offset);
+    }
+    /**
+     * Получение местоположения униформы в программе
+     * @param program программа
+     * @param name имя униформы
+     */
+    getUniformLocation(program, name) {
+        const result = this.context.getUniformLocation(program, name);
+        //если возникла ошибка во время получение униформы, то Exception
+        if (!result) {
+            throw new Error("Ошибка получения униформы с именем [ " + name + " ]");
+        }
+        return result;
+    }
+    /**
+     * Установка данных в униформу для текущего объекта программы
+     * @param location положение униформы
+     * @param transpose нужно ли транспонировать матрицу
+     * @param data данные для установки в униформу
+     */
+    uniformMatrix4fv(location, transpose, data) {
+        this.context.uniformMatrix4fv(location, transpose, data);
+    }
+    /**
+     * Установка данных в униформу для текущего объекта программы
+     * @param location положение униформы
+     * @param vector вектор с тремя компонентами
+     */
+    uniform3f(location, vector) {
+        this.context.uniform3f(location, vector.getX(), vector.getY(), vector.getZ());
+    }
+    /**
+     * Установка данных в униформу для текущего объекта программы
+     * @param location положение униформы
+     * @param vector вектор с четырьмя компонентами
+     */
+    uniform4f(location, vector) {
+        this.context.uniform4f(location, vector.getX(), vector.getY(), vector.getZ(), vector.getW());
+    }
+    /**
+     * Установка данных на заданную позицию
+     * @param location положение униформы
+     * @param values позиции
+     */
+    uniform1iv(location, values) {
+        this.context.uniform1iv(location, new Int32Array(values));
+    }
+    /**
+     * Установка данных на заданную позицию
+     * @param location положение униформы
+     * @param value позиция
+     */
+    uniform1i(location, value) {
+        this.context.uniform1i(location, value);
+    }
+    /**
+     * Установка данных на заданную позицию
+     * @param location положение униформы
+     * @param value позиция
+     */
+    uniformF(location, value) {
+        this.context.uniform1f(location, value);
+    }
+    /**
+     * Использование текстурного регистра в слоте
+     * @param slot слот который необходимо использовать
+     */
+    activeTexture(slot) {
+        this.context.activeTexture(this.context.TEXTURE0 + slot);
+    }
+    getVendor() {
+        return this.vendor;
+    }
+    getRenderer() {
+        return this.renderer;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/renderer/WebGLContext.ts
+
+class WebGLContext {
+    constructor(canvasElement) {
+        this.canvasElement = canvasElement;
+        const webGLContext = this.canvasElement.getContext("webgl2"); //получение контекста для работы с WebGL
+        //если выбранный контекст не проинициализирован, значит либо его не существует, либо браузер не может с ним работать
+        if (!webGLContext) {
+            throw new Error("Невозможно проинициализировать WebGL. Данный браузер не поддерживает данный контекст [ webgl2 ]");
+        }
+        //инициализация объекта WebGL с выбранным контекстом
+        this.gl = new WebGLExt(webGLContext //выбранный контекст
+        );
+    }
+    init() {
+    }
+    setViewport(x, y, width, height) {
+        this.gl.setViewport(x, y, width, height);
+    }
+    printDebugInfo() {
+        console.log("Vendor: " + this.gl.getVendor());
+        console.log("Renderer: " + this.gl.getRenderer());
+    }
+    getGL() {
+        return this.gl;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/factories/GraphicsContextFactory.ts
+
+
+
+class GraphicsContextFactory {
+    static createContext(canvasElement) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: return new WebGLContext(canvasElement);
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/support/Random.ts
+class Random {
+    static uuid() {
+        return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => {
+            const value = Number(c);
+            const randomValue = value ^ crypto.getRandomValues(new Uint8Array(1))[0];
+            const modRandomValue = randomValue & 15;
+            return (modRandomValue >> value / 4).toString(16);
+        });
+    }
+    static int(maxValue) {
+        return Math.floor(Math.random() * maxValue);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/resource/WebGL2DTexture.ts
+
+class WebGL2DTexture {
+    constructor(gl, image, channels, isEmpty = false) {
+        this.gl = gl;
+        this.id = Random.uuid();
+        this.image = image;
+        this.texture = this.gl.createTexture();
+        if (isEmpty) {
+            this.prepareTexture();
+            this.gl.texImage2DRGBAUbyteWithPixels(0, image, new Uint8Array([255, 255, 255, 255]));
+            return;
+        }
+        const listener = () => {
+            this.prepareTexture();
+            if (channels === 4) {
+                this.gl.texImage2DRGBAUbyte(0, image);
+            }
+            if (channels === 3) {
+                this.gl.texImage2DRGBUbyte(0, image);
+            }
+            image.removeEventListener("load", listener);
+        };
+        image.addEventListener("load", listener);
+    }
+    bind(slot) {
+        this.gl.activeTexture(slot);
+        this.gl.bindTexture2D(this.texture);
+    }
+    unbind() {
+        this.gl.unbindTexture2D();
+    }
+    clean() {
+        this.gl.deleteTexture(this.texture);
+    }
+    equal(other) {
+        return this.id === other.getId();
+    }
+    prepareTexture() {
+        this.gl.bindTexture2D(this.texture);
+        this.gl.tex2DParameteriMinFilterLinear();
+        this.gl.tex2DParameteriMagFilterNearest();
+        this.gl.tex2DParameteriWrapSClampToEdge();
+        this.gl.tex2DParameteriWrapTClampToEdge();
+    }
+    getHeight() {
+        return this.image.height;
+    }
+    getId() {
+        return this.id;
+    }
+    getWidth() {
+        return this.image.width;
+    }
+    getImage() {
+        return this.image;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/resource/Sprite2D.ts
+
+class Sprite2D {
+    constructor(texture) {
+        this.texture = texture;
+        this.coordinates = new Array(4);
+        this.coordinates[0] = new Vector2(0, 0);
+        this.coordinates[1] = new Vector2(0, 0);
+        this.coordinates[2] = new Vector2(0, 0);
+        this.coordinates[3] = new Vector2(0, 0);
+    }
+    updateCoordinates(bottomLeft, topRight) {
+        this.coordinates[0] = new Vector2(bottomLeft.getX(), bottomLeft.getY());
+        this.coordinates[1] = new Vector2(topRight.getX(), bottomLeft.getY());
+        this.coordinates[2] = new Vector2(topRight.getX(), topRight.getY());
+        this.coordinates[3] = new Vector2(bottomLeft.getX(), topRight.getY());
+    }
+    getTexture() {
+        return this.texture;
+    }
+    getCoordinates() {
+        return this.coordinates;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/factories/ResourceFactory.ts
+
+
+
+
+
+class ResourceFactory {
+    static create2DFullWhiteTexture(graphicsContext) {
+        const image = new Image(1, 1);
+        return ResourceFactory.create2DTexture(graphicsContext, image, 4, true);
+    }
+    static create2DTexture(graphicsContext, image, channels, isEmpty = false) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: {
+                const gl = graphicsContext.getGL();
+                return new WebGL2DTexture(gl, image, channels, isEmpty);
+            }
+        }
+    }
+    static createSprite2D(texture, coords, textureSize, size = new Vector2(1, 1)) {
+        const result = new Sprite2D(texture);
+        const offset = 0.5; //чтобы не было пересечения смежных текстур
+        if (texture.getWidth() === 0 || texture.getHeight() === 0) {
+            const listener = () => {
+                ResourceFactory.updateSpriteCoordinates(result, coords, textureSize, size, texture, offset);
+                texture.getImage().removeEventListener("load", listener);
+            };
+            texture.getImage().addEventListener("load", listener);
+        }
+        else {
+            ResourceFactory.updateSpriteCoordinates(result, coords, textureSize, size, texture, offset);
+        }
+        return result;
+    }
+    static updateSpriteCoordinates(sprite, coords, textureSize, size, texture, offset) {
+        const bottomLeftX = (coords.getX() * textureSize.getX() + offset) / texture.getWidth();
+        const bottomLeftY = (coords.getY() * textureSize.getY() + offset) / texture.getHeight();
+        const bottomLeft = new Vector2(bottomLeftX, bottomLeftY);
+        const topRightX = ((coords.getX() + size.getX()) * textureSize.getX() - offset) / texture.getWidth();
+        const topRightY = ((coords.getY() + size.getY()) * textureSize.getY() - offset) / texture.getHeight();
+        const topRight = new Vector2(topRightX, topRightY);
+        sprite.updateCoordinates(bottomLeft, topRight);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/buffer/BufferLayout.ts
+class BufferLayout {
+    constructor(elements) {
+        this.elements = elements;
+        this.stride = 0;
+        this.calculateStride();
+    }
+    getElements() {
+        return this.elements;
+    }
+    getStride() {
+        return this.stride;
+    }
+    sizeof() {
+        let result = 0;
+        for (const element of this.elements) {
+            result += element.size;
+        }
+        return result;
+    }
+    calculateStride() {
+        let offset = 0;
+        for (const element of this.elements) {
+            element.offset = offset;
+            offset += element.size;
+            this.stride += element.size;
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/buffer/BufferElement.ts
+function NewBufferElement(type, name, normalized = false) {
+    return {
+        type: type,
+        name: name,
+        size: type.valueOf(),
+        offset: 0,
+        normalized: normalized
+    };
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/renderer/RendererStatistics.ts
+class RendererStatistics {
+    constructor() {
+        this.drawMethodCallsCount = 0;
+        this.quadsCount = 0;
+        this.textureSlotsCount = 0;
+    }
+    increaseDrawMethodCallsCount() {
+        this.drawMethodCallsCount++;
+    }
+    increaseQuadsCount() {
+        this.quadsCount++;
+    }
+    increaseTextureSlotsCount() {
+        this.textureSlotsCount++;
+    }
+    reset() {
+        this.drawMethodCallsCount = 0;
+        this.quadsCount = 0;
+    }
+    getDrawMethodCallsCount() {
+        return this.drawMethodCallsCount;
+    }
+    getQuadsCount() {
+        return this.quadsCount;
+    }
+    getTextureSlotsCount() {
+        return this.textureSlotsCount;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/renderer/Renderer2D.ts
+
+
+
+
+
+
+
+
+
+
+class Renderer2D {
+    constructor() {
+        this.quadVertexBuffer = new Float32Array(0);
+        this.quadVertexBufferIndex = 0;
+        this.quadIndexCount = 0;
+        this.textureSlots = new Array(Renderer2D.maxTextureSlots);
+        this.textureSlotIndex = 1;
+        this.quadPositions = [
+            new Vector4(-0.5, -0.5, 0.0, 1.0),
+            new Vector4(0.5, -0.5, 0.0, 1.0),
+            new Vector4(0.5, 0.5, 0.0, 1.0),
+            new Vector4(-0.5, 0.5, 0.0, 1.0)
+        ];
+        this.textureCoordinates = [
+            new Vector2(0.0, 0.0),
+            new Vector2(1.0, 0.0),
+            new Vector2(1.0, 1.0),
+            new Vector2(0.0, 1.0)
+        ];
+        this.statistics = new RendererStatistics();
+    }
+    init(context, shaderProgram) {
+        this.shaderProgram = shaderProgram;
+        this.whiteColor = new Vector4(1.0, 1.0, 1.0, 1.0);
+        this.whiteTexture = ResourceFactory.create2DFullWhiteTexture(context);
+        this.initImpl();
+        const bufferLayout = new BufferLayout([
+            NewBufferElement(ShaderDataType.FLOAT_3, "a_Position"),
+            NewBufferElement(ShaderDataType.FLOAT_4, "a_Color"),
+            NewBufferElement(ShaderDataType.FLOAT_2, "a_TextureCoordinate"),
+            NewBufferElement(ShaderDataType.FLOAT_1, "a_TextureIndex"),
+            NewBufferElement(ShaderDataType.FLOAT_3, "a_Translate"),
+            NewBufferElement(ShaderDataType.FLOAT_3, "a_Rotation"),
+            NewBufferElement(ShaderDataType.FLOAT_3, "a_Scale"),
+        ]);
+        this.vertexBuffer = BufferFactory.createFloat32VertexDynamicBuffer(context, Renderer2D.maxVertices * bufferLayout.sizeof());
+        this.vertexBuffer.setLayout(bufferLayout);
+        this.quadVertexBuffer = new Float32Array(Renderer2D.maxVertices * bufferLayout.sizeof());
+        const indexes = new Uint16Array(Renderer2D.maxIndices);
+        let offset = 0;
+        for (let i = 0; i < indexes.length; i += 6) {
+            indexes[i] = offset;
+            indexes[i + 1] = offset + 1;
+            indexes[i + 2] = offset + 2;
+            indexes[i + 3] = offset + 2;
+            indexes[i + 4] = offset + 3;
+            indexes[i + 5] = offset;
+            offset += 4;
+        }
+        const indexBuffer = BufferFactory.createUint16IndexStaticBuffer(context, indexes);
+        this.vertexArray = BufferFactory.createVertexArrayBuffer(context);
+        this.vertexArray.addVertexBuffer(this.vertexBuffer);
+        this.vertexArray.setIndexBuffer(indexBuffer);
+        this.vertexArray.unbind();
+        this.vertexBuffer.unbind();
+        indexBuffer.unbind();
+        const samplers = new Array(Renderer2D.maxTextureSlots);
+        for (let i = 0; i < Renderer2D.maxTextureSlots; i++) {
+            samplers[i] = i;
+        }
+        this.shaderProgram.bind();
+        this.shaderProgram.setValueArrayI("u_Textures", samplers);
+        this.shaderProgram.unbind();
+        this.textureSlots[0] = this.whiteTexture;
+        this.statistics.increaseTextureSlotsCount();
+    }
+    begin(camera) {
+        this.shaderProgram.bind();
+        this.shaderProgram.setMatrix4f("u_ViewProjectionMatrix", camera.getViewProjectionMatrix());
+        this.quadIndexCount = 0;
+        this.quadVertexBufferIndex = 0;
+        this.textureSlotIndex = 1;
+    }
+    drawQuadWithColor(position, rotation, scale, color) {
+        this.drawQuad(position, rotation, scale, color, this.whiteTexture, this.textureCoordinates);
+    }
+    drawQuadWithTexture(position, rotation, scale, texture) {
+        this.drawQuad(position, rotation, scale, this.whiteColor, texture, this.textureCoordinates);
+    }
+    drawQuadWithSprite(position, rotation, scale, sprite) {
+        this.drawQuad(position, rotation, scale, this.whiteColor, sprite.getTexture(), sprite.getCoordinates());
+    }
+    drawQuad(position, rotation, scale, color, texture, textureCoordinates) {
+        if (this.quadIndexCount >= Renderer2D.maxIndices) {
+            this.newBatch();
+        }
+        let textIndex = -1;
+        for (let i = 0; this.textureSlotIndex; i++) {
+            if (!this.textureSlots[i]) {
+                break;
+            }
+            if (this.textureSlots[i].equal(texture)) {
+                textIndex = i;
+                break;
+            }
+        }
+        if (textIndex === -1) {
+            textIndex = this.textureSlotIndex;
+            this.textureSlots[this.textureSlotIndex] = texture;
+            this.statistics.increaseTextureSlotsCount();
+            this.textureSlotIndex++;
+        }
+        const rotationInRadians = new Vector3(Transformation.degreesToRadians(rotation.getX()), Transformation.degreesToRadians(rotation.getY()), Transformation.degreesToRadians(rotation.getZ()));
+        this.fillQuadVertexBuffer(this.quadPositions[0], color, textureCoordinates[0], textIndex, position, rotationInRadians, scale);
+        this.fillQuadVertexBuffer(this.quadPositions[1], color, textureCoordinates[1], textIndex, position, rotationInRadians, scale);
+        this.fillQuadVertexBuffer(this.quadPositions[2], color, textureCoordinates[2], textIndex, position, rotationInRadians, scale);
+        this.fillQuadVertexBuffer(this.quadPositions[3], color, textureCoordinates[3], textIndex, position, rotationInRadians, scale);
+        this.quadIndexCount += 6;
+        this.statistics.increaseQuadsCount();
+    }
+    end() {
+        this.vertexBuffer.setFloat32Data(this.quadVertexBuffer.subarray(0, this.quadVertexBufferIndex));
+        this.vertexArray.bind();
+        for (let i = 0; i < Renderer2D.maxTextureSlots; i++) {
+            const textureSlot = this.textureSlots[i];
+            if (!textureSlot) {
+                break;
+            }
+            textureSlot.bind(i);
+        }
+        this.drawTrianglesImpl(this.vertexArray, this.quadIndexCount);
+        this.statistics.increaseDrawMethodCallsCount();
+    }
+    newBatch() {
+        this.end();
+        this.quadIndexCount = 0;
+        this.quadVertexBufferIndex = 0;
+        this.textureSlotIndex = 1;
+    }
+    fillQuadVertexBuffer(position, color, textureCoordinates, textureIndex, translate, rotation, scale) {
+        this.quadVertexBuffer[this.quadVertexBufferIndex] = position.getX();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 1] = position.getY();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 2] = position.getZ();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 3] = color.getX();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 4] = color.getY();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 5] = color.getZ();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 6] = color.getW();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 7] = textureCoordinates.getX();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 8] = textureCoordinates.getY();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 9] = textureIndex;
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 10] = translate.getX();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 11] = translate.getY();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 12] = translate.getZ();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 13] = rotation.getX();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 14] = rotation.getY();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 15] = rotation.getZ();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 16] = scale.getX();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 17] = scale.getY();
+        this.quadVertexBuffer[this.quadVertexBufferIndex + 18] = scale.getZ();
+        this.quadVertexBufferIndex += 19;
+    }
+    getStatics() {
+        return this.statistics;
+    }
+    resetStatistics() {
+        this.statistics.reset();
+    }
+    clean() {
+        this.vertexBuffer.clean();
+        this.vertexArray.clean();
+        for (const textureSlot of this.textureSlots) {
+            if (!textureSlot) {
+                break;
+            }
+            textureSlot.clean();
+        }
+        this.shaderProgram.clean();
+    }
+}
+Renderer2D.maxQuads = 10000;
+Renderer2D.maxVertices = Renderer2D.maxQuads * 4;
+Renderer2D.maxIndices = Renderer2D.maxQuads * 6;
+Renderer2D.maxTextureSlots = 16;
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/renderer/WebGL2DRenderer.ts
+
+class WebGL2DRenderer extends Renderer2D {
+    constructor(gl) {
+        super();
+        this.gl = gl;
+    }
+    clear() {
+        this.gl.clearColorBuffer();
+        this.gl.clearDepthBuffer();
+    }
+    setClearColor(color) {
+        this.gl.clearColor(color.getX(), color.getY(), color.getZ(), color.getW());
+    }
+    drawTrianglesImpl(arrayBuffer, indexCount = 0) {
+        const count = indexCount === 0 ? arrayBuffer.getCount() : indexCount;
+        this.gl.drawTriangleElementsUshort(count, 0);
+    }
+    initImpl() {
+        this.gl.enableDepthTest(); //включение проверки удаленности объектов
+        this.gl.enableBlend(); //включение смешивания пикселей
+        this.gl.blendFuncSrcAlphaOneMinusSrcAlpha(); //включение прозрачности
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/factories/RendererFactory.ts
+
+
+
+class RendererFactory {
+    static create2D(graphicsContext) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: {
+                const gl = graphicsContext.getGL();
+                return new WebGL2DRenderer(gl);
+            }
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/shader/WebGLVertexShader.ts
+class WebGLVertexShader {
+    constructor(gl, code) {
+        this.gl = gl;
+        this.vs = this.gl.createVertexShader();
+        this.gl.setShaderSource(this.vs, code);
+    }
+    getShader() {
+        return this.vs;
+    }
+    clean() {
+        this.gl.deleteShader(this.vs);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/shader/WebGLFragmentShader.ts
+class WebGLFragmentShader {
+    constructor(gl, code) {
+        this.gl = gl;
+        this.vs = this.gl.createFragmentShader();
+        this.gl.setShaderSource(this.vs, code);
+    }
+    getShader() {
+        return this.vs;
+    }
+    clean() {
+        this.gl.deleteShader(this.vs);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/api/gl/shader/WebGLShaderProgram.ts
+class WebGLShaderProgram {
+    constructor(gl, name, vertexShader, fragmentShader) {
+        this.locationsCache = new Map();
+        this.gl = gl;
+        this.name = name;
+        this.vertexShader = vertexShader;
+        this.fragmentShader = fragmentShader;
+        this.program = this.gl.createProgram();
+        this.gl.attachShader(this.program, this.vertexShader.getShader());
+        this.gl.attachShader(this.program, this.fragmentShader.getShader());
+        this.gl.linkProgram(this.program);
+        this.vertexShader.clean();
+        this.fragmentShader.clean();
+    }
+    getName() {
+        return this.name;
+    }
+    bind() {
+        this.gl.useProgram(this.program);
+    }
+    unbind() {
+        this.gl.removeProgram();
+    }
+    setVector3f(name, vector) {
+        this.gl.uniform3f(this.getUniformLocation(name), vector);
+    }
+    setVector4f(name, vector) {
+        this.gl.uniform4f(this.getUniformLocation(name), vector);
+    }
+    setValue1i(name, value) {
+        this.gl.uniform1i(this.getUniformLocation(name), value);
+    }
+    setValueArrayI(name, values) {
+        this.gl.uniform1iv(this.getUniformLocation(name), values);
+    }
+    setMatrix4f(name, matrix) {
+        this.gl.uniformMatrix4fv(this.getUniformLocation(name), false, new Float32Array(matrix.getArray()));
+    }
+    getUniformLocation(name) {
+        let location = this.locationsCache.get(name);
+        if (!location) {
+            location = this.gl.getUniformLocation(this.program, name);
+            this.locationsCache.set(name, location);
+        }
+        return location;
+    }
+    clean() {
+        this.vertexShader.clean();
+        this.fragmentShader.clean();
+        this.gl.deleteProgram(this.program);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/factories/ShaderProgramFactory.ts
+
+
+
+
+
+class ShaderProgramFactory {
+    static createProgram(graphicsContext, programName, vertexShaderCode, fragmentShaderCode) {
+        switch (Renderer.getAPI()) {
+            case RendererAPI.WEB_GL: {
+                const gl = graphicsContext.getGL();
+                const vertexShader = new WebGLVertexShader(gl, vertexShaderCode);
+                const fragmentShader = new WebGLFragmentShader(gl, fragmentShaderCode);
+                return new WebGLShaderProgram(gl, programName, vertexShader, fragmentShader);
+            }
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/graphics/GraphicsElement.ts
+
+/**
+ * Класс для создания нового графического элемента и взаимодействия с ним
+ */
+class GraphicsElement {
+    /**
+     * Конструктор для создания объекта графического элемента в родительском элементе
+     * @param parentElement родительский элемент
+     */
+    constructor(parentElement) {
+        this.parentElement = parentElement;
+        this.canvasElement = document.createElement("canvas"); //создание вэб элемента canvas
+        this.canvasElement.style.display = "block";
+        this.canvasElement.style.width = "100%";
+        this.canvasElement.style.height = "100%";
+        //запрет на получение контекст меню при нажатии на правую кнопку мыши, так как права кнопка мыши может быть использована для вращения камерой
+        this.canvasElement.oncontextmenu = function () {
+            return false;
+        };
+        this.graphicsContext = GraphicsContextFactory.createContext(this.canvasElement);
+    }
+    /**
+     * Проверка на то что графического элемента уже не существует
+     */
+    notExist() {
+        return this.canvasElement.offsetParent == null;
+    }
+    /**
+     * Инициализация графического элемента
+     */
+    init() {
+        this.embedToElement();
+        this.graphicsContext.init();
+    }
+    /**
+     * Отрисовка графического элемента
+     */
+    render() {
+    }
+    /**
+     * Получение объекта графического контекста
+     */
+    getGraphicsContext() {
+        return this.graphicsContext;
+    }
+    /**
+     * Получение ширины графического элемента
+     */
+    getWidth() {
+        return this.canvasElement.width;
+    }
+    /**
+     * Получение высоты графического элемента
+     */
+    getHeight() {
+        return this.canvasElement.height;
+    }
+    /**
+     * Обновление графического элемента
+     */
+    update() {
+    }
+    /**
+     * Уничтожение графического элемента
+     */
+    destroy() {
+        this.canvasElement.remove();
+    }
+    getCanvasElement() {
+        return this.canvasElement;
+    }
+    /**
+     * Встраивание графического элемента (canvas) в родительский элемент
+     * @private
+     */
+    embedToElement() {
+        this.parentElement.append(this.canvasElement); //встраивание canvas элемента внутрь родительского
+        this.resize(); //заполнение canvas элемента под размер родительского
+    }
+    /**
+     * Обновление области просмотра
+     * @private
+     */
+    updateViewport() {
+        this.graphicsContext.setViewport(0, 0, this.canvasElement.width, this.canvasElement.height);
+    }
+    /**
+     * Обновление размеров canvas элемента
+     */
+    resize() {
+        this.canvasElement.width = this.parentElement.offsetWidth; //задание длины для canvas элемента таким же как у родительского, таким образом canvas всегда будет занимать все пространство родительского элемента
+        this.canvasElement.height = this.parentElement.offsetHeight; //задание высоты для canvas элемента таким же как у родительского, таким образом canvas всегда будет занимать все пространство родительского элемента
+        this.updateViewport();
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/graphics/GraphicsApplication.ts
+
+/**
+ * Класс графического приложения
+ */
+class GraphicsApplication {
+    /**
+     * Конструктор для создания объекта графического приложения
+     */
+    constructor(parentElement) {
+        this.graphicElement = new GraphicsElement(parentElement);
+        this.frame = 0;
+        this.shouldBeClosed = false;
+    }
+    /**
+     * Запуск графического приложения
+     */
+    start() {
+        this.init();
+        this.startNewFrame();
+    }
+    /**
+     * Остановка графического приложения
+     */
+    stop() {
+        this.shouldBeClosed = true;
+    }
+    /**
+     * Инициализация графического приложения внутри родительского вэб элемента
+     */
+    init() {
+        this.graphicElement.init();
+    }
+    /**
+     * Отправить запрос на отрисовку нового кадра
+     * @private
+     */
+    startNewFrame() {
+        if (this.graphicElement.notExist() || this.shouldBeClosed) {
+            window.cancelAnimationFrame(this.frame);
+            this.clean();
+            return;
+        }
+        this.frame = window.requestAnimationFrame((timestamp) => this.loop(timestamp));
+    }
+    /**
+     * Цикл рендеринга
+     * @param timestamp времени с момента старта цикла
+     * @private
+     */
+    loop(timestamp) {
+        this.input();
+        this.update(timestamp);
+        this.render();
+        this.endFrame();
+        this.startNewFrame();
+    }
+    /**
+     * Обработка ввода
+     */
+    input() {
+    }
+    /**
+     * Обновление кадра
+     * @param timestamp времени с момента старта цикла
+     */
+    update(timestamp) {
+        this.graphicElement.update();
+    }
+    /**
+     * Отрисовка кадра
+     */
+    render() {
+        this.graphicElement.render();
+    }
+    /**
+     * Завершить отрисовку кадра
+     * @private
+     */
+    endFrame() {
+    }
+    /**
+     * Отчистка ресурсов графического приложения
+     */
+    clean() {
+        this.graphicElement.destroy();
+    }
+    getGraphicsElement() {
+        return this.graphicElement;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/shader/ShaderProgramLibrary.ts
+class ShaderProgramLibrary {
+    constructor() {
+        this.shaderPrograms = new Map();
+    }
+    add(shaderProgram) {
+        this.shaderPrograms.set(shaderProgram.getName(), shaderProgram);
+    }
+    get(name) {
+        const result = this.shaderPrograms.get(name);
+        if (!result) {
+            throw new Error("Shader program by name [ " + name + " ] not found in library");
+        }
+        return result;
+    }
+    clean() {
+        this.shaderPrograms.clear();
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/support/Default2DShader.ts
+class Default2DShader {
+    static getVertexShader() {
+        return `#version 300 es
+				layout (location = 0) in vec4 a_Position;
+				layout (location = 1) in vec4 a_Color;
+				layout (location = 2) in vec2 a_TextCoord;
+				layout (location = 3) in float a_TextIndex;
+				layout (location = 4) in vec3 a_Translate;
+				layout (location = 5) in vec3 a_Rotation;
+				layout (location = 6) in vec3 a_Scale;
+				
+				out vec4 v_Color;
+				out vec2 v_TextCoord;
+				out float v_TextIndex;
+				
+				uniform mat4 u_ViewProjectionMatrix;
+				
+				mat4 getWorldMatrix() {
+					mat4 translationMatrix = mat4(1.0);
+					
+					translationMatrix[3] = vec4(a_Translate, 1.0);
+					
+					mat4 rotationMatrixX = mat4(
+						1.0, 0.0, 0.0, 0.0,
+						0.0, cos(a_Rotation.x), -sin(a_Rotation.x), 0.0,
+						0.0, sin(a_Rotation.x), cos(a_Rotation.x), 0.0,
+						0.0, 0.0, 0.0, 1.0
+					);
+					
+					mat4 rotationMatrixY = mat4(
+						cos(a_Rotation.y), 0.0, sin(a_Rotation.y), 0.0,
+						0.0, 1.0, 0.0, 0.0,
+						-sin(a_Rotation.y), 0.0, cos(a_Rotation.y), 0.0,
+						0.0, 0.0, 0.0, 1.0
+					);
+					
+					mat4 rotationMatrixZ = mat4(
+						cos(a_Rotation.z), -sin(a_Rotation.z), 0.0, 0.0,
+						sin(a_Rotation.z), cos(a_Rotation.z), 0.0, 0.0,
+						0.0, 0.0, 1.0, 0.0,
+						0.0, 0.0, 0.0, 1.0
+					);
+					
+					mat4 scaleMatrix = mat4(
+						a_Scale.x, 0.0, 0.0, 0.0,
+						0.0, a_Scale.y, 0.0, 0.0,
+						0.0, 0.0, a_Scale.z, 0.0,
+						0.0, 0.0, 0.0, 1.0
+					);
+				
+					return translationMatrix * rotationMatrixX * rotationMatrixY * rotationMatrixZ * scaleMatrix;
+				}
+				
+				void main() {
+					v_TextCoord = vec2(a_TextCoord.x, 1.0f - a_TextCoord.y);
+					v_TextIndex = a_TextIndex;
+					v_Color = a_Color;
+					
+					mat4 worldMatrix = getWorldMatrix();
+					gl_Position = u_ViewProjectionMatrix * worldMatrix * a_Position;
+				}`;
+    }
+    static getFragmentShader() {
+        return `#version 300 es
+				precision lowp float; //модификатор точности для фрагментного шейдера
+				
+				in vec4 v_Color;
+				in vec2 v_TextCoord;
+				in float v_TextIndex;
+				
+				uniform sampler2D u_Textures[16];
+				
+				out vec4 fragColor; //выходная переменная итогового цвета
+				
+				vec4 getColorByTexture() {
+					int index = int(v_TextIndex);
+					
+					//amd, intel, nvidia support
+					switch (index) {
+						case 0: return texture(u_Textures[0], v_TextCoord);
+						case 1: return texture(u_Textures[1], v_TextCoord);
+						case 2: return texture(u_Textures[2], v_TextCoord);
+						case 3: return texture(u_Textures[3], v_TextCoord);
+						case 4: return texture(u_Textures[4], v_TextCoord);
+						case 5: return texture(u_Textures[5], v_TextCoord);
+						case 6: return texture(u_Textures[6], v_TextCoord);
+						case 7: return texture(u_Textures[7], v_TextCoord);
+						case 8: return texture(u_Textures[8], v_TextCoord);
+						case 9: return texture(u_Textures[9], v_TextCoord);
+						case 10: return texture(u_Textures[10], v_TextCoord);
+						case 11: return texture(u_Textures[11], v_TextCoord);
+						case 12: return texture(u_Textures[12], v_TextCoord);
+						case 13: return texture(u_Textures[13], v_TextCoord);
+						case 14: return texture(u_Textures[14], v_TextCoord);
+						case 15: return texture(u_Textures[15], v_TextCoord);
+					};
+					
+					return vec4(1.0, 1.0, 1.0, 1.0);
+				}
+				
+				void main() {
+					fragColor = v_Color * getColorByTexture();
+				}`;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/index.ts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/graphics_engine/namespace/graphics_engine.ts
+
+
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/Engine.ts
+
+
+
+
+class Engine extends GraphicsApplication {
+    constructor(parentElement, api = RendererAPI.WEB_GL) {
+        super(parentElement);
+        Renderer.setAPI(api);
+        this.shaderProgramLibrary = new ShaderProgramLibrary();
+        this.layerStack = new BaseLayerStack();
+        this.element = new Element(16);
+        this.mouse = new Mouse(16);
+        this.keyboard = new Keyboard(16);
+        this.time = new Time();
+        Input.instance = new BaseInput(this.mouse, this.keyboard);
+    }
+    init() {
+        super.init();
+        const graphicsElement = this.getGraphicsElement();
+        this.element.onResize(graphicsElement.getWidth(), graphicsElement.getHeight());
+        const canvasElement = graphicsElement.getCanvasElement();
+        this.addMouseListener(canvasElement);
+        this.addKeyboardListener(canvasElement);
+        this.addElementListener(graphicsElement);
+    }
+    input() {
+        super.input();
+        const layers = this.layerStack.getLayers()
+            .reverse();
+        const mouseEvent = this.mouse.read();
+        if (mouseEvent.isValid()) {
+            for (let layer of layers) {
+                layer.mouseInput(mouseEvent);
+            }
+        }
+        const keyboardEvent = this.keyboard.readKey();
+        if (keyboardEvent.isValid()) {
+            for (let layer of layers) {
+                layer.keyboardInput(keyboardEvent);
+            }
+        }
+        const elementEvent = this.element.read();
+        if (elementEvent.isValid()) {
+            for (let layer of layers) {
+                layer.elementInput(elementEvent);
+            }
+        }
+    }
+    update(timestamp) {
+        super.update(timestamp);
+        this.time.update(timestamp);
+        const layers = this.layerStack.getLayers();
+        for (let layer of layers) {
+            layer.update(this.time);
+        }
+        this.mouse.updateDirection();
+    }
+    render() {
+        const layers = this.layerStack.getLayers();
+        for (let layer of layers) {
+            layer.render();
+        }
+    }
+    clean() {
+        this.mouse.flush();
+        this.keyboard.flush();
+        this.element.flush();
+        const layers = this.layerStack.getLayers();
+        for (let layer of layers) {
+            layer.clean();
+        }
+        this.shaderProgramLibrary.clean();
+        Engine.renderer2D.clean();
+        super.clean();
+    }
+    init2DRenderer(shaderProgram = null) {
+        const context = this.getContext();
+        if (shaderProgram === null) {
+            shaderProgram = ShaderProgramFactory.createProgram(context, "2D Default Shader Program", Default2DShader.getVertexShader(), Default2DShader.getFragmentShader());
+        }
+        this.saveShaderProgram(shaderProgram);
+        Engine.renderer2D = RendererFactory.create2D(context);
+        Engine.renderer2D.init(context, shaderProgram);
+    }
+    saveShaderProgram(shaderProgram) {
+        this.shaderProgramLibrary.add(shaderProgram);
+    }
+    pushLayer(layer) {
+        this.layerStack.push(layer);
+    }
+    pushOverlayLayer(layer) {
+        this.layerStack.pushOverlay(layer);
+    }
+    getContext() {
+        return this.getGraphicsElement().getGraphicsContext();
+    }
+    addMouseListener(canvasElement) {
+        canvasElement.addEventListener("mousedown", (event) => {
+            if (event.button === 0) {
+                this.mouse.onLeftKeyPressed(event.offsetX, event.offsetY);
+                return;
+            }
+            if (event.button === 2) {
+                this.mouse.onRightKeyPressed(event.offsetX, event.offsetY);
+                return;
+            }
+        });
+        canvasElement.addEventListener("mouseup", (event) => {
+            if (event.button === 0) {
+                this.mouse.onLeftKeyReleased(event.offsetX, event.offsetY);
+                return;
+            }
+            if (event.button === 2) {
+                this.mouse.onRightKeyReleased(event.offsetX, event.offsetY);
+                return;
+            }
+        });
+        canvasElement.addEventListener('mousemove', (event) => this.mouse.onMouseMove(event.offsetX, event.offsetY));
+        canvasElement.addEventListener('mouseenter', () => this.mouse.onMouseEnter());
+        canvasElement.addEventListener('mouseleave', () => this.mouse.onMouseLeave());
+    }
+    addKeyboardListener(canvasElement) {
+        document.addEventListener("keydown", (event) => this.keyboard.onKeyPressed(event.code), false);
+        document.addEventListener("keyup", (event) => this.keyboard.onKeyReleased(event.code), false);
+        document.addEventListener("keypress", (event) => this.keyboard.onChar(event.key), false);
+    }
+    addElementListener(graphicsElement) {
+        window.addEventListener("resize", () => {
+            graphicsElement.resize();
+            this.element.onResize(graphicsElement.getWidth(), graphicsElement.getHeight());
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/Component.ts
+class Component {
+    constructor(entity) {
+        this.entity = entity;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/GameComponent.ts
+
+class GameComponent extends Component {
+    constructor(entity) {
+        super(entity);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/System.ts
+class System {
+    constructor() {
+        this.components = new Array();
+    }
+    saveComponent(component) {
+        this.components.push(component);
+    }
+    removeComponent(component) {
+        const index = this.components.indexOf(component);
+        if (index > -1) {
+            this.components.splice(index, 1);
+        }
+    }
+    clean() {
+        for (const component of this.components) {
+            component.remove();
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/GameSystemComponent.ts
+
+class GameSystemComponent extends System {
+    constructor() {
+        super();
+    }
+    update(time) {
+        for (const component of this.components) {
+            component.update(time);
+        }
+    }
+    render() {
+        for (const component of this.components) {
+            component.render();
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/ext/TransformSystemComponent.ts
+
+class TransformSystemComponent extends GameSystemComponent {
+    constructor() {
+        super();
+    }
+    static getInstance() {
+        if (!TransformSystemComponent.instance) {
+            TransformSystemComponent.instance = new TransformSystemComponent();
+        }
+        return TransformSystemComponent.instance;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/ext/TransformComponent.ts
+
+
+
+class TransformComponent extends GameComponent {
+    constructor(entity) {
+        super(entity);
+        this.position = new Vector3(0, 0, 0);
+        this.rotation = new Vector3(0, 0, 0);
+        this.scale = new Vector3(1, 1, 1);
+        TransformSystemComponent.getInstance().saveComponent(this);
+    }
+    update(time) {
+    }
+    render() {
+    }
+    remove() {
+        TransformSystemComponent.getInstance().removeComponent(this);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/ext/TagSystemComponent.ts
+
+class TagSystemComponent extends GameSystemComponent {
+    constructor() {
+        super();
+    }
+    static getInstance() {
+        if (!TagSystemComponent.instance) {
+            TagSystemComponent.instance = new TagSystemComponent();
+        }
+        return TagSystemComponent.instance;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/ext/TagComponent.ts
+
+
+class TagComponent extends GameComponent {
+    constructor(entity) {
+        super(entity);
+        TagSystemComponent.getInstance().saveComponent(this);
+    }
+    remove() {
+        TagSystemComponent.getInstance().removeComponent(this);
+    }
+    render() {
+    }
+    update(time) {
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/ext/TypeScriptSystemComponent.ts
+
+class TypeScriptSystemComponent extends GameSystemComponent {
+    constructor() {
+        super();
+    }
+    static getInstance() {
+        if (!TypeScriptSystemComponent.instance) {
+            TypeScriptSystemComponent.instance = new TypeScriptSystemComponent();
+        }
+        return TypeScriptSystemComponent.instance;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/ext/TypeScriptComponent.ts
+
+
+class TypeScriptComponent extends GameComponent {
+    constructor(entity) {
+        super(entity);
+        this.instanceFn = () => { };
+        this.destroyFn = () => { };
+        this.onInitFn = () => { };
+        this.onUpdateFn = (time) => { };
+        this.onDestroyFn = () => { };
+        TypeScriptSystemComponent.getInstance().saveComponent(this);
+    }
+    bind(componentClass) {
+        this.instanceFn = () => {
+            this.script = new componentClass(this.entity);
+        };
+        this.destroyFn = () => {
+            this.script = null;
+            this.instanceFn = () => { };
+            this.destroyFn = () => { };
+            this.onInitFn = () => { };
+            this.onUpdateFn = (time) => { };
+            this.onDestroyFn = () => { };
+        };
+        this.onInitFn = () => {
+            this.script.init();
+        };
+        this.onUpdateFn = (time) => {
+            this.script.update(time);
+        };
+        this.onDestroyFn = () => {
+            this.script.destroy();
+        };
+    }
+    remove() {
+        this.onDestroyFn();
+        this.destroyFn();
+        TypeScriptSystemComponent.getInstance().removeComponent(this);
+    }
+    render() {
+    }
+    update(time) {
+        if (!this.script) {
+            this.instanceFn();
+            this.onInitFn();
+        }
+        this.onUpdateFn(time);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/ext/CameraSystemComponent.ts
+
+class CameraSystemComponent extends GameSystemComponent {
+    constructor() {
+        super();
+    }
+    static getInstance() {
+        if (!CameraSystemComponent.instance) {
+            CameraSystemComponent.instance = new CameraSystemComponent();
+        }
+        return CameraSystemComponent.instance;
+    }
+    resize(width, height) {
+        for (const component of this.components) {
+            component.camera.resize(width, height);
+        }
+    }
+    getPrimaryCamera() {
+        for (const component of this.components) {
+            if (component.primary) {
+                return component.camera;
+            }
+        }
+        return null;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/ext/CameraComponent.ts
+
+
+class CameraComponent extends GameComponent {
+    constructor(entity) {
+        super(entity);
+        CameraSystemComponent.getInstance().saveComponent(this);
+    }
+    render() {
+    }
+    update(time) {
+        const cameraComponent = this.entity.getComponent(CameraComponent);
+        if (cameraComponent.primary) {
+            cameraComponent.camera.update();
+        }
+    }
+    remove() {
+        CameraSystemComponent.getInstance().removeComponent(this);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/ext/Sprite2DRendererSystemComponent.ts
+
+
+class Sprite2DRendererSystemComponent extends GameSystemComponent {
+    constructor() {
+        super();
+    }
+    saveComponent(component) {
+        super.saveComponent(component);
+        this.components = this.components.sort((a, b) => {
+            const aZ = a.entity.getComponent(TransformComponent).position.getZ();
+            const bZ = b.entity.getComponent(TransformComponent).position.getZ();
+            return aZ - bZ;
+        });
+    }
+    static getInstance() {
+        if (!Sprite2DRendererSystemComponent.instance) {
+            Sprite2DRendererSystemComponent.instance = new Sprite2DRendererSystemComponent();
+        }
+        return Sprite2DRendererSystemComponent.instance;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/ext/Sprite2DRendererComponent.ts
+
+
+
+
+class Sprite2DRendererComponent extends GameComponent {
+    constructor(entity) {
+        super(entity);
+        Sprite2DRendererSystemComponent.getInstance().saveComponent(this);
+    }
+    update(time) {
+    }
+    render() {
+        const transformComponent = this.entity.getComponent(TransformComponent);
+        Engine.renderer2D.drawQuadWithSprite(transformComponent.position, transformComponent.rotation, transformComponent.scale, this.sprite);
+    }
+    remove() {
+        Sprite2DRendererSystemComponent.getInstance().removeComponent(this);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/ext/Texture2DRendererSystemComponent.ts
+
+
+class Texture2DRendererSystemComponent extends GameSystemComponent {
+    constructor() {
+        super();
+    }
+    saveComponent(component) {
+        super.saveComponent(component);
+        this.components = this.components.sort((a, b) => {
+            const aZ = a.entity.getComponent(TransformComponent).position.getZ();
+            const bZ = b.entity.getComponent(TransformComponent).position.getZ();
+            return aZ - bZ;
+        });
+    }
+    static getInstance() {
+        if (!Texture2DRendererSystemComponent.instance) {
+            Texture2DRendererSystemComponent.instance = new Texture2DRendererSystemComponent();
+        }
+        return Texture2DRendererSystemComponent.instance;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/ext/Texture2DRendererComponent.ts
+
+
+
+
+class Texture2DRendererComponent extends GameComponent {
+    constructor(entity) {
+        super(entity);
+        Texture2DRendererSystemComponent.getInstance().saveComponent(this);
+    }
+    remove() {
+        Texture2DRendererSystemComponent.getInstance().removeComponent(this);
+    }
+    render() {
+        const transformComponent = this.entity.getComponent(TransformComponent);
+        Engine.renderer2D.drawQuadWithTexture(transformComponent.position, transformComponent.rotation, transformComponent.scale, this.texture);
+    }
+    update(time) {
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/ext/ColorRendererSystemComponent.ts
+
+
+class ColorRendererSystemComponent extends GameSystemComponent {
+    constructor() {
+        super();
+    }
+    saveComponent(component) {
+        super.saveComponent(component);
+        this.components = this.components.sort((a, b) => {
+            const aZ = a.entity.getComponent(TransformComponent).position.getZ();
+            const bZ = b.entity.getComponent(TransformComponent).position.getZ();
+            return aZ - bZ;
+        });
+    }
+    static getInstance() {
+        if (!ColorRendererSystemComponent.instance) {
+            ColorRendererSystemComponent.instance = new ColorRendererSystemComponent();
+        }
+        return ColorRendererSystemComponent.instance;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/ext/ColorRendererComponent.ts
+
+
+
+
+
+class ColorRendererComponent extends GameComponent {
+    constructor(entity) {
+        super(entity);
+        this.color = new Vector4(1, 1, 1, 1);
+        ColorRendererSystemComponent.getInstance().saveComponent(this);
+    }
+    update(time) {
+    }
+    render() {
+        const transformComponent = this.entity.getComponent(TransformComponent);
+        Engine.renderer2D.drawQuadWithColor(transformComponent.position, transformComponent.rotation, transformComponent.scale, this.color);
+    }
+    remove() {
+        ColorRendererSystemComponent.getInstance().removeComponent(this);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/system/ext/State2DAnimationMachineSystemComponent.ts
+
+class State2DAnimationMachineSystemComponent extends GameSystemComponent {
+    constructor() {
+        super();
+    }
+    static getInstance() {
+        if (!State2DAnimationMachineSystemComponent.instance) {
+            State2DAnimationMachineSystemComponent.instance = new State2DAnimationMachineSystemComponent();
+        }
+        return State2DAnimationMachineSystemComponent.instance;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/component/ext/State2DAnimationMachineComponent.ts
+
+
+
+class State2DAnimationMachineComponent extends GameComponent {
+    constructor(entity) {
+        super(entity);
+        this.defaultStateName = "";
+        this.states = [];
+        State2DAnimationMachineSystemComponent.getInstance().saveComponent(this);
+        this.spriteComponent = this.entity.getComponent(Sprite2DRendererComponent);
+    }
+    addState(state) {
+        this.states.push(state);
+    }
+    play(stateName) {
+        if (this.currentState.getName() === stateName) {
+            return;
+        }
+        for (const state of this.states) {
+            if (state.getName() === stateName) {
+                this.currentState = state;
+                break;
+            }
+        }
+    }
+    remove() {
+        State2DAnimationMachineSystemComponent.getInstance().removeComponent(this);
+    }
+    render() {
+    }
+    update(time) {
+        this.currentState.update(time);
+        this.spriteComponent.sprite = this.currentState.getCurrentFrame().getSprite();
+    }
+    setDefaultStateName(defaultStateName) {
+        this.defaultStateName = defaultStateName;
+        for (const state of this.states) {
+            if (state.getName() === this.defaultStateName) {
+                this.currentState = state;
+                break;
+            }
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/entity/Entity.ts
+class Entity {
+    constructor(id, scene) {
+        this.id = id;
+        this.scene = scene;
+        this.components = new Map();
+    }
+    addComponent(componentClass) {
+        const component = new componentClass(this);
+        this.components.set(componentClass.name, component);
+        return component;
+    }
+    hasComponent(componentClass) {
+        return this.components.has(componentClass.name);
+    }
+    getComponent(componentClass) {
+        const componentType = componentClass.name;
+        if (this.hasComponent(componentClass)) {
+            return this.components.get(componentClass.name);
+        }
+        throw new Error("Component by type [ " + componentType + " ] not found into entity [ " + this.id + " ]");
+    }
+    removeComponent(componentClass) {
+        const component = this.getComponent(componentClass);
+        component.remove();
+        this.components.delete(componentClass.name);
+    }
+    getScene() {
+        return this.scene;
+    }
+    clean() {
+        for (const component of this.components.values()) {
+            component.remove();
+        }
+        this.components.clear();
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/script/BaseScript.ts
+class BaseScript {
+    constructor(entity) {
+        this.entity = entity;
+    }
+    getComponent(componentClass) {
+        return this.entity.getComponent(componentClass);
+    }
+    addComponent(componentClass) {
+        return this.entity.addComponent(componentClass);
+    }
+    getScene() {
+        return this.entity.getScene();
+    }
+    init() { }
+    destroy() { }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/support/animation/Animation2DSpriteFrame.ts
+class Animation2DSpriteFrame {
+    constructor(sprite, time) {
+        this.sprite = sprite;
+        this.time = time;
+    }
+    getTime() {
+        return this.time;
+    }
+    getSprite() {
+        return this.sprite;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/support/animation/Animation2DSpriteState.ts
+
+class Animation2DSpriteState {
+    constructor(name) {
+        this.name = name;
+        this.frames = [];
+        this.currentFrameIndex = 0;
+        this.timeTracker = 0;
+    }
+    addFrame(sprite, frameTime) {
+        this.frames.push(new Animation2DSpriteFrame(sprite, frameTime));
+    }
+    update(time) {
+        this.timeTracker -= time.getDeltaTimeMs();
+        if (this.timeTracker < 0) {
+            this.currentFrameIndex++;
+            if (this.currentFrameIndex >= this.frames.length) {
+                this.currentFrameIndex = 0;
+            }
+            this.timeTracker = this.frames[this.currentFrameIndex].getTime();
+        }
+    }
+    getCurrentFrame() {
+        return this.frames[this.currentFrameIndex];
+    }
+    getName() {
+        return this.name;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/index.ts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/entity_component_system/namespace/ecs.ts
+
+
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/Scene.ts
+
+
+class Scene {
+    constructor(width, height) {
+        this.transformSystemComponent = TransformSystemComponent.getInstance();
+        this.sprite2DRendererSystemComponent = Sprite2DRendererSystemComponent.getInstance();
+        this.tagSystemComponent = TagSystemComponent.getInstance();
+        this.cameraSystemComponent = CameraSystemComponent.getInstance();
+        this.texture2DRendererSystemComponent = Texture2DRendererSystemComponent.getInstance();
+        this.colorRendererSystemComponent = ColorRendererSystemComponent.getInstance();
+        this.typeScriptSystemComponent = TypeScriptSystemComponent.getInstance();
+        this.state2DMachineSystemComponent = State2DAnimationMachineSystemComponent.getInstance();
+        this.width = width;
+        this.height = height;
+        this.entities = [];
+    }
+    createEntity(name = "Entity") {
+        const result = new Entity(Scene.entityId++, this);
+        result.addComponent(TransformComponent);
+        result.addComponent(TagComponent).tag = name;
+        this.entities.push(result);
+        return result;
+    }
+    resizeCamera() {
+        this.cameraSystemComponent.resize(this.width, this.height);
+    }
+    resize(width, height) {
+        this.width = width;
+        this.height = height;
+        this.resizeCamera();
+    }
+    update(time) {
+        this.transformSystemComponent.update(time);
+        this.sprite2DRendererSystemComponent.update(time);
+        this.tagSystemComponent.update(time);
+        this.cameraSystemComponent.update(time);
+        this.colorRendererSystemComponent.update(time);
+        this.texture2DRendererSystemComponent.update(time);
+        this.typeScriptSystemComponent.update(time);
+        this.state2DMachineSystemComponent.update(time);
+    }
+    render() {
+        const primaryCamera = this.cameraSystemComponent.getPrimaryCamera();
+        if (primaryCamera) {
+            Engine.renderer2D.begin(primaryCamera);
+            this.colorRendererSystemComponent.render();
+            this.texture2DRendererSystemComponent.render();
+            this.sprite2DRendererSystemComponent.render();
+            Engine.renderer2D.end();
+        }
+    }
+    clean() {
+        this.transformSystemComponent.clean();
+        this.sprite2DRendererSystemComponent.clean();
+        this.tagSystemComponent.clean();
+        this.cameraSystemComponent.clean();
+        this.texture2DRendererSystemComponent.clean();
+        this.colorRendererSystemComponent.clean();
+        this.typeScriptSystemComponent.clean();
+        this.state2DMachineSystemComponent.clean();
+    }
+    getEntities() {
+        return this.entities;
+    }
+}
+Scene.entityId = 1;
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/layer/impl/BaseLayer.ts
+class BaseLayer {
+    constructor(name = "layer") {
+        this.name = name;
+    }
+    getName() {
+        return this.name;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/layer/index.ts
+
+
+
+
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/index.ts
+
+
+
+
+
+
+
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/namespace/game_engine.ts
+
+
+
+;// CONCATENATED MODULE: ./src/game/Game.ts
+
+class Game extends Engine {
+    constructor(parentElement) {
+        super(parentElement);
+    }
+}
+/* harmony default export */ const game_Game = (Game);
+
+;// CONCATENATED MODULE: ./src/resources/decoration_and_block_spritesheet.png
+/* harmony default export */ const decoration_and_block_spritesheet = (__webpack_require__.p + "73fb29bb69182dff4442752dca889c96.png");
+;// CONCATENATED MODULE: ./src/resources/character_spritesheet.png
+/* harmony default export */ const character_spritesheet = (__webpack_require__.p + "a29134208ca372ec3037f95e39a9d541.png");
+;// CONCATENATED MODULE: ./src/game/scripts/WorldCreatorScript.ts
+
+class WorldCreatorScript extends BaseScript {
+    init() {
+        const scene = this.getScene();
+        const spriteSheetComponent = this.getComponent(Texture2DRendererComponent);
+        const spriteSheetTexture = spriteSheetComponent.texture;
+        const spriteSize = new Vector2(16, 16);
+        this.createDecorations(scene, spriteSheetTexture, spriteSize);
+        this.createObstacles(scene, spriteSheetTexture, spriteSize);
+        spriteSheetComponent.remove();
+    }
+    update(time) {
+    }
+    createObstacles(scene, spriteSheetTexture, spriteSize) {
+        const floorSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(0, 11), spriteSize);
+        const topLeftPipeSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(2, 2), spriteSize);
+        const topRightPipeSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(3, 2), spriteSize);
+        const bottomLeftPipeSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(5, 3), spriteSize);
+        const bottomRightPipeSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(6, 3), spriteSize);
+        this.createFloor(scene, floorSprite, -8, 61);
+        this.createSmallPipe(scene, topLeftPipeSprite, topRightPipeSprite, bottomLeftPipeSprite, bottomRightPipeSprite, 20, 0);
+        this.createMediumPipe(scene, topLeftPipeSprite, topRightPipeSprite, bottomLeftPipeSprite, bottomRightPipeSprite, 30, 0);
+        this.createBigPipe(scene, topLeftPipeSprite, topRightPipeSprite, bottomLeftPipeSprite, bottomRightPipeSprite, 38, 0);
+        this.createBigPipe(scene, topLeftPipeSprite, topRightPipeSprite, bottomLeftPipeSprite, bottomRightPipeSprite, 49, 0);
+    }
+    createDecorations(scene, spriteSheetTexture, spriteSize) {
+        const leftBigHillSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(3, 5), spriteSize);
+        const centreLeftBigHillSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(4, 5), spriteSize);
+        const centreBigHillSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(3, 6), spriteSize);
+        const centreRightBigHillSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(5, 6), spriteSize);
+        const rightBigHillSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(5, 5), spriteSize);
+        const topBigHillSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(4, 6), spriteSize);
+        const leftBushSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(6, 5), spriteSize);
+        const centerBushSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(6, 6), spriteSize);
+        const rightBushSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(6, 7), spriteSize);
+        this.createBigHill(scene, leftBigHillSprite, centreLeftBigHillSprite, centreBigHillSprite, centreRightBigHillSprite, rightBigHillSprite, topBigHillSprite, -8, 0, -0.5);
+        this.createBigBush(scene, leftBushSprite, centerBushSprite, rightBushSprite, 3, 0, -0.5);
+        this.createSmallHill(scene, leftBigHillSprite, centreLeftBigHillSprite, rightBigHillSprite, topBigHillSprite, 8, 0, -0.5);
+        this.createSmallBush(scene, leftBushSprite, centerBushSprite, rightBushSprite, 15, 0, -0.5);
+        this.createMediumBush(scene, leftBushSprite, centerBushSprite, rightBushSprite, 33, 0, -0.5);
+        this.createBigHill(scene, leftBigHillSprite, centreLeftBigHillSprite, centreBigHillSprite, centreRightBigHillSprite, rightBigHillSprite, topBigHillSprite, 40, 0, -0.5);
+        this.createBigBush(scene, leftBushSprite, centerBushSprite, rightBushSprite, 51, 0, -0.5);
+        this.createSmallHill(scene, leftBigHillSprite, centreLeftBigHillSprite, rightBigHillSprite, topBigHillSprite, 56, 0, -0.5);
+    }
+    createSmallBush(scene, left, center, right, x, y, z) {
+        const leftEntity = scene.createEntity("Small Bush [left] entity");
+        const leftTransformComponent = leftEntity.getComponent(TransformComponent);
+        leftTransformComponent.position.setX(x);
+        leftTransformComponent.position.setY(y);
+        leftTransformComponent.position.setZ(z);
+        const leftSpriteComponent = leftEntity.addComponent(Sprite2DRendererComponent);
+        leftSpriteComponent.sprite = left;
+        const centerEntity = scene.createEntity("Small Bush [center] entity");
+        const centerTransformComponent = centerEntity.getComponent(TransformComponent);
+        centerTransformComponent.position.setX(x + 1);
+        centerTransformComponent.position.setY(y);
+        centerTransformComponent.position.setZ(z);
+        const centerSpriteComponent = centerEntity.addComponent(Sprite2DRendererComponent);
+        centerSpriteComponent.sprite = center;
+        const rightEntity = scene.createEntity("Small Bush [right] entity");
+        const rightTransformComponent = rightEntity.getComponent(TransformComponent);
+        rightTransformComponent.position.setX(x + 2);
+        rightTransformComponent.position.setY(y);
+        rightTransformComponent.position.setZ(z);
+        const rightSpriteComponent = rightEntity.addComponent(Sprite2DRendererComponent);
+        rightSpriteComponent.sprite = right;
+    }
+    createMediumBush(scene, left, center, right, x, y, z) {
+        const leftEntity = scene.createEntity("Big Bush [left] entity");
+        const leftTransformComponent = leftEntity.getComponent(TransformComponent);
+        leftTransformComponent.position.setX(x);
+        leftTransformComponent.position.setY(y);
+        leftTransformComponent.position.setZ(z);
+        const leftSpriteComponent = leftEntity.addComponent(Sprite2DRendererComponent);
+        leftSpriteComponent.sprite = left;
+        const centerLeftEntity = scene.createEntity("Big Bush [center left] entity");
+        const centerLeftTransformComponent = centerLeftEntity.getComponent(TransformComponent);
+        centerLeftTransformComponent.position.setX(x + 1);
+        centerLeftTransformComponent.position.setY(y);
+        centerLeftTransformComponent.position.setZ(z);
+        const centerLeftSpriteComponent = centerLeftEntity.addComponent(Sprite2DRendererComponent);
+        centerLeftSpriteComponent.sprite = center;
+        const centerRightEntity = scene.createEntity("Big Bush [center right] entity");
+        const centerRightTransformComponent = centerRightEntity.getComponent(TransformComponent);
+        centerRightTransformComponent.position.setX(x + 2);
+        centerRightTransformComponent.position.setY(y);
+        centerRightTransformComponent.position.setZ(z);
+        const centerRightSpriteComponent = centerRightEntity.addComponent(Sprite2DRendererComponent);
+        centerRightSpriteComponent.sprite = center;
+        const rightEntity = scene.createEntity("Big Bush [right] entity");
+        const rightTransformComponent = rightEntity.getComponent(TransformComponent);
+        rightTransformComponent.position.setX(x + 3);
+        rightTransformComponent.position.setY(y);
+        rightTransformComponent.position.setZ(z);
+        const rightSpriteComponent = rightEntity.addComponent(Sprite2DRendererComponent);
+        rightSpriteComponent.sprite = right;
+    }
+    createBigBush(scene, left, center, right, x, y, z) {
+        const leftEntity = scene.createEntity("Big Bush [left] entity");
+        const leftTransformComponent = leftEntity.getComponent(TransformComponent);
+        leftTransformComponent.position.setX(x);
+        leftTransformComponent.position.setY(y);
+        leftTransformComponent.position.setZ(z);
+        const leftSpriteComponent = leftEntity.addComponent(Sprite2DRendererComponent);
+        leftSpriteComponent.sprite = left;
+        const centerLeftEntity = scene.createEntity("Big Bush [center left] entity");
+        const centerLeftTransformComponent = centerLeftEntity.getComponent(TransformComponent);
+        centerLeftTransformComponent.position.setX(x + 1);
+        centerLeftTransformComponent.position.setY(y);
+        centerLeftTransformComponent.position.setZ(z);
+        const centerLeftSpriteComponent = centerLeftEntity.addComponent(Sprite2DRendererComponent);
+        centerLeftSpriteComponent.sprite = center;
+        const centerEntity = scene.createEntity("Big Bush [center] entity");
+        const centerTransformComponent = centerEntity.getComponent(TransformComponent);
+        centerTransformComponent.position.setX(x + 2);
+        centerTransformComponent.position.setY(y);
+        centerTransformComponent.position.setZ(z);
+        const centerSpriteComponent = centerEntity.addComponent(Sprite2DRendererComponent);
+        centerSpriteComponent.sprite = center;
+        const centerRightEntity = scene.createEntity("Big Bush [center right] entity");
+        const centerRightTransformComponent = centerRightEntity.getComponent(TransformComponent);
+        centerRightTransformComponent.position.setX(x + 3);
+        centerRightTransformComponent.position.setY(y);
+        centerRightTransformComponent.position.setZ(z);
+        const centerRightSpriteComponent = centerRightEntity.addComponent(Sprite2DRendererComponent);
+        centerRightSpriteComponent.sprite = center;
+        const rightEntity = scene.createEntity("Big Bush [right] entity");
+        const rightTransformComponent = rightEntity.getComponent(TransformComponent);
+        rightTransformComponent.position.setX(x + 4);
+        rightTransformComponent.position.setY(y);
+        rightTransformComponent.position.setZ(z);
+        const rightSpriteComponent = rightEntity.addComponent(Sprite2DRendererComponent);
+        rightSpriteComponent.sprite = right;
+    }
+    createSmallHill(scene, left, center, right, top, x, y, z) {
+        const bottomLeftEntity = scene.createEntity("Small Hill [bottom left] entity");
+        const bottomLeftTransformComponent = bottomLeftEntity.getComponent(TransformComponent);
+        bottomLeftTransformComponent.position.setX(x);
+        bottomLeftTransformComponent.position.setY(y);
+        bottomLeftTransformComponent.position.setZ(z);
+        const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomLeftSpriteComponent.sprite = left;
+        const bottomCenterEntity = scene.createEntity("Small Hill [bottom center] entity");
+        const bottomCenterTransformComponent = bottomCenterEntity.getComponent(TransformComponent);
+        bottomCenterTransformComponent.position.setX(x + 1);
+        bottomCenterTransformComponent.position.setY(y);
+        bottomCenterTransformComponent.position.setZ(z);
+        const bottomCenterSpriteComponent = bottomCenterEntity.addComponent(Sprite2DRendererComponent);
+        bottomCenterSpriteComponent.sprite = center;
+        const bottomRightEntity = scene.createEntity("Small Hill [bottom right] entity");
+        const bottomRightTransformComponent = bottomRightEntity.getComponent(TransformComponent);
+        bottomRightTransformComponent.position.setX(x + 2);
+        bottomRightTransformComponent.position.setY(y);
+        bottomRightTransformComponent.position.setZ(z);
+        const bottomRightSpriteComponent = bottomRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomRightSpriteComponent.sprite = right;
+        const topEntity = scene.createEntity("Small Hill [top] entity");
+        const topTransformComponent = topEntity.getComponent(TransformComponent);
+        topTransformComponent.position.setX(x + 1);
+        topTransformComponent.position.setY(y + 1);
+        topTransformComponent.position.setZ(z);
+        const topSpriteComponent = topEntity.addComponent(Sprite2DRendererComponent);
+        topSpriteComponent.sprite = top;
+    }
+    createBigHill(scene, left, centerLeft, center, centerRight, right, top, x, y, z) {
+        const bottomLeftEntity = scene.createEntity("Big Hill [bottom left] entity");
+        const bottomLeftTransformComponent = bottomLeftEntity.getComponent(TransformComponent);
+        bottomLeftTransformComponent.position.setX(x);
+        bottomLeftTransformComponent.position.setY(y);
+        bottomLeftTransformComponent.position.setZ(z);
+        const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomLeftSpriteComponent.sprite = left;
+        const bottomCenterLeftEntity = scene.createEntity("Big Hill [bottom center left] entity");
+        const bottomCenterLeftTransformComponent = bottomCenterLeftEntity.getComponent(TransformComponent);
+        bottomCenterLeftTransformComponent.position.setX(x + 1);
+        bottomCenterLeftTransformComponent.position.setY(y);
+        bottomCenterLeftTransformComponent.position.setZ(z);
+        const bottomCenterLeftSpriteComponent = bottomCenterLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomCenterLeftSpriteComponent.sprite = centerLeft;
+        const bottomCenterEntity = scene.createEntity("Big Hill [bottom center] entity");
+        const bottomCenterTransformComponent = bottomCenterEntity.getComponent(TransformComponent);
+        bottomCenterTransformComponent.position.setX(x + 2);
+        bottomCenterTransformComponent.position.setY(y);
+        bottomCenterTransformComponent.position.setZ(z);
+        const bottomCenterSpriteComponent = bottomCenterEntity.addComponent(Sprite2DRendererComponent);
+        bottomCenterSpriteComponent.sprite = center;
+        const bottomCenterRightEntity = scene.createEntity("Big Hill [bottom center right] entity");
+        const bottomCenterRightTransformComponent = bottomCenterRightEntity.getComponent(TransformComponent);
+        bottomCenterRightTransformComponent.position.setX(x + 3);
+        bottomCenterRightTransformComponent.position.setY(y);
+        bottomCenterRightTransformComponent.position.setZ(z);
+        const bottomCenterRightSpriteComponent = bottomCenterRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomCenterRightSpriteComponent.sprite = centerRight;
+        const bottomRightEntity = scene.createEntity("Big Hill [bottom right] entity");
+        const bottomRightTransformComponent = bottomRightEntity.getComponent(TransformComponent);
+        bottomRightTransformComponent.position.setX(x + 4);
+        bottomRightTransformComponent.position.setY(y);
+        bottomRightTransformComponent.position.setZ(z);
+        const bottomRightSpriteComponent = bottomRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomRightSpriteComponent.sprite = right;
+        const topLeftEntity = scene.createEntity("Big Hill [top left] entity");
+        const topLeftTransformComponent = topLeftEntity.getComponent(TransformComponent);
+        topLeftTransformComponent.position.setX(x + 1);
+        topLeftTransformComponent.position.setY(y + 1);
+        topLeftTransformComponent.position.setZ(z);
+        const topLeftSpriteComponent = topLeftEntity.addComponent(Sprite2DRendererComponent);
+        topLeftSpriteComponent.sprite = left;
+        const topCentreEntity = scene.createEntity("Big Hill [top centre] entity");
+        const topCenterTransformComponent = topCentreEntity.getComponent(TransformComponent);
+        topCenterTransformComponent.position.setX(x + 2);
+        topCenterTransformComponent.position.setY(y + 1);
+        topCenterTransformComponent.position.setZ(z);
+        const topCenterSpriteComponent = topCentreEntity.addComponent(Sprite2DRendererComponent);
+        topCenterSpriteComponent.sprite = centerLeft;
+        const topRightEntity = scene.createEntity("Big Hill [top right] entity");
+        const topRightTransformComponent = topRightEntity.getComponent(TransformComponent);
+        topRightTransformComponent.position.setX(x + 3);
+        topRightTransformComponent.position.setY(y + 1);
+        topRightTransformComponent.position.setZ(z);
+        const topRightSpriteComponent = topRightEntity.addComponent(Sprite2DRendererComponent);
+        topRightSpriteComponent.sprite = right;
+        const topEntity = scene.createEntity("Big Hill [top] entity");
+        const topTransformComponent = topEntity.getComponent(TransformComponent);
+        topTransformComponent.position.setX(x + 2);
+        topTransformComponent.position.setY(y + 2);
+        topTransformComponent.position.setZ(z);
+        const topSpriteComponent = topEntity.addComponent(Sprite2DRendererComponent);
+        topSpriteComponent.sprite = top;
+    }
+    createFloor(scene, sprite, fromX, toX) {
+        for (let row = -1; row > -3; row--) {
+            for (let column = fromX; column < toX; column++) {
+                const blockEntity = scene.createEntity("Floor[" + row + "][" + column + "] entity");
+                const blockTransformComponent = blockEntity.getComponent(TransformComponent);
+                blockTransformComponent.position.setX(column);
+                blockTransformComponent.position.setY(row);
+                const blockSpriteComponent = blockEntity.addComponent(Sprite2DRendererComponent);
+                blockSpriteComponent.sprite = sprite;
+            }
+        }
+    }
+    createBigPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y, z = 0.1) {
+        this.createMediumPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y + 1, z);
+        const bottomLeftEntity = scene.createEntity("Big Pipe [bottom left] entity");
+        const bottomLeftTransformComponent = bottomLeftEntity.getComponent(TransformComponent);
+        bottomLeftTransformComponent.position.setX(x);
+        bottomLeftTransformComponent.position.setY(y);
+        bottomLeftTransformComponent.position.setZ(z);
+        const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomLeftSpriteComponent.sprite = bottomLeft;
+        const bottomRightEntity = scene.createEntity("Big Pipe [bottom right] entity");
+        const bottomRightTransformComponent = bottomRightEntity.getComponent(TransformComponent);
+        bottomRightTransformComponent.position.setX(x + 1);
+        bottomRightTransformComponent.position.setY(y);
+        bottomRightTransformComponent.position.setZ(z);
+        const bottomRightSpriteComponent = bottomRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomRightSpriteComponent.sprite = bottomRight;
+    }
+    createMediumPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y, z = 0.1) {
+        this.createSmallPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y + 1, z);
+        const bottomLeftEntity = scene.createEntity("Medium Pipe [bottom left] entity");
+        const bottomLeftTransformComponent = bottomLeftEntity.getComponent(TransformComponent);
+        bottomLeftTransformComponent.position.setX(x);
+        bottomLeftTransformComponent.position.setY(y);
+        bottomLeftTransformComponent.position.setZ(z);
+        const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomLeftSpriteComponent.sprite = bottomLeft;
+        const bottomRightEntity = scene.createEntity("Medium Pipe [bottom right] entity");
+        const bottomRightTransformComponent = bottomRightEntity.getComponent(TransformComponent);
+        bottomRightTransformComponent.position.setX(x + 1);
+        bottomRightTransformComponent.position.setY(y);
+        bottomRightTransformComponent.position.setZ(z);
+        const bottomRightSpriteComponent = bottomRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomRightSpriteComponent.sprite = bottomRight;
+    }
+    createSmallPipe(scene, topLeft, topRight, bottomLeft, bottomRight, x, y, z = 0.1) {
+        const bottomLeftEntity = scene.createEntity("Small Pipe [bottom left] entity");
+        const bottomLeftTransformComponent = bottomLeftEntity.getComponent(TransformComponent);
+        bottomLeftTransformComponent.position.setX(x);
+        bottomLeftTransformComponent.position.setY(y);
+        bottomLeftTransformComponent.position.setZ(z);
+        const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomLeftSpriteComponent.sprite = bottomLeft;
+        const bottomRightEntity = scene.createEntity("Small Pipe [bottom right] entity");
+        const bottomRightTransformComponent = bottomRightEntity.getComponent(TransformComponent);
+        bottomRightTransformComponent.position.setX(x + 1);
+        bottomRightTransformComponent.position.setY(y);
+        bottomRightTransformComponent.position.setZ(z);
+        const bottomRightSpriteComponent = bottomRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomRightSpriteComponent.sprite = bottomRight;
+        const topLeftEntity = scene.createEntity("Small Pipe [top left] entity");
+        const topLeftTransformComponent = topLeftEntity.getComponent(TransformComponent);
+        topLeftTransformComponent.position.setX(x);
+        topLeftTransformComponent.position.setY(y + 1);
+        topLeftTransformComponent.position.setZ(z);
+        const topLeftSpriteComponent = topLeftEntity.addComponent(Sprite2DRendererComponent);
+        topLeftSpriteComponent.sprite = topLeft;
+        const topRightEntity = scene.createEntity("Small Pipe [top right] entity");
+        const topRightTransformComponent = topRightEntity.getComponent(TransformComponent);
+        topRightTransformComponent.position.setX(x + 1);
+        topRightTransformComponent.position.setY(y + 1);
+        topRightTransformComponent.position.setZ(z);
+        const topRightSpriteComponent = topRightEntity.addComponent(Sprite2DRendererComponent);
+        topRightSpriteComponent.sprite = topRight;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/game/scripts/PlayerControllerScript.ts
+
+class PlayerControllerScript extends BaseScript {
+    init() {
+        this.marioAnimationStateComponent = this.getComponent(State2DAnimationMachineComponent);
+        this.marioTransformComponent = this.getComponent(TransformComponent);
+        this.cameraComponent = this.getComponent(CameraComponent);
+        this.cameraComponent.camera.getPosition().setY(7.5);
+        this.marioRunSpeed = 5;
+    }
+    update(time) {
+        const deltaTime = time.getDeltaTimeSec();
+        const marioPosition = this.marioTransformComponent.position;
+        const marioRotation = this.marioTransformComponent.rotation;
+        if (Input.isKeyboardKeyPressed(Key.D)) {
+            marioRotation.setY(0);
+            marioPosition.setX(marioPosition.getX() + this.marioRunSpeed * deltaTime);
+            this.marioAnimationStateComponent.play("Run");
+        }
+        else if (Input.isKeyboardKeyPressed(Key.A)) {
+            marioRotation.setY(180);
+            marioPosition.setX(marioPosition.getX() - this.marioRunSpeed * deltaTime);
+            this.marioAnimationStateComponent.play("Run");
+        }
+        else {
+            this.marioAnimationStateComponent.play("Idle");
+        }
+        this.cameraComponent.camera.getPosition().setX(marioPosition.getX());
+    }
+}
+
+;// CONCATENATED MODULE: ./src/game/scripts/EnemyCreatorScript.ts
+
+class EnemyCreatorScript extends BaseScript {
+    init() {
+        const spriteSheetComponent = this.getComponent(Texture2DRendererComponent);
+        const spriteSheetTexture = spriteSheetComponent.texture;
+        const spriteSize = new Vector2(16, 16);
+        this.enemyRunSpriteIndex = 0;
+        this.enemyRunSpriteFlipTime = 0.25;
+        this.enemyRunSpriteFlipTimeLeft = 0;
+        this.enemyRunSprites = [];
+        this.enemyRunSprites.push(ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(0, 0), spriteSize));
+        this.enemyRunSprites.push(ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(1, 0), spriteSize));
+        this.enemySpriteComponent = this.addComponent(Sprite2DRendererComponent);
+        this.enemySpriteComponent.sprite = this.enemyRunSprites[this.enemyRunSpriteIndex];
+        spriteSheetComponent.remove();
+    }
+    update(time) {
+        const deltaTime = time.getDeltaTimeSec();
+        this.updateRunFrame(deltaTime);
+    }
+    updateRunFrame(deltaTime) {
+        this.enemyRunSpriteFlipTimeLeft -= deltaTime;
+        if (this.enemyRunSpriteFlipTimeLeft < 0) {
+            this.enemyRunSpriteFlipTimeLeft = this.enemyRunSpriteFlipTime;
+            this.enemyRunSpriteIndex++;
+            if (this.enemyRunSpriteIndex >= this.enemyRunSprites.length) {
+                this.enemyRunSpriteIndex = 0;
+            }
+            this.enemySpriteComponent.sprite = this.enemyRunSprites[this.enemyRunSpriteIndex];
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/game/Level.ts
+
+
+
+
+
+
+class Level {
+    constructor(scene, graphicsElement) {
+        this.scene = scene;
+        this.graphicsElement = graphicsElement;
+        this.color = new Vector4(0.41, 0.57, 0.96, 1.0);
+        const context = this.graphicsElement.getGraphicsContext();
+        context.printDebugInfo();
+        const decorationAndBlockSpriteSheetImage = new Image();
+        decorationAndBlockSpriteSheetImage.src = decoration_and_block_spritesheet;
+        const decorationAndBlockSpriteSheetTexture = ResourceFactory.create2DTexture(context, decorationAndBlockSpriteSheetImage, 4);
+        const characterSpriteSheetImage = new Image();
+        characterSpriteSheetImage.src = character_spritesheet;
+        const characterSpriteSheetTexture = ResourceFactory.create2DTexture(context, characterSpriteSheetImage, 4);
+        const characterSpriteSize = new Vector2(16, 16);
+        this.addWorldOnScene(decorationAndBlockSpriteSheetTexture);
+        this.addMarioOnScene(characterSpriteSheetTexture, characterSpriteSize);
+        this.addEnemiesOnScene(characterSpriteSheetTexture);
+    }
+    resize(width, height) {
+        this.scene.resize(width, height);
+    }
+    keyboardInput(event) {
+    }
+    mouseInput(event) {
+    }
+    update(time) {
+        this.scene.update(time);
+        // console.log(1 / time.getDeltaTimeSec());
+    }
+    render() {
+        Engine.renderer2D.resetStatistics();
+        Engine.renderer2D.setClearColor(this.color);
+        Engine.renderer2D.clear();
+        this.scene.render();
+        // console.log(GameEngine.Engine.renderer2D.getStatics());
+    }
+    clean() {
+        this.scene.clean();
+    }
+    addWorldOnScene(decorationAndBlockSpriteSheetTexture) {
+        const worldEntity = this.scene.createEntity("World");
+        const worldTextureComponent = worldEntity.addComponent(Texture2DRendererComponent);
+        worldTextureComponent.texture = decorationAndBlockSpriteSheetTexture;
+        worldEntity.addComponent(TypeScriptComponent).bind(WorldCreatorScript);
+    }
+    addEnemiesOnScene(characterSpriteSheetTexture) {
+        const enemyEntity = this.scene.createEntity("Enemy");
+        const enemyTransformComponent = enemyEntity.getComponent(TransformComponent);
+        enemyTransformComponent.position.setX(9);
+        enemyTransformComponent.position.setZ(0.5);
+        const enemyCharactersTextureComponent = enemyEntity.addComponent(Texture2DRendererComponent);
+        enemyCharactersTextureComponent.texture = characterSpriteSheetTexture;
+        enemyEntity.addComponent(TypeScriptComponent).bind(EnemyCreatorScript);
+    }
+    addMarioOnScene(characterSpriteSheetTexture, characterSpriteSize) {
+        const playerEntity = this.scene.createEntity("Player");
+        playerEntity.addComponent(TypeScriptComponent).bind(PlayerControllerScript);
+        const playerCameraComponent = playerEntity.addComponent(CameraComponent);
+        playerCameraComponent.camera = new OrthographicCamera(this.graphicsElement.getWidth(), this.graphicsElement.getHeight(), 10);
+        playerCameraComponent.primary = true;
+        const playerSprite2DRendererComponent = playerEntity.addComponent(Sprite2DRendererComponent);
+        const playerIdleSprite = ResourceFactory.createSprite2D(characterSpriteSheetTexture, new Vector2(0, 1), characterSpriteSize);
+        playerSprite2DRendererComponent.sprite = playerIdleSprite;
+        const playerStateMachineComponent = playerEntity.addComponent(State2DAnimationMachineComponent);
+        const idle = new Animation2DSpriteState("Idle");
+        const idleFrameTime = 2000;
+        idle.addFrame(playerIdleSprite, idleFrameTime);
+        const run = new Animation2DSpriteState("Run");
+        const runFrameTime = 150;
+        run.addFrame(ResourceFactory.createSprite2D(characterSpriteSheetTexture, new Vector2(1, 1), characterSpriteSize), runFrameTime);
+        run.addFrame(ResourceFactory.createSprite2D(characterSpriteSheetTexture, new Vector2(2, 1), characterSpriteSize), runFrameTime);
+        run.addFrame(ResourceFactory.createSprite2D(characterSpriteSheetTexture, new Vector2(3, 1), characterSpriteSize), runFrameTime);
+        playerStateMachineComponent.addState(idle);
+        playerStateMachineComponent.addState(run);
+        playerStateMachineComponent.setDefaultStateName(idle.getName());
+    }
+}
+
+;// CONCATENATED MODULE: ./src/game/GameLayer.ts
+
+
+class GameLayer extends BaseLayer {
+    constructor(graphicsElement) {
+        super("Game layer");
+        this.graphicsElement = graphicsElement;
+    }
+    attach() {
+        const scene = new Scene(this.graphicsElement.getWidth(), this.graphicsElement.getHeight());
+        this.level = new Level(scene, this.graphicsElement);
+    }
+    detach() {
+    }
+    elementInput(event) {
+        if (event.getType() === ElementEventType.RESIZE) {
+            this.level.resize(event.getWidth(), event.getHeight());
+        }
+    }
+    keyboardInput(event) {
+        this.level.keyboardInput(event);
+    }
+    mouseInput(event) {
+        this.level.mouseInput(event);
+    }
+    update(time) {
+        this.level.update(time);
+    }
+    render() {
+        this.level.render();
+    }
+    clean() {
+        this.level.clean();
+    }
+}
+/* harmony default export */ const game_GameLayer = (GameLayer);
+
+;// CONCATENATED MODULE: ./src/index.ts
+
+
+const parentElement = document.getElementById("game");
+if (!parentElement) {
+    throw new Error("Game element nof found");
+}
+const game = new game_Game(parentElement);
+game.pushLayer(new game_GameLayer(game.getGraphicsElement()));
+game.init2DRenderer();
+game.start();
+
+/******/ })()
+;

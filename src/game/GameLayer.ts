@@ -1,5 +1,5 @@
 import {Level} from "./Level";
-import {GameEngine} from "#game_engine/src/namespace/game_engine";
+import {GameEngine} from "../libs/game_engine/src/namespace/game_engine";
 
 class GameLayer extends GameEngine.Layer.BaseLayer {
 	private readonly graphicsElement: GameEngine.GraphicsEngine.GraphicsElement;

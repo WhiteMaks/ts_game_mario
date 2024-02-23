@@ -4595,14 +4595,14 @@ class Level {
         const idle = new Animation2DSpriteState("Idle");
         const idleFrameTime = 2000;
         idle.addFrame(playerIdleSprite, idleFrameTime);
+        playerStateMachineComponent.addState(idle);
+        playerStateMachineComponent.setDefaultStateName(idle.getName());
         const run = new Animation2DSpriteState("Run");
         const runFrameTime = 150;
         run.addFrame(ResourceFactory.createSprite2D(characterSpriteSheetTexture, new Vector2(1, 1), characterSpriteSize), runFrameTime);
         run.addFrame(ResourceFactory.createSprite2D(characterSpriteSheetTexture, new Vector2(2, 1), characterSpriteSize), runFrameTime);
         run.addFrame(ResourceFactory.createSprite2D(characterSpriteSheetTexture, new Vector2(3, 1), characterSpriteSize), runFrameTime);
-        playerStateMachineComponent.addState(idle);
         playerStateMachineComponent.addState(run);
-        playerStateMachineComponent.setDefaultStateName(idle.getName());
     }
 }
 

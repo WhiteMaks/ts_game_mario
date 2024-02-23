@@ -195,39 +195,6 @@ class Element {
     }
 }
 
-;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/inputs/Input.ts
-class Input {
-    constructor() { }
-    static isKeyboardKeyPressed(key) {
-        return this.instance.isKeyboardKeyPressedImpl(key);
-    }
-    static isLeftMouseKeyPressed() {
-        return this.instance.isLeftMouseKeyPressedImpl();
-    }
-    static isRightMouseKeyPressed() {
-        return this.instance.isRightMouseKeyPressedImpl();
-    }
-}
-
-;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/inputs/BaseInput.ts
-
-class BaseInput extends Input {
-    constructor(mouse, keyboard) {
-        super();
-        this.mouse = mouse;
-        this.keyboard = keyboard;
-    }
-    isKeyboardKeyPressedImpl(key) {
-        return this.keyboard.keyIsPressed(key);
-    }
-    isLeftMouseKeyPressedImpl() {
-        return this.mouse.isLeftKeyPressed();
-    }
-    isRightMouseKeyPressedImpl() {
-        return this.mouse.isRightKeyPressed();
-    }
-}
-
 ;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/keyboard/Key.ts
 /**
  * Перечисления клавиш
@@ -260,10 +227,70 @@ var Key;
     Key["X"] = "KeyX";
     Key["Y"] = "KeyY";
     Key["Z"] = "KeyZ";
+    Key["ARROW_RIGHT"] = "ArrowRight";
+    Key["ARROW_LEFT"] = "ArrowLeft";
+    Key["ARROW_UP"] = "ArrowUp";
+    Key["ARROW_DOWN"] = "ArrowDown";
     Key["LEFT_SHIFT"] = "ShiftLeft";
     Key["LEFT_CTR"] = "ControlLeft";
     Key["SPACE"] = "Space";
 })(Key || (Key = {}));
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/inputs/Input.ts
+
+class Input {
+    constructor() { }
+    static getHorizontalAxis() {
+        let leftValue = 0;
+        let rightValue = 0;
+        if (this.isKeyboardKeyPressed(Key.A) || this.isKeyboardKeyPressed(Key.ARROW_LEFT)) {
+            leftValue = -1;
+        }
+        if (this.isKeyboardKeyPressed(Key.D) || this.isKeyboardKeyPressed(Key.ARROW_RIGHT)) {
+            rightValue = 1;
+        }
+        return leftValue + rightValue;
+    }
+    static getVerticalAxis() {
+        let upValue = 0;
+        let downValue = 0;
+        if (this.isKeyboardKeyPressed(Key.W) || this.isKeyboardKeyPressed(Key.ARROW_UP)) {
+            upValue = 1;
+        }
+        if (this.isKeyboardKeyPressed(Key.S) || this.isKeyboardKeyPressed(Key.ARROW_DOWN)) {
+            downValue = -1;
+        }
+        return downValue + upValue;
+    }
+    static isKeyboardKeyPressed(key) {
+        return this.instance.isKeyboardKeyPressedImpl(key);
+    }
+    static isLeftMouseKeyPressed() {
+        return this.instance.isLeftMouseKeyPressedImpl();
+    }
+    static isRightMouseKeyPressed() {
+        return this.instance.isRightMouseKeyPressedImpl();
+    }
+}
+
+;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/inputs/BaseInput.ts
+
+class BaseInput extends Input {
+    constructor(mouse, keyboard) {
+        super();
+        this.mouse = mouse;
+        this.keyboard = keyboard;
+    }
+    isKeyboardKeyPressedImpl(key) {
+        return this.keyboard.keyIsPressed(key);
+    }
+    isLeftMouseKeyPressedImpl() {
+        return this.mouse.isLeftKeyPressed();
+    }
+    isRightMouseKeyPressedImpl() {
+        return this.mouse.isRightKeyPressed();
+    }
+}
 
 ;// CONCATENATED MODULE: ./src/libs/game_engine/src/events_system/keyboard/KeyboardEventType.ts
 var KeyboardEventType;
@@ -3964,6 +3991,12 @@ class WorldCreatorScript extends BaseScript {
         const leftBushSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(6, 5), spriteSize);
         const centerBushSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(6, 6), spriteSize);
         const rightBushSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(6, 7), spriteSize);
+        const topLeftCloudSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(3, 4), spriteSize);
+        const topCenterCloudSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(4, 4), spriteSize);
+        const topRightCloudSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(5, 4), spriteSize);
+        const bottomLeftCloudSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(2, 3), spriteSize);
+        const bottomCenterCloudSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(3, 3), spriteSize);
+        const bottomRightCloudSprite = ResourceFactory.createSprite2D(spriteSheetTexture, new Vector2(4, 3), spriteSize);
         this.createBigHill(scene, leftBigHillSprite, centreLeftBigHillSprite, centreBigHillSprite, centreRightBigHillSprite, rightBigHillSprite, topBigHillSprite, -8, 0, -0.5);
         this.createBigBush(scene, leftBushSprite, centerBushSprite, rightBushSprite, 3, 0, -0.5);
         this.createSmallHill(scene, leftBigHillSprite, centreLeftBigHillSprite, rightBigHillSprite, topBigHillSprite, 8, 0, -0.5);
@@ -3972,6 +4005,186 @@ class WorldCreatorScript extends BaseScript {
         this.createBigHill(scene, leftBigHillSprite, centreLeftBigHillSprite, centreBigHillSprite, centreRightBigHillSprite, rightBigHillSprite, topBigHillSprite, 40, 0, -0.5);
         this.createBigBush(scene, leftBushSprite, centerBushSprite, rightBushSprite, 51, 0, -0.5);
         this.createSmallHill(scene, leftBigHillSprite, centreLeftBigHillSprite, rightBigHillSprite, topBigHillSprite, 56, 0, -0.5);
+        this.createSmallCloud(scene, topLeftCloudSprite, topCenterCloudSprite, topRightCloudSprite, bottomLeftCloudSprite, bottomCenterCloudSprite, bottomRightCloudSprite, 0, 9, -0.5);
+        this.createSmallCloud(scene, topLeftCloudSprite, topCenterCloudSprite, topRightCloudSprite, bottomLeftCloudSprite, bottomCenterCloudSprite, bottomRightCloudSprite, 11, 10, -0.5);
+        this.createBigCloud(scene, topLeftCloudSprite, topCenterCloudSprite, topRightCloudSprite, bottomLeftCloudSprite, bottomCenterCloudSprite, bottomRightCloudSprite, 19, 9, -0.5);
+        this.createMediumCloud(scene, topLeftCloudSprite, topCenterCloudSprite, topRightCloudSprite, bottomLeftCloudSprite, bottomCenterCloudSprite, bottomRightCloudSprite, 28, 10, -0.5);
+        this.createSmallCloud(scene, topLeftCloudSprite, topCenterCloudSprite, topRightCloudSprite, bottomLeftCloudSprite, bottomCenterCloudSprite, bottomRightCloudSprite, 48, 9, -0.5);
+        this.createSmallCloud(scene, topLeftCloudSprite, topCenterCloudSprite, topRightCloudSprite, bottomLeftCloudSprite, bottomCenterCloudSprite, bottomRightCloudSprite, 59, 10, -0.5);
+    }
+    createMediumCloud(scene, topLeft, topCenter, topRight, bottomLeft, bottomCenter, bottomRight, x, y, z) {
+        const topLeftEntity = scene.createEntity("Medium cloud [topLeft] entity");
+        const topLeftTransformComponent = topLeftEntity.getComponent(TransformComponent);
+        topLeftTransformComponent.position.setX(x);
+        topLeftTransformComponent.position.setY(y + 1);
+        topLeftTransformComponent.position.setZ(z);
+        const topLeftSpriteComponent = topLeftEntity.addComponent(Sprite2DRendererComponent);
+        topLeftSpriteComponent.sprite = topLeft;
+        const topCenterEntity = scene.createEntity("Medium cloud [topCenter] entity");
+        const topCenterTransformComponent = topCenterEntity.getComponent(TransformComponent);
+        topCenterTransformComponent.position.setX(x + 1);
+        topCenterTransformComponent.position.setY(y + 1);
+        topCenterTransformComponent.position.setZ(z);
+        const topCenterSpriteComponent = topCenterEntity.addComponent(Sprite2DRendererComponent);
+        topCenterSpriteComponent.sprite = topCenter;
+        const topCenter2Entity = scene.createEntity("Medium cloud [topCenter 2] entity");
+        const topCenter2TransformComponent = topCenter2Entity.getComponent(TransformComponent);
+        topCenter2TransformComponent.position.setX(x + 2);
+        topCenter2TransformComponent.position.setY(y + 1);
+        topCenter2TransformComponent.position.setZ(z);
+        const topCenter2SpriteComponent = topCenter2Entity.addComponent(Sprite2DRendererComponent);
+        topCenter2SpriteComponent.sprite = topCenter;
+        const topRightEntity = scene.createEntity("Medium cloud [topRight] entity");
+        const topRightTransformComponent = topRightEntity.getComponent(TransformComponent);
+        topRightTransformComponent.position.setX(x + 3);
+        topRightTransformComponent.position.setY(y + 1);
+        topRightTransformComponent.position.setZ(z);
+        const topRightSpriteComponent = topRightEntity.addComponent(Sprite2DRendererComponent);
+        topRightSpriteComponent.sprite = topRight;
+        const bottomLeftEntity = scene.createEntity("Medium cloud [bottomLeft] entity");
+        const bottomLeftTransformComponent = bottomLeftEntity.getComponent(TransformComponent);
+        bottomLeftTransformComponent.position.setX(x);
+        bottomLeftTransformComponent.position.setY(y);
+        bottomLeftTransformComponent.position.setZ(z);
+        const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomLeftSpriteComponent.sprite = bottomLeft;
+        const bottomCenterEntity = scene.createEntity("Medium cloud [bottomCenter] entity");
+        const bottomCenterTransformComponent = bottomCenterEntity.getComponent(TransformComponent);
+        bottomCenterTransformComponent.position.setX(x + 1);
+        bottomCenterTransformComponent.position.setY(y);
+        bottomCenterTransformComponent.position.setZ(z);
+        const bottomCenterSpriteComponent = bottomCenterEntity.addComponent(Sprite2DRendererComponent);
+        bottomCenterSpriteComponent.sprite = bottomCenter;
+        const bottomCenter2Entity = scene.createEntity("Medium cloud [bottomCenter 2] entity");
+        const bottomCenter2TransformComponent = bottomCenter2Entity.getComponent(TransformComponent);
+        bottomCenter2TransformComponent.position.setX(x + 2);
+        bottomCenter2TransformComponent.position.setY(y);
+        bottomCenter2TransformComponent.position.setZ(z);
+        const bottomCenter2SpriteComponent = bottomCenter2Entity.addComponent(Sprite2DRendererComponent);
+        bottomCenter2SpriteComponent.sprite = bottomCenter;
+        const bottomRightEntity = scene.createEntity("Medium cloud [bottomRight] entity");
+        const bottomRightTransformComponent = bottomRightEntity.getComponent(TransformComponent);
+        bottomRightTransformComponent.position.setX(x + 3);
+        bottomRightTransformComponent.position.setY(y);
+        bottomRightTransformComponent.position.setZ(z);
+        const bottomRightSpriteComponent = bottomRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomRightSpriteComponent.sprite = bottomRight;
+    }
+    createBigCloud(scene, topLeft, topCenter, topRight, bottomLeft, bottomCenter, bottomRight, x, y, z) {
+        const topLeftEntity = scene.createEntity("Bid cloud [topLeft] entity");
+        const topLeftTransformComponent = topLeftEntity.getComponent(TransformComponent);
+        topLeftTransformComponent.position.setX(x);
+        topLeftTransformComponent.position.setY(y + 1);
+        topLeftTransformComponent.position.setZ(z);
+        const topLeftSpriteComponent = topLeftEntity.addComponent(Sprite2DRendererComponent);
+        topLeftSpriteComponent.sprite = topLeft;
+        const topCenterEntity = scene.createEntity("Bid cloud [topCenter] entity");
+        const topCenterTransformComponent = topCenterEntity.getComponent(TransformComponent);
+        topCenterTransformComponent.position.setX(x + 1);
+        topCenterTransformComponent.position.setY(y + 1);
+        topCenterTransformComponent.position.setZ(z);
+        const topCenterSpriteComponent = topCenterEntity.addComponent(Sprite2DRendererComponent);
+        topCenterSpriteComponent.sprite = topCenter;
+        const topCenter2Entity = scene.createEntity("Bid cloud [topCenter 2] entity");
+        const topCenter2TransformComponent = topCenter2Entity.getComponent(TransformComponent);
+        topCenter2TransformComponent.position.setX(x + 2);
+        topCenter2TransformComponent.position.setY(y + 1);
+        topCenter2TransformComponent.position.setZ(z);
+        const topCenter2SpriteComponent = topCenter2Entity.addComponent(Sprite2DRendererComponent);
+        topCenter2SpriteComponent.sprite = topCenter;
+        const topCenter3Entity = scene.createEntity("Bid cloud [topCenter 3] entity");
+        const topCenter3TransformComponent = topCenter3Entity.getComponent(TransformComponent);
+        topCenter3TransformComponent.position.setX(x + 3);
+        topCenter3TransformComponent.position.setY(y + 1);
+        topCenter3TransformComponent.position.setZ(z);
+        const topCenter3SpriteComponent = topCenter3Entity.addComponent(Sprite2DRendererComponent);
+        topCenter3SpriteComponent.sprite = topCenter;
+        const topRightEntity = scene.createEntity("Big cloud [topRight] entity");
+        const topRightTransformComponent = topRightEntity.getComponent(TransformComponent);
+        topRightTransformComponent.position.setX(x + 4);
+        topRightTransformComponent.position.setY(y + 1);
+        topRightTransformComponent.position.setZ(z);
+        const topRightSpriteComponent = topRightEntity.addComponent(Sprite2DRendererComponent);
+        topRightSpriteComponent.sprite = topRight;
+        const bottomLeftEntity = scene.createEntity("Big cloud [bottomLeft] entity");
+        const bottomLeftTransformComponent = bottomLeftEntity.getComponent(TransformComponent);
+        bottomLeftTransformComponent.position.setX(x);
+        bottomLeftTransformComponent.position.setY(y);
+        bottomLeftTransformComponent.position.setZ(z);
+        const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomLeftSpriteComponent.sprite = bottomLeft;
+        const bottomCenterEntity = scene.createEntity("Big cloud [bottomCenter] entity");
+        const bottomCenterTransformComponent = bottomCenterEntity.getComponent(TransformComponent);
+        bottomCenterTransformComponent.position.setX(x + 1);
+        bottomCenterTransformComponent.position.setY(y);
+        bottomCenterTransformComponent.position.setZ(z);
+        const bottomCenterSpriteComponent = bottomCenterEntity.addComponent(Sprite2DRendererComponent);
+        bottomCenterSpriteComponent.sprite = bottomCenter;
+        const bottomCenter2Entity = scene.createEntity("Big cloud [bottomCenter 2] entity");
+        const bottomCenter2TransformComponent = bottomCenter2Entity.getComponent(TransformComponent);
+        bottomCenter2TransformComponent.position.setX(x + 2);
+        bottomCenter2TransformComponent.position.setY(y);
+        bottomCenter2TransformComponent.position.setZ(z);
+        const bottomCenter2SpriteComponent = bottomCenter2Entity.addComponent(Sprite2DRendererComponent);
+        bottomCenter2SpriteComponent.sprite = bottomCenter;
+        const bottomCenter3Entity = scene.createEntity("Big cloud [bottomCenter 3] entity");
+        const bottomCenter3TransformComponent = bottomCenter3Entity.getComponent(TransformComponent);
+        bottomCenter3TransformComponent.position.setX(x + 3);
+        bottomCenter3TransformComponent.position.setY(y);
+        bottomCenter3TransformComponent.position.setZ(z);
+        const bottomCenter3SpriteComponent = bottomCenter3Entity.addComponent(Sprite2DRendererComponent);
+        bottomCenter3SpriteComponent.sprite = bottomCenter;
+        const bottomRightEntity = scene.createEntity("Big cloud [bottomRight] entity");
+        const bottomRightTransformComponent = bottomRightEntity.getComponent(TransformComponent);
+        bottomRightTransformComponent.position.setX(x + 4);
+        bottomRightTransformComponent.position.setY(y);
+        bottomRightTransformComponent.position.setZ(z);
+        const bottomRightSpriteComponent = bottomRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomRightSpriteComponent.sprite = bottomRight;
+    }
+    createSmallCloud(scene, topLeft, topCenter, topRight, bottomLeft, bottomCenter, bottomRight, x, y, z) {
+        const topLeftEntity = scene.createEntity("Small cloud [topLeft] entity");
+        const topLeftTransformComponent = topLeftEntity.getComponent(TransformComponent);
+        topLeftTransformComponent.position.setX(x);
+        topLeftTransformComponent.position.setY(y + 1);
+        topLeftTransformComponent.position.setZ(z);
+        const topLeftSpriteComponent = topLeftEntity.addComponent(Sprite2DRendererComponent);
+        topLeftSpriteComponent.sprite = topLeft;
+        const topCenterEntity = scene.createEntity("Small cloud [topCenter] entity");
+        const topCenterTransformComponent = topCenterEntity.getComponent(TransformComponent);
+        topCenterTransformComponent.position.setX(x + 1);
+        topCenterTransformComponent.position.setY(y + 1);
+        topCenterTransformComponent.position.setZ(z);
+        const topCenterSpriteComponent = topCenterEntity.addComponent(Sprite2DRendererComponent);
+        topCenterSpriteComponent.sprite = topCenter;
+        const topRightEntity = scene.createEntity("Small cloud [topRight] entity");
+        const topRightTransformComponent = topRightEntity.getComponent(TransformComponent);
+        topRightTransformComponent.position.setX(x + 2);
+        topRightTransformComponent.position.setY(y + 1);
+        topRightTransformComponent.position.setZ(z);
+        const topRightSpriteComponent = topRightEntity.addComponent(Sprite2DRendererComponent);
+        topRightSpriteComponent.sprite = topRight;
+        const bottomLeftEntity = scene.createEntity("Small cloud [bottomLeft] entity");
+        const bottomLeftTransformComponent = bottomLeftEntity.getComponent(TransformComponent);
+        bottomLeftTransformComponent.position.setX(x);
+        bottomLeftTransformComponent.position.setY(y);
+        bottomLeftTransformComponent.position.setZ(z);
+        const bottomLeftSpriteComponent = bottomLeftEntity.addComponent(Sprite2DRendererComponent);
+        bottomLeftSpriteComponent.sprite = bottomLeft;
+        const bottomCenterEntity = scene.createEntity("Small cloud [bottomCenter] entity");
+        const bottomCenterTransformComponent = bottomCenterEntity.getComponent(TransformComponent);
+        bottomCenterTransformComponent.position.setX(x + 1);
+        bottomCenterTransformComponent.position.setY(y);
+        bottomCenterTransformComponent.position.setZ(z);
+        const bottomCenterSpriteComponent = bottomCenterEntity.addComponent(Sprite2DRendererComponent);
+        bottomCenterSpriteComponent.sprite = bottomCenter;
+        const bottomRightEntity = scene.createEntity("Small cloud [bottomRight] entity");
+        const bottomRightTransformComponent = bottomRightEntity.getComponent(TransformComponent);
+        bottomRightTransformComponent.position.setX(x + 2);
+        bottomRightTransformComponent.position.setY(y);
+        bottomRightTransformComponent.position.setZ(z);
+        const bottomRightSpriteComponent = bottomRightEntity.addComponent(Sprite2DRendererComponent);
+        bottomRightSpriteComponent.sprite = bottomRight;
     }
     createSmallBush(scene, left, center, right, x, y, z) {
         const leftEntity = scene.createEntity("Small Bush [left] entity");
@@ -4243,27 +4456,34 @@ class PlayerControllerScript extends BaseScript {
         this.marioAnimationStateComponent = this.getComponent(State2DAnimationMachineComponent);
         this.marioTransformComponent = this.getComponent(TransformComponent);
         this.cameraComponent = this.getComponent(CameraComponent);
-        this.cameraComponent.camera.getPosition().setY(7.5);
+        this.cameraComponent.camera.getPosition().setY(5.5);
         this.marioRunSpeed = 5;
     }
     update(time) {
         const deltaTime = time.getDeltaTimeSec();
         const marioPosition = this.marioTransformComponent.position;
         const marioRotation = this.marioTransformComponent.rotation;
-        if (Input.isKeyboardKeyPressed(Key.D)) {
-            marioRotation.setY(0);
-            marioPosition.setX(marioPosition.getX() + this.marioRunSpeed * deltaTime);
-            this.marioAnimationStateComponent.play("Run");
-        }
-        else if (Input.isKeyboardKeyPressed(Key.A)) {
+        const horizontalAxis = Input.getHorizontalAxis();
+        if (horizontalAxis < 0) {
             marioRotation.setY(180);
-            marioPosition.setX(marioPosition.getX() - this.marioRunSpeed * deltaTime);
-            this.marioAnimationStateComponent.play("Run");
+        }
+        else if (horizontalAxis > 0) {
+            marioRotation.setY(0);
+        }
+        if (horizontalAxis === 0) {
+            this.playIdleAnimation();
         }
         else {
-            this.marioAnimationStateComponent.play("Idle");
+            this.playRunAnimation();
         }
+        marioPosition.setX(marioPosition.getX() + this.marioRunSpeed * deltaTime * horizontalAxis);
         this.cameraComponent.camera.getPosition().setX(marioPosition.getX());
+    }
+    playRunAnimation() {
+        this.marioAnimationStateComponent.play("Run");
+    }
+    playIdleAnimation() {
+        this.marioAnimationStateComponent.play("Idle");
     }
 }
 
@@ -4366,7 +4586,7 @@ class Level {
         const playerEntity = this.scene.createEntity("Player");
         playerEntity.addComponent(TypeScriptComponent).bind(PlayerControllerScript);
         const playerCameraComponent = playerEntity.addComponent(CameraComponent);
-        playerCameraComponent.camera = new OrthographicCamera(this.graphicsElement.getWidth(), this.graphicsElement.getHeight(), 10);
+        playerCameraComponent.camera = new OrthographicCamera(this.graphicsElement.getWidth(), this.graphicsElement.getHeight(), 8);
         playerCameraComponent.primary = true;
         const playerSprite2DRendererComponent = playerEntity.addComponent(Sprite2DRendererComponent);
         const playerIdleSprite = ResourceFactory.createSprite2D(characterSpriteSheetTexture, new Vector2(0, 1), characterSpriteSize);

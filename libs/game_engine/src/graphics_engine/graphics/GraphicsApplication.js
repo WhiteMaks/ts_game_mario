@@ -1,4 +1,4 @@
-import { GraphicsElement } from "./GraphicsElement";
+import { GraphicsElement } from "./GraphicsElement.js";
 /**
  * Класс графического приложения
  */

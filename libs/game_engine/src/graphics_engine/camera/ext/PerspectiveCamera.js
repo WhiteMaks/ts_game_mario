@@ -1,5 +1,5 @@
-import { BaseCamera } from "../impl/BaseCamera";
-import { Transformation } from "../../maths/support/Transformation";
+import { BaseCamera } from "../impl/BaseCamera.js";
+import { Transformation } from "../../maths/support/Transformation.js";
 export class PerspectiveCamera extends BaseCamera {
     constructor(width, height, fieldOfView, zNear, zFar) {
         super(Transformation.getPerspectiveProjectionMatrix(width / height, Transformation.degreesToRadians(fieldOfView), zNear, zFar), width, height);

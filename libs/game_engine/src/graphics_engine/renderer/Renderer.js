@@ -1,4 +1,4 @@
-import { RendererAPI } from "./RendererAPI";
+import { RendererAPI } from "./RendererAPI.js";
 export class Renderer {
     static getAPI() {
         return this.rendererAPI;

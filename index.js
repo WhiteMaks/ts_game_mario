@@ -1,5 +1,5 @@
-import Game from "./game/Game";
-import GameLayer from "./game/GameLayer";
+import Game from "./game/Game.js";
+import GameLayer from "./game/GameLayer.js";
 const parentElement = document.getElementById("game");
 if (!parentElement) {
     throw new Error("Game element nof found");

@@ -1,4 +1,4 @@
-import { GameSystemComponent } from "../GameSystemComponent";
+import { GameSystemComponent } from "../GameSystemComponent.js";
 export class CameraSystemComponent extends GameSystemComponent {
     constructor() {
         super();

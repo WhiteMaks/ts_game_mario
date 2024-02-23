@@ -1,5 +1,5 @@
-import { Vector3 } from "../impl/Vector3";
-import { Matrix4 } from "../impl/Matrix4";
+import { Vector3 } from "../impl/Vector3.js";
+import { Matrix4 } from "../impl/Matrix4.js";
 /**
  * Класс для работы с трансформациями
  */

@@ -1,9 +1,7 @@
-import decorationAndBlockSpriteSheetSrc from "../resources/decoration_and_block_spritesheet.png";
-import characterSpriteSheetSrc from "../resources/character_spritesheet.png";
-import { WorldCreatorScript } from "./scripts/WorldCreatorScript";
-import { PlayerControllerScript } from "./scripts/PlayerControllerScript";
-import { EnemyCreatorScript } from "./scripts/EnemyCreatorScript";
-import { GameEngine } from "../libs/game_engine/src/namespace/game_engine";
+import { WorldCreatorScript } from "./scripts/WorldCreatorScript.js";
+import { PlayerControllerScript } from "./scripts/PlayerControllerScript.js";
+import { EnemyCreatorScript } from "./scripts/EnemyCreatorScript.js";
+import { GameEngine } from "../libs/game_engine/src/namespace/game_engine.js";
 export class Level {
     constructor(scene, graphicsElement) {
         this.scene = scene;
@@ -12,10 +10,10 @@ export class Level {
         const context = this.graphicsElement.getGraphicsContext();
         context.printDebugInfo();
         const decorationAndBlockSpriteSheetImage = new Image();
-        decorationAndBlockSpriteSheetImage.src = decorationAndBlockSpriteSheetSrc;
+        decorationAndBlockSpriteSheetImage.src = "../resources/decoration_and_block_spritesheet.png";
         const decorationAndBlockSpriteSheetTexture = GameEngine.GraphicsEngine.ResourceFactory.create2DTexture(context, decorationAndBlockSpriteSheetImage, 4);
         const characterSpriteSheetImage = new Image();
-        characterSpriteSheetImage.src = characterSpriteSheetSrc;
+        characterSpriteSheetImage.src = "../resources/character_spritesheet.png";
         const characterSpriteSheetTexture = GameEngine.GraphicsEngine.ResourceFactory.create2DTexture(context, characterSpriteSheetImage, 4);
         const characterSpriteSize = new GameEngine.GraphicsEngine.Vector2(16, 16);
         this.addWorldOnScene(decorationAndBlockSpriteSheetTexture);

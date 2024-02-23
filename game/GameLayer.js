@@ -1,5 +1,5 @@
-import { Level } from "./Level";
-import { GameEngine } from "../libs/game_engine/src/namespace/game_engine";
+import { Level } from "./Level.js";
+import { GameEngine } from "../libs/game_engine/src/namespace/game_engine.js";
 class GameLayer extends GameEngine.Layer.BaseLayer {
     constructor(graphicsElement) {
         super("Game layer");

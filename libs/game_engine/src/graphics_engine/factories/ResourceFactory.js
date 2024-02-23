@@ -1,8 +1,8 @@
-import { Renderer } from "../renderer/Renderer";
-import { RendererAPI } from "../renderer/RendererAPI";
-import { WebGL2DTexture } from "../api/gl/resource/WebGL2DTexture";
-import { Sprite2D } from "../resource/Sprite2D";
-import { Vector2 } from "../maths/impl/Vector2";
+import { Renderer } from "../renderer/Renderer.js";
+import { RendererAPI } from "../renderer/RendererAPI.js";
+import { WebGL2DTexture } from "../api/gl/resource/WebGL2DTexture.js";
+import { Sprite2D } from "../resource/Sprite2D.js";
+import { Vector2 } from "../maths/impl/Vector2.js";
 export class ResourceFactory {
     static create2DFullWhiteTexture(graphicsContext) {
         const image = new Image(1, 1);

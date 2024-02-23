@@ -1,13 +1,13 @@
-import { Vector4 } from "../maths/impl/Vector4";
-import { ResourceFactory } from "../factories/ResourceFactory";
-import { BufferLayout } from "../buffer/BufferLayout";
-import { NewBufferElement } from "../buffer/BufferElement";
-import { ShaderDataType } from "../shader/ShaderDataType";
-import { BufferFactory } from "../factories/BufferFactory";
-import { Vector3 } from "../maths/impl/Vector3";
-import { Transformation } from "../maths/support/Transformation";
-import { RendererStatistics } from "./RendererStatistics";
-import { Vector2 } from "../maths/impl/Vector2";
+import { Vector4 } from "../maths/impl/Vector4.js";
+import { ResourceFactory } from "../factories/ResourceFactory.js";
+import { BufferLayout } from "../buffer/BufferLayout.js";
+import { NewBufferElement } from "../buffer/BufferElement.js";
+import { ShaderDataType } from "../shader/ShaderDataType.js";
+import { BufferFactory } from "../factories/BufferFactory.js";
+import { Vector3 } from "../maths/impl/Vector3.js";
+import { Transformation } from "../maths/support/Transformation.js";
+import { RendererStatistics } from "./RendererStatistics.js";
+import { Vector2 } from "../maths/impl/Vector2.js";
 export class Renderer2D {
     constructor() {
         this.quadVertexBuffer = new Float32Array(0);

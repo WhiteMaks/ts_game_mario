@@ -1,4 +1,4 @@
-import { GameEngine } from "../../libs/game_engine/src/namespace/game_engine";
+import { GameEngine } from "../../libs/game_engine/src/namespace/game_engine.js";
 export class WorldCreatorScript extends GameEngine.ECS.BaseScript {
     init() {
         const scene = this.getScene();

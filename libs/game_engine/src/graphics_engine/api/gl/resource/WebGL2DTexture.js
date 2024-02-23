@@ -1,4 +1,4 @@
-import { Random } from "../../../support/Random";
+import { Random } from "../../../support/Random.js";
 export class WebGL2DTexture {
     constructor(gl, image, channels, isEmpty = false) {
         this.gl = gl;

@@ -1,6 +1,6 @@
-import { Renderer } from "../renderer/Renderer";
-import { RendererAPI } from "../renderer/RendererAPI";
-import { WebGL2DRenderer } from "../api/gl/renderer/WebGL2DRenderer";
+import { Renderer } from "../renderer/Renderer.js";
+import { RendererAPI } from "../renderer/RendererAPI.js";
+import { WebGL2DRenderer } from "../api/gl/renderer/WebGL2DRenderer.js";
 export class RendererFactory {
     static create2D(graphicsContext) {
         switch (Renderer.getAPI()) {

@@ -1,4 +1,4 @@
-import { WebGLExt } from "../wrappers/WebGLExt";
+import { WebGLExt } from "../wrappers/WebGLExt.js";
 export class WebGLContext {
     constructor(canvasElement) {
         this.canvasElement = canvasElement;

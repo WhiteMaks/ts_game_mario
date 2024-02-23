@@ -1,4 +1,4 @@
-import { ShaderDataType, getComponentCountFromShaderDataType } from "../../../shader/ShaderDataType";
+import { ShaderDataType, getComponentCountFromShaderDataType } from "../../../shader/ShaderDataType.js";
 export class WebGLVertexArrayBuffer {
     constructor(gl) {
         this.gl = gl;

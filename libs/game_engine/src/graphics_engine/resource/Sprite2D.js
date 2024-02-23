@@ -1,4 +1,4 @@
-import { Vector2 } from "../maths/impl/Vector2";
+import { Vector2 } from "../maths/impl/Vector2.js";
 export class Sprite2D {
     constructor(texture) {
         this.texture = texture;

@@ -1,5 +1,5 @@
-import { GameSystemComponent } from "../GameSystemComponent";
-import { TransformComponent } from "../../component/ext/TransformComponent";
+import { GameSystemComponent } from "../GameSystemComponent.js";
+import { TransformComponent } from "../../component/ext/TransformComponent.js";
 export class Sprite2DRendererSystemComponent extends GameSystemComponent {
     constructor() {
         super();

@@ -1,5 +1,5 @@
-import { Engine } from "./Engine";
-import { ECS } from "./entity_component_system/namespace/ecs";
+import { Engine } from "./Engine.js";
+import { ECS } from "./entity_component_system/namespace/ecs.js";
 export class Scene {
     constructor(width, height) {
         this.transformSystemComponent = ECS.TransformSystemComponent.getInstance();

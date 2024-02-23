@@ -1,5 +1,5 @@
-import { TypeScriptSystemComponent } from "../../system/ext/TypeScriptSystemComponent";
-import { GameComponent } from "../GameComponent";
+import { TypeScriptSystemComponent } from "../../system/ext/TypeScriptSystemComponent.js";
+import { GameComponent } from "../GameComponent.js";
 export class TypeScriptComponent extends GameComponent {
     constructor(entity) {
         super(entity);

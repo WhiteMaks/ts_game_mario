@@ -1,4 +1,4 @@
-import { NumberType } from "../support/NumberType";
+import { NumberType } from "../support/NumberType.js";
 export var ShaderDataType;
 (function (ShaderDataType) {
     ShaderDataType[ShaderDataType["FLOAT_1"] = NumberType.FLOAT.valueOf()] = "FLOAT_1";

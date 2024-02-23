@@ -1,4 +1,4 @@
-import { Animation2DSpriteFrame } from "./Animation2DSpriteFrame";
+import { Animation2DSpriteFrame } from "./Animation2DSpriteFrame.js";
 export class Animation2DSpriteState {
     constructor(name) {
         this.name = name;

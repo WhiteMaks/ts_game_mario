@@ -1,6 +1,6 @@
-import { ElementEvent } from "./ElementEvent";
-import { BaseQueue } from "../structures/impl/BaseQueue";
-import { ElementEventType } from "./ElementEventType";
+import { ElementEvent } from "./ElementEvent.js";
+import { BaseQueue } from "../structures/impl/BaseQueue.js";
+import { ElementEventType } from "./ElementEventType.js";
 export class Element {
     constructor(bufferSize) {
         this.bufferSize = bufferSize;

@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../../../buffer/FrameBuffer";
+import { FrameBuffer } from "../../../buffer/FrameBuffer.js";
 export class WebGLFrameBuffer extends FrameBuffer {
     constructor(gl, data) {
         super(data);

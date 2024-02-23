@@ -1,6 +1,6 @@
-import { GameComponent } from "../GameComponent";
-import { Sprite2DRendererComponent } from "./Sprite2DRendererComponent";
-import { State2DAnimationMachineSystemComponent } from "../../system/ext/State2DAnimationMachineSystemComponent";
+import { GameComponent } from "../GameComponent.js";
+import { Sprite2DRendererComponent } from "./Sprite2DRendererComponent.js";
+import { State2DAnimationMachineSystemComponent } from "../../system/ext/State2DAnimationMachineSystemComponent.js";
 export class State2DAnimationMachineComponent extends GameComponent {
     constructor(entity) {
         super(entity);

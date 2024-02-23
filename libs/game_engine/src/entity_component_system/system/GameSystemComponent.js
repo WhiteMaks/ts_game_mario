@@ -1,4 +1,4 @@
-import { System } from "./System";
+import { System } from "./System.js";
 export class GameSystemComponent extends System {
     constructor() {
         super();

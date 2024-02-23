@@ -1,7 +1,7 @@
-import { TransformComponent } from "./TransformComponent";
-import { Texture2DRendererSystemComponent } from "../../system/ext/Texture2DRendererSystemComponent";
-import { GameComponent } from "../GameComponent";
-import { Engine } from "../../../Engine";
+import { TransformComponent } from "./TransformComponent.js";
+import { Texture2DRendererSystemComponent } from "../../system/ext/Texture2DRendererSystemComponent.js";
+import { GameComponent } from "../GameComponent.js";
+import { Engine } from "../../../Engine.js";
 export class Texture2DRendererComponent extends GameComponent {
     constructor(entity) {
         super(entity);

@@ -1,4 +1,4 @@
-import { GameEngine } from "../../libs/game_engine/src/namespace/game_engine";
+import { GameEngine } from "../../libs/game_engine/src/namespace/game_engine.js";
 export class PlayerControllerScript extends GameEngine.ECS.BaseScript {
     init() {
         this.marioAnimationStateComponent = this.getComponent(GameEngine.ECS.State2DAnimationMachineComponent);

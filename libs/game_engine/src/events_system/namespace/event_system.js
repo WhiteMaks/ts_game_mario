@@ -1,2 +1,2 @@
-import * as EventSystem from "../index";
+import * as EventSystem from "../index.js";
 export { EventSystem };

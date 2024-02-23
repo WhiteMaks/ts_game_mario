@@ -1,6 +1,6 @@
-import { BaseQueue } from "../structures/impl/BaseQueue";
-import { MouseEventType } from "./MouseEventType";
-import { MouseEvent } from "./MouseEvent";
+import { BaseQueue } from "../structures/impl/BaseQueue.js";
+import { MouseEventType } from "./MouseEventType.js";
+import { MouseEvent } from "./MouseEvent.js";
 /**
  * Класс для работы с событиями мышки
  */

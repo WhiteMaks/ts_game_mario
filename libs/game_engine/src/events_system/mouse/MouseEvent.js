@@ -1,4 +1,4 @@
-import { MouseEventType } from "./MouseEventType";
+import { MouseEventType } from "./MouseEventType.js";
 /**
  * Класс для описания событий мышки
  */

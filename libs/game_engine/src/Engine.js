@@ -1,7 +1,7 @@
-import { Time } from "./Time";
-import { Layer } from "./layer/namespace/layer";
-import { EventSystem } from "./events_system/namespace/event_system";
-import { GraphicsEngine } from "./graphics_engine/namespace/graphics_engine";
+import { Time } from "./Time.js";
+import { Layer } from "./layer/namespace/layer.js";
+import { EventSystem } from "./events_system/namespace/event_system.js";
+import { GraphicsEngine } from "./graphics_engine/namespace/graphics_engine.js";
 export class Engine extends GraphicsEngine.GraphicsApplication {
     constructor(parentElement, api = GraphicsEngine.RendererAPI.WEB_GL) {
         super(parentElement);

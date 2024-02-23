@@ -1,2 +1,2 @@
-import * as ECS from "../index";
+import * as ECS from "../index.js";
 export { ECS };

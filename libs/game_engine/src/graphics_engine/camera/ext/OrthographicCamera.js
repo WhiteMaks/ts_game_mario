@@ -1,5 +1,5 @@
-import { Transformation } from "../../maths/support/Transformation";
-import { BaseCamera } from "../impl/BaseCamera";
+import { Transformation } from "../../maths/support/Transformation.js";
+import { BaseCamera } from "../impl/BaseCamera.js";
 export class OrthographicCamera extends BaseCamera {
     constructor(width, height, zoomLevel = 1) {
         super(Transformation.getOrthogonalProjectionMatrix((-1) * width / height * zoomLevel, width / height * zoomLevel, -1 * zoomLevel, zoomLevel, -1.0, 1.0), width, height);

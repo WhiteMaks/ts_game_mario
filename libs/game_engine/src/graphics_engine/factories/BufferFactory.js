@@ -1,10 +1,10 @@
-import { Renderer } from "../renderer/Renderer";
-import { RendererAPI } from "../renderer/RendererAPI";
-import { WebGLVertexArrayBuffer } from "../api/gl/buffer/WebGLVertexArrayBuffer";
-import { WebGLUint16IndexStaticBuffer } from "../api/gl/buffer/WebGLUint16IndexStaticBuffer";
-import { WebGLFloat32VertexStaticBuffer } from "../api/gl/buffer/WebGLFloat32VertexStaticBuffer";
-import { WebGLFloat32VertexDynamicBuffer } from "../api/gl/buffer/WebGLFloat32VertexDynamicBuffer";
-import { WebGLFrameBuffer } from "../api/gl/buffer/WebGLFrameBuffer";
+import { Renderer } from "../renderer/Renderer.js";
+import { RendererAPI } from "../renderer/RendererAPI.js";
+import { WebGLVertexArrayBuffer } from "../api/gl/buffer/WebGLVertexArrayBuffer.js";
+import { WebGLUint16IndexStaticBuffer } from "../api/gl/buffer/WebGLUint16IndexStaticBuffer.js";
+import { WebGLFloat32VertexStaticBuffer } from "../api/gl/buffer/WebGLFloat32VertexStaticBuffer.js";
+import { WebGLFloat32VertexDynamicBuffer } from "../api/gl/buffer/WebGLFloat32VertexDynamicBuffer.js";
+import { WebGLFrameBuffer } from "../api/gl/buffer/WebGLFrameBuffer.js";
 export class BufferFactory {
     static createFloat32VertexDynamicBuffer(graphicsContext, size) {
         switch (Renderer.getAPI()) {

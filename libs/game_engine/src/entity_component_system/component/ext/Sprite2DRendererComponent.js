@@ -1,7 +1,7 @@
-import { Sprite2DRendererSystemComponent } from "../../system/ext/Sprite2DRendererSystemComponent";
-import { TransformComponent } from "./TransformComponent";
-import { Engine } from "../../../Engine";
-import { GameComponent } from "../GameComponent";
+import { Sprite2DRendererSystemComponent } from "../../system/ext/Sprite2DRendererSystemComponent.js";
+import { TransformComponent } from "./TransformComponent.js";
+import { Engine } from "../../../Engine.js";
+import { GameComponent } from "../GameComponent.js";
 export class Sprite2DRendererComponent extends GameComponent {
     constructor(entity) {
         super(entity);

@@ -1,8 +1,8 @@
-import { TransformComponent } from "./TransformComponent";
-import { Engine } from "../../../Engine";
-import { ColorRendererSystemComponent } from "../../system/ext/ColorRendererSystemComponent";
-import { GameComponent } from "../GameComponent";
-import { GraphicsEngine } from "../../../graphics_engine/namespace/graphics_engine";
+import { TransformComponent } from "./TransformComponent.js";
+import { Engine } from "../../../Engine.js";
+import { ColorRendererSystemComponent } from "../../system/ext/ColorRendererSystemComponent.js";
+import { GameComponent } from "../GameComponent.js";
+import { GraphicsEngine } from "../../../graphics_engine/namespace/graphics_engine.js";
 export class ColorRendererComponent extends GameComponent {
     constructor(entity) {
         super(entity);

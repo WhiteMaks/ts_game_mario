@@ -1,5 +1,5 @@
-import { Vector2 } from "../impl/Vector2";
-import { Random } from "../../support/Random";
+import { Vector2 } from "../impl/Vector2.js";
+import { Random } from "../../support/Random.js";
 export class RandomWalk2D {
     constructor(width, height) {
         this.width = width;

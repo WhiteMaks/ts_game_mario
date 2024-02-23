@@ -1,4 +1,4 @@
-import { GraphicsContextFactory } from "../factories/GraphicsContextFactory";
+import { GraphicsContextFactory } from "../factories/GraphicsContextFactory.js";
 /**
  * Класс для создания нового графического элемента и взаимодействия с ним
  */

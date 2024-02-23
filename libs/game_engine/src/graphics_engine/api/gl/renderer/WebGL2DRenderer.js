@@ -1,4 +1,4 @@
-import { Renderer2D } from "../../../renderer/Renderer2D";
+import { Renderer2D } from "../../../renderer/Renderer2D.js";
 export class WebGL2DRenderer extends Renderer2D {
     constructor(gl) {
         super();

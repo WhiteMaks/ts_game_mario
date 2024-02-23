@@ -1,4 +1,4 @@
-import { Vector2 } from "./Vector2";
+import { Vector2 } from "./Vector2.js";
 /**
  * Класс для работы с векторами
  */

@@ -1,4 +1,4 @@
-import { Input } from "./Input";
+import { Input } from "./Input.js";
 export class BaseInput extends Input {
     constructor(mouse, keyboard) {
         super();

@@ -1,6 +1,6 @@
-import { TransformSystemComponent } from "../../system/ext/TransformSystemComponent";
-import { GameComponent } from "../GameComponent";
-import { GraphicsEngine } from "../../../graphics_engine/namespace/graphics_engine";
+import { TransformSystemComponent } from "../../system/ext/TransformSystemComponent.js";
+import { GameComponent } from "../GameComponent.js";
+import { GraphicsEngine } from "../../../graphics_engine/namespace/graphics_engine.js";
 export class TransformComponent extends GameComponent {
     constructor(entity) {
         super(entity);

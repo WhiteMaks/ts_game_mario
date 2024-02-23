@@ -1,4 +1,4 @@
-import { GameEngine } from "../../libs/game_engine/src/namespace/game_engine";
+import { GameEngine } from "../../libs/game_engine/src/namespace/game_engine.js";
 export class EnemyCreatorScript extends GameEngine.ECS.BaseScript {
     init() {
         const spriteSheetComponent = this.getComponent(GameEngine.ECS.Texture2DRendererComponent);

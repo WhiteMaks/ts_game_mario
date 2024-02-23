@@ -1,4 +1,4 @@
-import { KeyboardEventType } from "./KeyboardEventType";
+import { KeyboardEventType } from "./KeyboardEventType.js";
 /**
  * Класс для описания событий клавиатуры
  */

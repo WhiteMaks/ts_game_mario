@@ -1,5 +1,5 @@
-import { Vector3 } from "../../maths/impl/Vector3";
-import { Transformation } from "../../maths/support/Transformation";
+import { Vector3 } from "../../maths/impl/Vector3.js";
+import { Transformation } from "../../maths/support/Transformation.js";
 export class BaseCamera {
     constructor(projectionMatrix, width, height) {
         this.projectionMatrix = projectionMatrix;

@@ -1,2 +1,2 @@
-import * as Layer from "../index";
+import * as Layer from "../index.js";
 export { Layer };

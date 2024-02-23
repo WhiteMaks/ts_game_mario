@@ -1,4 +1,4 @@
-import { ElementEventType } from "./ElementEventType";
+import { ElementEventType } from "./ElementEventType.js";
 export class ElementEvent {
     constructor(type, width, height) {
         this.type = type;

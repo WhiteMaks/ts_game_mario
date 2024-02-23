@@ -1,5 +1,5 @@
-import { GameComponent } from "../GameComponent";
-import { CameraSystemComponent } from "../../system/ext/CameraSystemComponent";
+import { GameComponent } from "../GameComponent.js";
+import { CameraSystemComponent } from "../../system/ext/CameraSystemComponent.js";
 export class CameraComponent extends GameComponent {
     constructor(entity) {
         super(entity);

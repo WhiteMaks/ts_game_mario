@@ -1,6 +1,6 @@
-import { BaseQueue } from "../structures/impl/BaseQueue";
-import { KeyboardEventType } from "./KeyboardEventType";
-import { KeyboardEvent } from "./KeyboardEvent";
+import { BaseQueue } from "../structures/impl/BaseQueue.js";
+import { KeyboardEventType } from "./KeyboardEventType.js";
+import { KeyboardEvent } from "./KeyboardEvent.js";
 /**
  * Класс для работы с событиями клавиатуры
  */

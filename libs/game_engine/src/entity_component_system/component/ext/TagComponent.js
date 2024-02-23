@@ -1,5 +1,5 @@
-import { TagSystemComponent } from "../../system/ext/TagSystemComponent";
-import { GameComponent } from "../GameComponent";
+import { TagSystemComponent } from "../../system/ext/TagSystemComponent.js";
+import { GameComponent } from "../GameComponent.js";
 export class TagComponent extends GameComponent {
     constructor(entity) {
         super(entity);

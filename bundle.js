@@ -3920,7 +3920,6 @@ class BaseLayer {
 class Game extends Engine {
     constructor(parentElement) {
         super(parentElement);
-        console.log("sss");
     }
 }
 /* harmony default export */ const game_Game = (Game);
